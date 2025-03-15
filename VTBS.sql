@@ -27,7 +27,7 @@ CREATE TABLE "Profile" (
 -- Company Table
 CREATE TABLE "Company" (
   "Company_ID" BIGSERIAL PRIMARY KEY,
-  "Name" VARCHAR(50) NOT NULL,
+  "Name" VARCHAR(50) NOT NULL UNIQUE,
   "Headquarters" TEXT,
   "Year_Of_Establishment" SMALLINT CHECK ("Year_Of_Establishment" > 1800),
   "Contact_Number" VARCHAR(15) NOT NULL UNIQUE CHECK ("Contact_Number" ~ '^021\d{8}$') 
@@ -40,7 +40,7 @@ CREATE TABLE "Vehicle" (
   "Name" VARCHAR(50) 
 );
 
--- Transportation Types (Airplane, Bus, Train) inheriting Vehicle
+-- Vehicle Types
 CREATE TABLE "Airplane" (
   "First_Class_Capacity" SMALLINT NOT NULL CHECK ("First_Class_Capacity" >= 0),
   "Business_Class_Capacity" SMALLINT NOT NULL CHECK ("Business_Class_Capacity" >= 0),
@@ -53,81 +53,95 @@ CREATE TABLE "Airplane" (
 
 CREATE TABLE "Bus" (
   "Type" VARCHAR(10) NOT NULL CHECK("Type" IN ('VIP', 'Normal')),
-  "Seats_Count" SMALLINT,
-  "Seats_In_Row" VARCHAR(10),
-  "With_Bed" BOOLEAN,
-  "Internet" BOOLEAN,
-  "Entertainment_Screen" BOOLEAN,
-  "Air_Conditioning" BOOLEAN
+  "Seats_Count" SMALLINT NOT NULL CHECK("Seats_Count" > 0),
+  "Seats_In_Row" VARCHAR(10) NOT NULL CHECK("Seats_In_Row" IN ("1+2", "2+2")),
+  "With_Bed" BOOLEAN NOT NULL,
+  "Internet" BOOLEAN NOT NULL,
+  "Entertainment_Screen" BOOLEAN NOT NULL,
+  "Air_Conditioning" BOOLEAN NOT NULL
 ) INHERITS ("Vehicle");
 
 CREATE TABLE "Train" (
-  "Type" VARCHAR(8),
-  "Stars" SMALLINT CHECK ("Stars" BETWEEN 1 AND 5),
-  "Seats_Count" SMALLINT,
-  "Seats_In_Cabin" SMALLINT,
-  "With_Bed" BOOLEAN,
-  "Internet" BOOLEAN,
-  "Entertainment_Screen" BOOLEAN,
-  "Air_Conditioning" BOOLEAN,
-  "Freight_Wagons_Count" SMALLINT
+  "Type" VARCHAR(8) NOT NULL CHECK ("Type" IN ("Compartment", "Coach")),
+  "Stars" SMALLINT NOT NULL CHECK ("Stars" BETWEEN 1 AND 5),
+  "Seats_Count" SMALLINT NOT NULL CHECK("Seats_Count" > 0),
+  "Seats_In_Cabin" SMALLINT CHECK("Seats_In_Cabin" > 0),
+  "With_Bed" BOOLEAN NOT NULL,
+  "Internet" BOOLEAN NOT NULL,
+  "Entertainment_Screen" BOOLEAN NOT NULL,
+  "Air_Conditioning" BOOLEAN NOT NULL,
+  "Freight_Wagons_Count" SMALLINT NOT NULL
 ) INHERITS ("Vehicle");
 
 -- Ticket Table
 CREATE TABLE "Ticket" (
   "Ticket_ID" BIGSERIAL PRIMARY KEY,
-  "Vehicle_ID" BIGINT REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
-  "Origin" VARCHAR(50),
-  "Destination" VARCHAR(50),
-  "Departure_Date" DATE,
-  "Arrival_Date" DATE,
-  "Departure_Time" TIME,
-  "Arrival_Time" TIME,
-  "Price" DECIMAL(10,2) CHECK ("Price" > 0),
-  "Remaining_Capacity" SMALLINT CHECK ("Remaining_Capacity" >= 0)
+  "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
+  "Origin" VARCHAR(50) NOT NULL,
+  "Destination" VARCHAR(50) NOT NULL,
+  "Departure_Date" DATE NOT NULL,
+  "Arrival_Date" DATE NOT NULL,
+  "Departure_Time" TIME NOT NULL,
+  "Arrival_Time" TIME NOT NULL,
+  "Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
+  "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
+  CONSTRAINT check_departure_is_before_arrival
+    CHECK  ("Departure_Date" < "Arrival_Date" OR 
+      ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time"))
 );
 
 -- Ticket Types (Flight, Train Ride, Bus Ride)
 CREATE TABLE "Flight" (
-  "Vacation_Class_Code" VARCHAR(10),
-  "Service" BOOLEAN,
-  "Number_of_Stops" SMALLINT,
+  "Vacation_Class_Code" VARCHAR(20) NOT NULL CHECK ("Vacation_Class_Code" IN ("First_Class", "Business_Class", "Economy_Class")),
+  "Service" BOOLEAN NOT NULL,
+  "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
   "Stops" TEXT,
-  "Origin_Airport" VARCHAR(50),
-  "Destination_Airport" VARCHAR(50),
-  "Type" VARCHAR(10)
+  "Origin_Airport" VARCHAR(50) NOT NULL,
+  "Destination_Airport" VARCHAR(50) NOT NULL,
+  "Type" VARCHAR(15) NOT NULL CHECK("Type" IN ("Domestic", "International")),
+  CONSTRAINT check_stops_validity CHECK 
+         (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
+       OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL))
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Train_Ride" (
-  "Has_Private_Compartment" BOOLEAN,
-  "Service" BOOLEAN,
-  "Number_Of_Stops" SMALLINT,
+  "Has_Private_Compartment" BOOLEAN NOT NULL,
+  "Service" BOOLEAN NOT NULL,
+  "Number_Of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
   "Stops" TEXT,
-  "Origin_Station" VARCHAR(50),
-  "Destination_Station" VARCHAR(50),
-  "Freight_Wagons_Left" SMALLINT
+  "Origin_Station" VARCHAR(50) NOT NULL,
+  "Destination_Station" VARCHAR(50) NOT NULL,
+  "Freight_Wagons_Left" SMALLINT NOT NULL,
+  CONSTRAINT check_stops_validity CHECK 
+         (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
+       OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL))
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Bus_Ride" (
-  "Service" BOOLEAN,
-  "Meal_Stops" VARCHAR(50),
-  "Number_of_Stops" SMALLINT,
+  "Service" BOOLEAN NOT NULL,
+  "Number_of_Meal_Stops" SMALLINT NOT NULL CHECK ("Number_of_Meal_Stops" >= 0),
+  "Meal_Stops" TEXT,
+  "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
   "Stops" TEXT,
-  "Origin_Station" VARCHAR(50),
-  "Destination_Station" VARCHAR(50)
+  "Origin_Station" VARCHAR(50) NOT NULL,
+  "Destination_Station" VARCHAR(50) NOT NULL,
+  CONSTRAINT check_stops_validity CHECK 
+         (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
+       OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL)),
+  CONSTRAINT check_meal_stops_validity CHECK 
+         (("Number_of_Meal_Stops" = 0 AND "Meal_Stops" IS NULL) 
+       OR ("Number_of_Meal_Stops" > 0 AND "Meal_Stops" IS NOT NULL))
 ) INHERITS ("Ticket");
 
 -- Reservation Table
 CREATE TABLE "Reservation" (
   "Reservation_ID" BIGSERIAL PRIMARY KEY,
-  "User_ID" BIGINT REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Ticket_ID" BIGINT REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
-  "Seat_Number" VARCHAR(10),
+  "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
+  "Seat_Number" VARCHAR(10) NOT NULL,
   "Status" VARCHAR(20) CHECK ("Status" IN ('Pending', 'Confirmed', 'Cancelled')),
   "Reservation_Date" DATE DEFAULT CURRENT_DATE,
   "Reservation_Time" TIME DEFAULT CURRENT_TIME,
-  CONSTRAINT check_expiration_after_reservation_time
-    CHECK ("Expiration" > ("Reservation_Date" + "Reservation_Time")),
   "Expiration" INTERVAL
 );
 
