@@ -54,7 +54,7 @@ CREATE TABLE "Airplane" (
 CREATE TABLE "Bus" (
   "Type" VARCHAR(10) NOT NULL CHECK("Type" IN ('VIP', 'Normal')),
   "Seats_Count" SMALLINT NOT NULL CHECK("Seats_Count" > 0),
-  "Seats_In_Row" VARCHAR(10) NOT NULL CHECK("Seats_In_Row" IN ("1+2", "2+2")),
+  "Seats_In_Row" VARCHAR(10) NOT NULL CHECK("Seats_In_Row" IN ('1+2', '2+2')),
   "With_Bed" BOOLEAN NOT NULL,
   "Internet" BOOLEAN NOT NULL,
   "Entertainment_Screen" BOOLEAN NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE "Bus" (
 ) INHERITS ("Vehicle");
 
 CREATE TABLE "Train" (
-  "Type" VARCHAR(8) NOT NULL CHECK ("Type" IN ("Compartment", "Coach")),
+  "Type" VARCHAR(8) NOT NULL CHECK ("Type" IN ('Compartment', 'Coach')),
   "Stars" SMALLINT NOT NULL CHECK ("Stars" BETWEEN 1 AND 5),
   "Seats_Count" SMALLINT NOT NULL CHECK("Seats_Count" > 0),
   "Seats_In_Cabin" SMALLINT CHECK("Seats_In_Cabin" > 0),
@@ -92,13 +92,13 @@ CREATE TABLE "Ticket" (
 
 -- Ticket Types (Flight, Train Ride, Bus Ride)
 CREATE TABLE "Flight" (
-  "Vacation_Class_Code" VARCHAR(20) NOT NULL CHECK ("Vacation_Class_Code" IN ("First_Class", "Business_Class", "Economy_Class")),
+  "Vacation_Class_Code" VARCHAR(20) NOT NULL CHECK ("Vacation_Class_Code" IN ('First_Class', 'Business_Class', 'Economy_Class')),
   "Service" BOOLEAN NOT NULL,
   "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
   "Stops" TEXT,
   "Origin_Airport" VARCHAR(50) NOT NULL,
   "Destination_Airport" VARCHAR(50) NOT NULL,
-  "Type" VARCHAR(15) NOT NULL CHECK("Type" IN ("Domestic", "International")),
+  "Type" VARCHAR(15) NOT NULL CHECK("Type" IN ('Domestic', 'International')),
   CONSTRAINT check_stops_validity CHECK 
          (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
        OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL))
@@ -139,70 +139,76 @@ CREATE TABLE "Reservation" (
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
   "Seat_Number" VARCHAR(10) NOT NULL,
-  "Status" VARCHAR(20) CHECK ("Status" IN ('Pending', 'Confirmed', 'Cancelled')),
-  "Reservation_Date" DATE DEFAULT CURRENT_DATE,
-  "Reservation_Time" TIME DEFAULT CURRENT_TIME,
-  "Expiration" INTERVAL
+  "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Pending', 'Confirmed', 'Cancelled')),
+  "Reservation_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "Reservation_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
+  "Expiration" NOT NULL INTERVAL
 );
 
 -- Payment Table
 CREATE TABLE "Payment" (
   "Payment_ID" BIGSERIAL PRIMARY KEY,
-  "User_ID" BIGINT REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Reservation_ID" BIGINT REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
-  "Amount" DECIMAL(10,2) CHECK ("Amount" > 0),
-  "Payment_Method" VARCHAR(20) CHECK ("Payment_Method" IN ('Credit Card', 'PayPal', 'Bank Transfer', 'Cash')),
-  "Status" VARCHAR(20) CHECK ("Status" IN ('Pending', 'Completed', 'Failed', 'Refunded')),
-  "Payment_Time" TIME DEFAULT CURRENT_TIME,
-  "Payment_Date" DATE DEFAULT CURRENT_DATE
+  "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "Reservation_ID" BIGINT NOT NULL REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
+  "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
+  "Payment_Method" VARCHAR(20) NOT NULL CHECK ("Payment_Method" IN ('Credit Card', 'PayPal', 'Bank Transfer', 'Cash')),
+  "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Pending', 'Completed', 'Failed', 'Refunded')),
+  "Payment_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
+  "Payment_Date" DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 -- Wallet Table
 CREATE TABLE "Wallet" (
   "Wallet_ID" BIGSERIAL PRIMARY KEY,
-  "User_ID" BIGINT UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Balance" DECIMAL(10,2) CHECK ("Balance" >= 0)
+  "User_ID" BIGINT NOT NULL UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "Balance" DECIMAL(10,2) NOT NULL CHECK ("Balance" >= 0)
 );
 
 -- Wallet Transactions Table
 CREATE TABLE "Wallet_Transactions" (
   "Transaction_ID" BIGSERIAL PRIMARY KEY,
-  "Wallet_ID" BIGINT REFERENCES "Wallet"("Wallet_ID") ON DELETE CASCADE,
+  "Wallet_ID" BIGINT NOT NULL REFERENCES "Wallet"("Wallet_ID") ON DELETE CASCADE,
   "Related_Payment_ID" BIGINT REFERENCES "Payment"("Payment_ID") ON DELETE SET NULL,
-  "Amount" DECIMAL(10,2) CHECK ("Amount" > 0),
-  "Transaction_Type" VARCHAR(20),
-  "Transaction_Date" DATE DEFAULT CURRENT_DATE,
-  "Transaction_Time" TIME DEFAULT CURRENT_TIME
+  "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
+  "Transaction_Type" VARCHAR(20) NOT NULL CHECK ("Transaction_Type" IN ('Charge', 'Payment', 'Refund')),
+  "Transaction_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "Transaction_Time" TIME NOT NULL DEFAULT CURRENT_TIME
 );
 
 -- Cancellation Table
 CREATE TABLE "Cancelation" (
   "Cancelation_ID" BIGSERIAL PRIMARY KEY,
-  "Reservation_ID" BIGINT REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
-  "Transaction_ID" BIGINT REFERENCES "Wallet_Transactions"("Transaction_ID") ON DELETE SET NULL,
-  "Cancel_Date" DATE DEFAULT CURRENT_DATE,
-  "Cancel_Time" TIME DEFAULT CURRENT_TIME,
+  "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
+  "Transaction_ID" BIGINT NOT NULL UNIQUE REFERENCES "Wallet_Transactions"("Transaction_ID") ON DELETE SET NULL,
+  "Cancel_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "Cancel_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
   "Refund_Amount" DECIMAL(10,2) CHECK ("Refund_Amount" >= 0)
 );
+
 CREATE TABLE "Report" (
-  "Report_ID" BIGSERIAL,
-  "User_ID" BIGINT REFERENCES "User"("User_ID"),
-  "Payment_ID" BIGINT REFERENCES "Payment"("Payment_ID"),
-  "Reservation_ID" BIGINT REFERENCES "Reservation"("Reservation_ID"),
-  "Ticket_ID" BIGINT REFERENCES "Ticket"("Ticket_ID"),
-  "Type" VARCHAR(10),
-  "Status" VARCHAR(10),
-  "Text" TEXT,
+  "Report_ID" BIGSERIAL PRIMARY KEY,
+  "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
+  "Payment_ID" BIGINT UNIQUE REFERENCES "Payment"("Payment_ID"),
+  "Reservation_ID" BIGINT UNIQUE REFERENCES "Reservation"("Reservation_ID"),
+  "Ticket_ID" BIGINT UNIQUE REFERENCES "Ticket"("Ticket_ID"),
+  "Type" VARCHAR(10) NOT NULL CHECK("Type" IN ('Payment', 'Reservation', 'Ticket')),
+  "Status" VARCHAR(10) NOT NULL CHECK ("Status" IN ('Pending', 'Checked')),
+  "Text" TEXT NOT NULL,
   "Answer" TEXT,
-  PRIMARY KEY ("Report_ID")
+  CONSTRAINT check_meal_stops_validity CHECK 
+         (("Type" = 'Reservation' AND "Reservation_ID" IS NOT NULL) 
+       OR ("Type" = 'Payment' AND "Payment_ID" IS NOT NULL)
+       OR ("Type" = 'Ticket' AND "Ticket_ID" IS NOT NULL))
 );
 
 CREATE TABLE "Passenger" (
-  "Passenger_ID" BIGSERIAL,
-  "Name" VARCHAR(50),
-  "Lastname" VARCHAR(50),
-  "SSN" VARCHAR(10),
-  "Birthdate" DATE,
-  PRIMARY KEY ("Passenger_ID")
+  "Passenger_ID" BIGSERIAL PRIMARY KEY,
+  "Name" VARCHAR(50) NOT NULL,
+  "Lastname" VARCHAR(50) NOT NULL,
+  "SSN" VARCHAR(10) UNIQUE CHECK (
+      "SSN" ~ '^\d{10}$'
+  ),
+  "Birthdate" DATE NOT NULL,
+  
 );
 
