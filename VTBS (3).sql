@@ -77,10 +77,10 @@ CREATE TABLE "Train" (
 CREATE TABLE "Ticket" (
   "Ticket_ID" BIGSERIAL PRIMARY KEY,
   "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
-  "Origin" BIGINT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
-  "Destination" BIGINT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
-  "Origin_Station" BIGINT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
-  "Destination_Station" BIGINT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
+  "Origin" INT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
+  "Destination" INT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
+  "Origin_Station" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
+  "Destination_Station" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
   "Departure_Date" DATE NOT NULL,
   "Arrival_Date" DATE NOT NULL,
   "Departure_Time" TIME NOT NULL,
@@ -89,7 +89,11 @@ CREATE TABLE "Ticket" (
   "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
   CONSTRAINT check_departure_is_before_arrival
     CHECK  ("Departure_Date" < "Arrival_Date" OR 
-      ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time"))
+      ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time")),
+  CONSTRAINT check_locations_are_different
+    CHECK ("Origin" <> "Destination"),
+  CONSTRAINT check_stations_are_different
+    CHECK ("Origin_Station" <> "Destination_Station"),
 );
 
 -- Ticket Types (Flight, Train Ride, Bus Ride)
