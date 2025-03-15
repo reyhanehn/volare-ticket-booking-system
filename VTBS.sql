@@ -107,14 +107,14 @@ CREATE TABLE "Flight" (
 CREATE TABLE "Train_Ride" (
   "Has_Private_Compartment" BOOLEAN NOT NULL,
   "Service" BOOLEAN NOT NULL,
-  "Number_Of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
+  "Number_Of_Stops" SMALLINT NOT NULL CHECK ("Number_Of_Stops" >= 0),
   "Stops" TEXT,
   "Origin_Station" VARCHAR(50) NOT NULL,
   "Destination_Station" VARCHAR(50) NOT NULL,
   "Freight_Wagons_Left" SMALLINT NOT NULL,
   CONSTRAINT check_stops_validity CHECK 
-         (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
-       OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL))
+         (("Number_Of_Stops" = 0 AND "Stops" IS NULL) 
+       OR ("Number_Of_Stops" > 0 AND "Stops" IS NOT NULL))
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Bus_Ride" (
@@ -142,7 +142,7 @@ CREATE TABLE "Reservation" (
   "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Pending', 'Confirmed', 'Cancelled')),
   "Reservation_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Reservation_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
-  "Expiration" NOT NULL INTERVAL
+  "Expiration" INTERVAL NOT NULL
 );
 
 -- Payment Table
@@ -208,6 +208,5 @@ CREATE TABLE "Passenger" (
   "SSN" VARCHAR(10) UNIQUE CHECK (
       "SSN" ~ '^\d{10}$'
   ),
-  "Birthdate" DATE NOT NULL,
+  "Birthdate" DATE NOT NULL
 );
-
