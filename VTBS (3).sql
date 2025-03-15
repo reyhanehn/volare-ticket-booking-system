@@ -73,6 +73,21 @@ CREATE TABLE "Train" (
   "Freight_Wagons_Count" SMALLINT NOT NULL
 ) INHERITS ("Vehicle");
 
+CREATE TABLE "Location" (
+    "Location_ID" SERIAL PRIMARY KEY,
+    "Country" VARCHAR(50) NOT NULL,
+    "City" VARCHAR(50) NOT NULL,
+    UNIQUE("Country", "City")
+);
+
+CREATE TABLE "Station" (
+    "Station_ID" SERIAL PRIMARY KEY,
+    "Name" VARCHAR(100) NOT NULL,
+    "Type" VARCHAR(20) CHECK ("Type" IN ('Train_Station', 'Bus_Station', 'Airport')),
+    "Location_ID" INT REFERENCES "Location"("Location_ID") ON DELETE CASCADE
+);
+
+
 -- Ticket Table
 CREATE TABLE "Ticket" (
   "Ticket_ID" BIGSERIAL PRIMARY KEY,
@@ -93,7 +108,7 @@ CREATE TABLE "Ticket" (
   CONSTRAINT check_locations_are_different
     CHECK ("Origin" <> "Destination"),
   CONSTRAINT check_stations_are_different
-    CHECK ("Origin_Station" <> "Destination_Station"),
+    CHECK ("Origin_Station" <> "Destination_Station")
 );
 
 -- Ticket Types (Flight, Train Ride, Bus Ride)
@@ -211,17 +226,4 @@ CREATE TABLE "Passenger" (
   "Birthdate" DATE NOT NULL
 );
 
-CREATE TABLE "Location" (
-    "Location_ID" SERIAL PRIMARY KEY,
-    "Country" VARCHAR(50) NOT NULL,
-    "City" VARCHAR(50) NOT NULL,
-    UNIQUE("Country", "City")
-);
-
-CREATE TABLE "Station" (
-    "Station_ID" SERIAL PRIMARY KEY,
-    "Name" VARCHAR(100) NOT NULL,
-    "Type" VARCHAR(20) CHECK ("Type" IN ('Train_Station', 'Bus_Station', 'Airport')),
-    "Location_ID" INT REFERENCES "Location"("Location_ID") ON DELETE CASCADE
-);
 
