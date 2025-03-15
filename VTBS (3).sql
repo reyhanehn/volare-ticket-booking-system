@@ -79,7 +79,8 @@ CREATE TABLE "Ticket" (
   "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
   "Origin" VARCHAR(50) NOT NULL,
   "Destination" VARCHAR(50) NOT NULL,
-  ""
+  "Origin_Station" VARCHAR(50) NOT NULL,
+  "Destination_Station" VARCHAR(50) NOT NULL,
   "Departure_Date" DATE NOT NULL,
   "Arrival_Date" DATE NOT NULL,
   "Departure_Time" TIME NOT NULL,
@@ -97,8 +98,6 @@ CREATE TABLE "Flight" (
   "Service" BOOLEAN NOT NULL,
   "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
   "Stops" TEXT,
-  "Origin_Airport" VARCHAR(50) NOT NULL,
-  "Destination_Airport" VARCHAR(50) NOT NULL,
   "Type" VARCHAR(15) NOT NULL CHECK("Type" IN ('Domestic', 'International')),
   CONSTRAINT check_stops_validity CHECK 
          (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
@@ -110,8 +109,6 @@ CREATE TABLE "Train_Ride" (
   "Service" BOOLEAN NOT NULL,
   "Number_Of_Stops" SMALLINT NOT NULL CHECK ("Number_Of_Stops" >= 0),
   "Stops" TEXT,
-  "Origin_Station" VARCHAR(50) NOT NULL,
-  "Destination_Station" VARCHAR(50) NOT NULL,
   "Freight_Wagons_Left" SMALLINT NOT NULL,
   CONSTRAINT check_stops_validity CHECK 
          (("Number_Of_Stops" = 0 AND "Stops" IS NULL) 
@@ -124,8 +121,6 @@ CREATE TABLE "Bus_Ride" (
   "Meal_Stops" TEXT,
   "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
   "Stops" TEXT,
-  "Origin_Station" VARCHAR(50) NOT NULL,
-  "Destination_Station" VARCHAR(50) NOT NULL,
   CONSTRAINT check_stops_validity CHECK 
          (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
        OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL)),
