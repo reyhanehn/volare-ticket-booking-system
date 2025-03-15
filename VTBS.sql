@@ -149,7 +149,7 @@ CREATE TABLE "Reservation" (
 CREATE TABLE "Payment" (
   "Payment_ID" BIGSERIAL PRIMARY KEY,
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Reservation_ID" BIGINT NOT NULL REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
+  "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
   "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
   "Payment_Method" VARCHAR(20) NOT NULL CHECK ("Payment_Method" IN ('Credit Card', 'PayPal', 'Bank Transfer', 'Cash')),
   "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Pending', 'Completed', 'Failed', 'Refunded')),
@@ -168,7 +168,7 @@ CREATE TABLE "Wallet" (
 CREATE TABLE "Wallet_Transactions" (
   "Transaction_ID" BIGSERIAL PRIMARY KEY,
   "Wallet_ID" BIGINT NOT NULL REFERENCES "Wallet"("Wallet_ID") ON DELETE CASCADE,
-  "Related_Payment_ID" BIGINT REFERENCES "Payment"("Payment_ID") ON DELETE SET NULL,
+  "Related_Payment_ID" BIGINT UNIQUE REFERENCES "Payment"("Payment_ID") ON DELETE SET NULL,
   "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
   "Transaction_Type" VARCHAR(20) NOT NULL CHECK ("Transaction_Type" IN ('Charge', 'Payment', 'Refund')),
   "Transaction_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -209,6 +209,5 @@ CREATE TABLE "Passenger" (
       "SSN" ~ '^\d{10}$'
   ),
   "Birthdate" DATE NOT NULL,
-  
 );
 
