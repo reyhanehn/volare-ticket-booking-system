@@ -1,16 +1,16 @@
 --ENUMS
---CREATE TYPE user_role AS ENUM ('Customer', 'Admin');
---CREATE TYPE user_status AS ENUM ('Active', 'Banned');
---CREATE TYPE seats_layout AS ENUM ('1+2', '2+2');
---CREATE TYPE train_type AS ENUM ('Compartment', 'Coach');
---CREATE TYPE payment_method AS ENUM ('Credit Card','PayPal','Bank Transfer','Cash');
---CREATE TYPE payment_status AS ENUM ('Pending','Completed','Failed','Refunded');
---CREATE TYPE transaction_type AS ENUM ('Charge', 'Payment', 'Refund');
---CREATE TYPE station_type AS ENUM ('Train_Station', 'Bus_Station', 'Airport');
---CREATE TYPE flight_type AS ENUM ('Domestic', 'International');
---CREATE TYPE transport_type AS ENUM ('Train', 'Bus', 'Airplane');
---CREATE TYPE stop_type AS ENUM ('Transit', 'Meal', 'Refuel', 'Layover');
---CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
+CREATE TYPE user_role AS ENUM ('Customer', 'Admin');
+CREATE TYPE user_status AS ENUM ('Active', 'Banned');
+CREATE TYPE seats_layout AS ENUM ('1+2', '2+2');
+CREATE TYPE train_type AS ENUM ('Compartment', 'Coach');
+CREATE TYPE payment_method AS ENUM ('Credit Card','PayPal','Bank Transfer','Cash');
+CREATE TYPE payment_status AS ENUM ('Pending','Completed','Failed','Refunded');
+CREATE TYPE transaction_type AS ENUM ('Charge', 'Payment', 'Refund');
+CREATE TYPE station_type AS ENUM ('Train_Station', 'Bus_Station', 'Airport');
+CREATE TYPE flight_type AS ENUM ('Domestic', 'International');
+CREATE TYPE transport_type AS ENUM ('Train', 'Bus', 'Airplane');
+CREATE TYPE stop_type AS ENUM ('Transit', 'Meal', 'Refuel', 'Layover');
+CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
 
 
 
