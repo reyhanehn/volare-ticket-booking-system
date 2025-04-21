@@ -12,8 +12,15 @@ CREATE TYPE transport_type AS ENUM ('Train', 'Bus', 'Airplane');
 CREATE TYPE stop_type AS ENUM ('Transit', 'Meal', 'Refuel', 'Layover');
 CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
 
-
-
+-- Location Table
+CREATE TABLE "Location" (
+    "Location_ID" SERIAL PRIMARY KEY,
+    "Country" VARCHAR(50) NOT NULL--CHECK ("Country" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
+    ,
+    "City" VARCHAR(50) NOT NULL--CHECK ("City" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
+    ,
+    UNIQUE("Country", "City")
+);
 
 -- User Table
 CREATE TABLE "User" (
@@ -24,12 +31,9 @@ CREATE TABLE "User" (
   "Email" VARCHAR(100) UNIQUE CHECK (
       "Email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' OR "Email" IS NULL
   ),
-  "Role" VARCHAR(20) NOT NULL CHECK ("Role" IN ('Customer', 'Admin')),
-  --"Role" user_role NOT NULL,
-  "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Active', 'Banned')),
-  --"Status" user_status NOT NULL,
-  "Password" TEXT NOT NULL,
-  --"Password_Hash" TEXT NOT NULL,
+  "Role" user_role NOT NULL,
+  "Status" user_status NOT NULL,
+  "Password_Hash" TEXT NOT NULL,
   CONSTRAINT at_least_one_not_null CHECK (
       "Email" IS NOT NULL OR "Phone_Number" IS NOT NULL
   )
@@ -37,44 +41,38 @@ CREATE TABLE "User" (
 
 -- Profile Table
 CREATE TABLE "Profile" (
-  "User_ID" BIGSERIAL PRIMARY KEY REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  --"User_ID" BIGINT PRIMARY KEY REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Name" VARCHAR(50) NOT NULL --CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-      ,
-  "Lastname" VARCHAR(50) NOT NULL--CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-  ,
-  "City" VARCHAR(50) NOT NULL,
-  -- "City_ID" BIGINT REFRENCES "Location"("Location_ID") NOT NULL,
+  "User_ID" BIGINT PRIMARY KEY REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "Name" VARCHAR(50) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$'),
+  "Lastname" VARCHAR(50) NOT NULL CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z])*$'),
+  "City_ID" BIGINT REFRENCES "Location"("Location_ID") NOT NULL,
   "Registration_Date" DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 -- Company Table
 CREATE TABLE "Company" (
   "Company_ID" BIGSERIAL PRIMARY KEY,
-  "Name" VARCHAR(50) NOT NULL UNIQUE--CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-  ,
+  "Name" VARCHAR(50) NOT NULL UNIQUE CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$'),
   "Headquarters" TEXT,
-  "Year_Of_Establishment" SMALLINT CHECK ("Year_Of_Establishment" > 1800),
-  --"Year_Of_Establishment" SMALLINT CHECK (
-  --"Year_Of_Establishment" > 1800 AND
-  --"Year_Of_Establishment" <= EXTRACT(YEAR FROM CURRENT_DATE)
-  --)
+    "Year_Of_Establishment" SMALLINT CHECK (
+    "Year_Of_Establishment" > 1800 AND
+    "Year_Of_Establishment" <= EXTRACT(YEAR FROM CURRENT_DATE)
+  ),
 
   "Contact_Number" VARCHAR(15) NOT NULL UNIQUE CHECK ("Contact_Number" ~ '^021\d{8}$') 
 );
 
---CREATE TABLE "Service" (
-  --"Service_ID" SERIAL PRIMARY KEY,
-  --"Name" VARCHAR(50) UNIQUE NOT NULL
---);
+-- Service Table
+CREATE TABLE "Service" (
+  "Service_ID" SERIAL PRIMARY KEY,
+  "Name" VARCHAR(50) UNIQUE NOT NULL
+);
 
---CREATE TABLE "Vehicle_Service" (
-  --"Vehicle_ID" BIGINT REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
-  --"Service_ID" INT REFERENCES "Service"("Service_ID") ON DELETE CASCADE,
-  --PRIMARY KEY ("Vehicle_ID", "Service_ID")
---);
-
-
+-- Junction table to link Servive and Vehicle
+CREATE TABLE "Vehicle_Service" (
+  "Vehicle_ID" BIGINT REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
+  "Service_ID" INT REFERENCES "Service"("Service_ID") ON DELETE CASCADE,
+  PRIMARY KEY ("Vehicle_ID", "Service_ID")
+);
 
 -- Vehicle Table
 CREATE TABLE "Vehicle" (
@@ -88,175 +86,93 @@ CREATE TABLE "Airplane" (
   "First_Class_Capacity" SMALLINT NOT NULL CHECK ("First_Class_Capacity" >= 0),
   "Business_Class_Capacity" SMALLINT NOT NULL CHECK ("Business_Class_Capacity" >= 0),
   "Economy_Class_Capacity" SMALLINT NOT NULL CHECK ("Economy_Class_Capacity" >= 0),
-  "With_Bed" BOOLEAN NOT NULL,
-  "Internet" BOOLEAN NOT NULL,
-  "Entertainment_Screen" BOOLEAN NOT NULL,
-  -- so these 3 must be deleted
   CONSTRAINT check_positive_seats CHECK (("First_Class_Capacity" + "Business_Class_Capacity" + "Economy_Class_Capacity") > 0)
 ) INHERITS ("Vehicle");
 
 CREATE TABLE "Bus" (
   "Type" VARCHAR(10) NOT NULL CHECK("Type" IN ('VIP', 'Normal')),
   "Seats_Count" SMALLINT NOT NULL CHECK("Seats_Count" > 0),
-  "Seats_In_Row" VARCHAR(10) NOT NULL CHECK("Seats_In_Row" IN ('1+2', '2+2')),
-  --"Seats_In_Row" seats_layout NOT NULL,
-  "With_Bed" BOOLEAN NOT NULL,
-  "Internet" BOOLEAN NOT NULL,
-  "Entertainment_Screen" BOOLEAN NOT NULL,
-  "Air_Conditioning" BOOLEAN NOT NULL
-  -- so these 4 must be deleted
+  "Seats_In_Row" seats_layout NOT NULL,
 ) INHERITS ("Vehicle");
 
 CREATE TABLE "Train" (
-  "Type" VARCHAR(8) NOT NULL CHECK ("Type" IN ('Compartment', 'Coach')),
-  --"Type" train_type NOT NULL,
+  "Type" train_type NOT NULL,
   "Stars" SMALLINT NOT NULL CHECK ("Stars" BETWEEN 1 AND 5),
   "Seats_Count" SMALLINT NOT NULL CHECK("Seats_Count" > 0),
   "Seats_In_Cabin" SMALLINT CHECK("Seats_In_Cabin" > 0),
-  "With_Bed" BOOLEAN NOT NULL,
-  "Internet" BOOLEAN NOT NULL,
-  "Entertainment_Screen" BOOLEAN NOT NULL,
-  "Air_Conditioning" BOOLEAN NOT NULL,
-  "Freight_Wagons_Count" SMALLINT NOT NULL
-  --,
-  --CHECK (
-    --"Type" != 'Coach' OR "Seats_In_Cabin" = "Seats_Count"
-  --)
+  "Freight_Wagons_Count" SMALLINT NOT NULL,
+  CHECK (
+    "Type" != 'Coach' OR "Seats_In_Cabin" = "Seats_Count"
+  )
 ) INHERITS ("Vehicle");
 
-CREATE TABLE "Location" (
-    "Location_ID" SERIAL PRIMARY KEY,
-    "Country" VARCHAR(50) NOT NULL--CHECK ("Country" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-    ,
-    "City" VARCHAR(50) NOT NULL--CHECK ("City" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-    ,
-    UNIQUE("Country", "City")
-);
-
+-- Station Table
 CREATE TABLE "Station" (
     "Station_ID" SERIAL PRIMARY KEY,
-    "Name" VARCHAR(100) NOT NULL--CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-    ,
-    "Type" VARCHAR(20) CHECK ("Type" IN ('Train_Station', 'Bus_Station', 'Airport')),
-    --"Type" station_type NOT NULL,
+    "Name" VARCHAR(100) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$'),
+    "Type" station_type NOT NULL,
     "Location_ID" INT REFERENCES "Location"("Location_ID") ON DELETE CASCADE
 );
 
---CREATE TABLE "Route" (
-  --"Route_ID" SERIAL PRIMARY KEY,
-  --"Origin" INT NOT NULL REFERENCES "Location"("Location_ID"),
-  --"Destination" INT NOT NULL REFERENCES "Location"("Location_ID"),
-  --"Origin_Station" INT REFERENCES "Station"("Station_ID"),
-  --"Destination_Station" INT REFERENCES "Station"("Station_ID"),
-  --"Departure_Date" DATE NOT NULL,
-  --"Departure_Time" TIME NOT NULL,
-  --"Arrival_Date" DATE NOT NULL,
-  --"Arrival_Time" TIME NOT NULL,
-  --CONSTRAINT check_departure_before_arrival
-    --CHECK ("Departure_Date" < "Arrival_Date"
-        --OR ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time")),
-    --CONSTRAINT check_departure_is_before_arrival
-        --CHECK  ("Departure_Date" < "Arrival_Date" OR 
-          --("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time"))
---);
-
-
---CREATE TABLE "Ticket" (
-  --"Ticket_ID" BIGSERIAL PRIMARY KEY,
-  --"Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID"),
-  --"Route_ID" INT NOT NULL REFERENCES "Route"("Route_ID"),
-  --"Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
-  --"Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
-  --"Service" BOOLEAN NOT NULL
---);
-
---CREATE TABLE "Valid_Stop_Type" (
-  --"Valid_Stop_Type_ID" SERIAL PRIMARY KEY,
-  --"Transport_Mode" transport_type NOT NULL,
-  --"Stop_Type" stop_type NOT NULL,
-  --UNIQUE ("Transport_Mode", "Stop_Type")
---);
-
---CREATE TABLE "Ticket_Stop" (
-  --"Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
-  --"Station_ID" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
-  --"Stop_Order" SMALLINT NOT NULL CHECK ("Stop_Order" > 0),
-  --"Valid_Stop_Type_ID" INT NOT NULL REFERENCES "Valid_Stop_Type"("Valid_Stop_Type_ID"),
-  --PRIMARY KEY ("Ticket_ID", "Stop_Order")
---);
-
-
-
-
+-- Route Table
+CREATE TABLE "Route" (
+  "Route_ID" SERIAL PRIMARY KEY,
+  "Origin" INT NOT NULL REFERENCES "Location"("Location_ID"),
+  "Destination" INT NOT NULL REFERENCES "Location"("Location_ID"),
+  "Origin_Station" INT REFERENCES "Station"("Station_ID"),
+  "Destination_Station" INT REFERENCES "Station"("Station_ID"),
+  "Departure_Date" DATE NOT NULL,
+  "Departure_Time" TIME NOT NULL,
+  "Arrival_Date" DATE NOT NULL,
+  "Arrival_Time" TIME NOT NULL,
+  CONSTRAINT check_departure_before_arrival
+    CHECK ("Departure_Date" < "Arrival_Date"
+        OR ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time")),
+    CONSTRAINT check_departure_is_before_arrival
+        CHECK  ("Departure_Date" < "Arrival_Date" OR 
+          ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time"))
+);
 
 -- Ticket Table
 CREATE TABLE "Ticket" (
   "Ticket_ID" BIGSERIAL PRIMARY KEY,
-  "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
-  "Origin" INT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
-  "Destination" INT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
-  "Origin_Station" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
-  "Destination_Station" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
-  "Departure_Date" DATE NOT NULL,
-  "Arrival_Date" DATE NOT NULL,
-  "Departure_Time" TIME NOT NULL,
-  "Arrival_Time" TIME NOT NULL,
+  "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID"),
+  "Route_ID" INT NOT NULL REFERENCES "Route"("Route_ID"),
   "Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
   "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
-  CONSTRAINT check_departure_is_before_arrival
-    CHECK  ("Departure_Date" < "Arrival_Date" OR 
-      ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time")),
-  CONSTRAINT check_locations_are_different
-    CHECK ("Origin" <> "Destination"),
-  CONSTRAINT check_stations_are_different
-    CHECK ("Origin_Station" <> "Destination_Station")
+  "Service" BOOLEAN NOT NULL
+);
+
+-- Valid Stop Type Table
+CREATE TABLE "Valid_Stop_Type" (
+  "Valid_Stop_Type_ID" SERIAL PRIMARY KEY,
+  "Transport_Mode" transport_type NOT NULL,
+  "Stop_Type" stop_type NOT NULL,
+  UNIQUE ("Transport_Mode", "Stop_Type")
+);
+
+-- Junction Table to connect Ticket to its stops
+CREATE TABLE "Ticket_Stop" (
+  "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
+  "Station_ID" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
+  "Stop_Order" SMALLINT NOT NULL CHECK ("Stop_Order" > 0),
+  "Valid_Stop_Type_ID" INT NOT NULL REFERENCES "Valid_Stop_Type"("Valid_Stop_Type_ID"),
+  PRIMARY KEY("Ticket_ID", "Station_ID"),
+  UNIQUE("Ticket_ID", "Stop_Order")
 );
 
 -- Ticket Types (Flight, Train Ride, Bus Ride)
 CREATE TABLE "Flight" (
   "Vacation_Class_Code" VARCHAR(20) NOT NULL CHECK ("Vacation_Class_Code" IN ('First_Class', 'Business_Class', 'Economy_Class')),
-  "Service" BOOLEAN NOT NULL,
-  --this needs to be removed
-  "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
-  "Stops" TEXT,
-  --stops are getting handled by a junction table
-  "Type" VARCHAR(15) NOT NULL CHECK("Type" IN ('Domestic', 'International')),
-  --"Type" flight_type NOT NULL,
-  CONSTRAINT check_stops_validity CHECK 
-         (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
-       OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL))
-  --since stops are getting handled a different way this is not necessary
+  "Type" flight_type NOT NULL,
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Train_Ride" (
   "Has_Private_Compartment" BOOLEAN NOT NULL,
-  "Service" BOOLEAN NOT NULL,
-  --this needs to be removed
-  "Number_Of_Stops" SMALLINT NOT NULL CHECK ("Number_Of_Stops" >= 0),
-  "Stops" TEXT,
-  --stops are getting handled by a junction table
   "Freight_Wagons_Left" SMALLINT NOT NULL,
-  CONSTRAINT check_stops_validity CHECK 
-         (("Number_Of_Stops" = 0 AND "Stops" IS NULL) 
-       OR ("Number_Of_Stops" > 0 AND "Stops" IS NOT NULL))
-  --since stops are getting handled a different way this is not necessary
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Bus_Ride" (
-  "Service" BOOLEAN NOT NULL,
-  --this needs to be removed
-  "Number_of_Meal_Stops" SMALLINT NOT NULL CHECK ("Number_of_Meal_Stops" >= 0),
-  "Meal_Stops" TEXT,
-  "Number_of_Stops" SMALLINT NOT NULL CHECK ("Number_of_Stops" >= 0),
-  "Stops" TEXT,
-  --since stops are getting handled a different way this is not necessary
-  CONSTRAINT check_stops_validity CHECK 
-         (("Number_of_Stops" = 0 AND "Stops" IS NULL) 
-       OR ("Number_of_Stops" > 0 AND "Stops" IS NOT NULL)),
-  CONSTRAINT check_meal_stops_validity CHECK 
-         (("Number_of_Meal_Stops" = 0 AND "Meal_Stops" IS NULL) 
-       OR ("Number_of_Meal_Stops" > 0 AND "Meal_Stops" IS NOT NULL))
-  --since stops are getting handled a different way this is not necessary
 ) INHERITS ("Ticket");
 
 -- Reservation Table
@@ -265,7 +181,7 @@ CREATE TABLE "Reservation" (
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
   "Seat_Number" VARCHAR(10) NOT NULL,
-  "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Pending', 'Confirmed', 'Cancelled')),
+  "Status" reservation_status NOT NULL,
   "Reservation_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Reservation_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
   "Expiration" INTERVAL NOT NULL
@@ -277,10 +193,8 @@ CREATE TABLE "Payment" (
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
   "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
-  "Payment_Method" VARCHAR(20) NOT NULL CHECK ("Payment_Method" IN ('Credit Card', 'PayPal', 'Bank Transfer', 'Cash')),
-  --"Payment_Method" "Payment_Method" NOT NULL,
-  "Status" VARCHAR(20) NOT NULL CHECK ("Status" IN ('Pending', 'Completed', 'Failed', 'Refunded')),
-  --"Status" "Payment_Status" NOT NULL,
+  "Payment_Method" payment_status NOT NULL,
+  "Status" payment_status NOT NULL,
   "Payment_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
   "Payment_Date" DATE NOT NULL DEFAULT CURRENT_DATE
 );
@@ -298,8 +212,7 @@ CREATE TABLE "Wallet_Transactions" (
   "Wallet_ID" BIGINT NOT NULL REFERENCES "Wallet"("Wallet_ID") ON DELETE CASCADE,
   "Related_Payment_ID" BIGINT UNIQUE REFERENCES "Payment"("Payment_ID") ON DELETE SET NULL,
   "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
-  "Transaction_Type" VARCHAR(20) NOT NULL CHECK ("Transaction_Type" IN ('Charge', 'Payment', 'Refund')),
-  --"Type" transaction_type NOT NULL
+  "Type" transaction_type NOT NULL
   "Transaction_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Transaction_Time" TIME NOT NULL DEFAULT CURRENT_TIME
 );
@@ -317,10 +230,9 @@ CREATE TABLE "Cancelation" (
 CREATE TABLE "Report" (
   "Report_ID" BIGSERIAL PRIMARY KEY,
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
-  "Payment_ID" BIGINT UNIQUE REFERENCES "Payment"("Payment_ID"),
-  "Reservation_ID" BIGINT UNIQUE REFERENCES "Reservation"("Reservation_ID"),
-  "Ticket_ID" BIGINT UNIQUE REFERENCES "Ticket"("Ticket_ID"),
-  --not all four of these must be unique the combination of four of them is unique
+  "Payment_ID" BIGINT REFERENCES "Payment"("Payment_ID"),
+  "Reservation_ID" BIGINT REFERENCES "Reservation"("Reservation_ID"),
+  "Ticket_ID" BIGINT REFERENCES "Ticket"("Ticket_ID"),
   "Type" VARCHAR(10) NOT NULL CHECK("Type" IN ('Payment', 'Reservation', 'Ticket')),
   "Status" VARCHAR(10) NOT NULL CHECK ("Status" IN ('Pending', 'Checked')),
   "Text" TEXT NOT NULL,
@@ -328,16 +240,15 @@ CREATE TABLE "Report" (
   CONSTRAINT check_report_validity CHECK 
          (("Type" = 'Reservation' AND "Reservation_ID" IS NOT NULL) 
        OR ("Type" = 'Payment' AND "Payment_ID" IS NOT NULL)
-       OR ("Type" = 'Ticket' AND "Ticket_ID" IS NOT NULL))
-  --,
-  --CONSTRAINT unique_combination UNIQUE ("User_ID", "Payment_ID", "Reservation_ID", "Ticket_ID")
+       OR ("Type" = 'Ticket' AND "Ticket_ID" IS NOT NULL)),
+  CONSTRAINT unique_combination UNIQUE ("User_ID", "Payment_ID", "Reservation_ID", "Ticket_ID")
 );
 
 CREATE TABLE "Passenger" (
   "Passenger_ID" BIGSERIAL PRIMARY KEY,
-  "Name" VARCHAR(50) NOT NULL --CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
+  "Name" VARCHAR(50) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
   ,
-  "Lastname" VARCHAR(50) NOT NULL--CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
+  "Lastname" VARCHAR(50) NOT NULL CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
   ,
   "SSN" VARCHAR(10) UNIQUE CHECK (
       "SSN" ~ '^\d{10}$'
