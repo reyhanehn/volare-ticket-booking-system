@@ -36,7 +36,7 @@ CREATE TABLE "User" (
       "Email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' OR "Email" IS NULL
   ),
   "Role" user_role NOT NULL,
-  "Status" user_status NOT NULL,
+  "Status" user_status NOT NULL DEFAULT 'Active',
   "Password_Hash" TEXT NOT NULL,
   CONSTRAINT at_least_one_not_null CHECK (
       "Email" IS NOT NULL OR "Phone_Number" IS NOT NULL
@@ -115,7 +115,8 @@ CREATE TABLE "Station" (
     "Station_ID" SERIAL PRIMARY KEY,
     "Name" VARCHAR(100) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$'),
     "Type" station_type NOT NULL,
-    "Location_ID" INT REFERENCES "Location"("Location_ID") ON DELETE CASCADE
+    "Location_ID" INT REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
+    UNIQUE("Name", "Location_ID")
 );
 
 -- Route Table
@@ -130,8 +131,11 @@ CREATE TABLE "Route" (
   "Arrival_Date" DATE NOT NULL,
   "Arrival_Time" TIME NOT NULL,
   CONSTRAINT check_departure_before_arrival
-    CHECK ("Departure_Date" < "Arrival_Date"
-        OR ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time"))
+    CHECK (("Departure_Date" < "Arrival_Date")
+            OR 
+          ("Departure_Date" = "Arrival_Date" AND "Departure_Time" < "Arrival_Time")),
+  CONSTRAINT different_origin_and_station 
+    CHECK ("Origin" <> "Destination")
 );
 
 -- Ticket Table
@@ -141,7 +145,6 @@ CREATE TABLE "Ticket" (
   "Route_ID" INT NOT NULL REFERENCES "Route"("Route_ID"),
   "Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
   "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
-  "Service" BOOLEAN NOT NULL
 );
 
 -- Valid Stop Type Table
@@ -165,11 +168,12 @@ CREATE TABLE "Ticket_Stop" (
 -- Ticket Types (Flight, Train Ride, Bus Ride)
 CREATE TABLE "Flight" (
   "Class_Code" vacation_class_code NOT NULL,
-  "Type" flight_type NOT NULL
+  "Type" flight_type NOT NULL,
+  UNIQUE ("Ticket_ID", "Class_Code")
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Train_Ride" (
-  "Has_Private_Compartment" BOOLEAN NOT NULL,
+  "Has_Private_Compartment" BOOLEAN NOT NULL DEFAULT FALSE,
   "Freight_Wagons_Left" SMALLINT NOT NULL,
 ) INHERITS ("Ticket");
 
@@ -182,11 +186,12 @@ CREATE TABLE "Reservation" (
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE, --the user who reserved it
   "Passenger_ID" BIGINT NOT NULL REFERENCES "Passenger" ("Passenger_ID") ON DELETE CASCADE, -- the passenger whom the reservation is for 
   "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
-  "Seat_Number" VARCHAR(10) NOT NULL,
-  "Status" reservation_status NOT NULL,
+  "Seat_Number" VARCHAR(10) NOT NULL CHECK ("Seat_Number" ~ '^[0-9]{1,2}[A-Z]$'),
+  "Status" reservation_status NOT NULL DEFAULT 'Pending',
   "Reservation_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Reservation_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
-  "Expiration" INTERVAL NOT NULL
+  "Expiration" INTERVAL NOT NULL,
+  UNIQUE("Ticket_ID", "Seat_Number")
 );
 
 -- Payment Table
@@ -236,7 +241,7 @@ CREATE TABLE "Report" (
   "Reservation_ID" BIGINT REFERENCES "Reservation"("Reservation_ID"),
   "Ticket_ID" BIGINT REFERENCES "Ticket"("Ticket_ID"),
   "Type" report_type NOT NULL,
-  "Status" report_status NOT NULL,
+  "Status" report_status NOT NULL DEFAULT 'Pending',
   "Text" TEXT NOT NULL,
   "Answer" TEXT,
   CONSTRAINT check_report_validity CHECK 
@@ -255,5 +260,5 @@ CREATE TABLE "Passenger" (
   "SSN" VARCHAR(10) UNIQUE CHECK (
       "SSN" ~ '^\d{10}$'
   ),
-  "Birthdate" DATE NOT NULL
+  "Birthdate" DATE NOT NULL CHECK ("Birthdate" <= CURRENT_DATE)
 );
