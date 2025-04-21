@@ -144,7 +144,7 @@ CREATE TABLE "Ticket" (
   "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID"),
   "Route_ID" INT NOT NULL REFERENCES "Route"("Route_ID"),
   "Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
-  "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
+  "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0)
 );
 
 -- Valid Stop Type Table
@@ -174,11 +174,24 @@ CREATE TABLE "Flight" (
 
 CREATE TABLE "Train_Ride" (
   "Has_Private_Compartment" BOOLEAN NOT NULL DEFAULT FALSE,
-  "Freight_Wagons_Left" SMALLINT NOT NULL,
+  "Freight_Wagons_Left" SMALLINT NOT NULL
 ) INHERITS ("Ticket");
 
 CREATE TABLE "Bus_Ride" (
 ) INHERITS ("Ticket");
+
+-- Passenger Table
+CREATE TABLE "Passenger" (
+  "Passenger_ID" BIGSERIAL PRIMARY KEY,
+  "Name" VARCHAR(50) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
+  ,
+  "Lastname" VARCHAR(50) NOT NULL CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
+  ,
+  "SSN" VARCHAR(10) UNIQUE CHECK (
+      "SSN" ~ '^\d{10}$'
+  ),
+  "Birthdate" DATE NOT NULL CHECK ("Birthdate" <= CURRENT_DATE)
+);
 
 -- Reservation Table
 CREATE TABLE "Reservation" (
@@ -234,6 +247,7 @@ CREATE TABLE "Cancelation" (
   "Refund_Amount" DECIMAL(10,2) CHECK ("Refund_Amount" >= 0)
 );
 
+-- Report Table
 CREATE TABLE "Report" (
   "Report_ID" BIGSERIAL PRIMARY KEY,
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
@@ -249,16 +263,4 @@ CREATE TABLE "Report" (
        OR ("Type" = 'Payment' AND "Payment_ID" IS NOT NULL)
        OR ("Type" = 'Ticket' AND "Ticket_ID" IS NOT NULL)),
   CONSTRAINT unique_combination UNIQUE ("User_ID", "Payment_ID", "Reservation_ID", "Ticket_ID")
-);
-
-CREATE TABLE "Passenger" (
-  "Passenger_ID" BIGSERIAL PRIMARY KEY,
-  "Name" VARCHAR(50) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-  ,
-  "Lastname" VARCHAR(50) NOT NULL CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z])*$')
-  ,
-  "SSN" VARCHAR(10) UNIQUE CHECK (
-      "SSN" ~ '^\d{10}$'
-  ),
-  "Birthdate" DATE NOT NULL CHECK ("Birthdate" <= CURRENT_DATE)
 );
