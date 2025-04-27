@@ -37,3 +37,21 @@ SELECT P."User_ID", R."Reservation_Date", R."Reservation_Time"
     JOIN "Reservation" R ON P."User_ID" = R."User_ID"   
     ORDER BY R."Reservation_Date" DESC, R."Reservation_Time" DESC
     LIMIT 1;
+
+
+
+-- 6. Find users (phone number and email) whose total payment is above the average total payment
+WITH User_Total_Payment AS (
+    SELECT U."User_ID", SUM(P."Amount") AS Total_Payment
+    FROM "User" U
+    JOIN "Payment" P ON U."User_ID" = P."User_ID"
+    GROUP BY U."User_ID"
+)
+
+SELECT U."Phone_Number", U."Email"
+    FROM "User" U
+    JOIN User_Total_Payment UTP ON U."User_ID" = UTP."User_ID"
+    WHERE UTP.Total_Payment > (
+        SELECT AVG(Total_Payment)
+        FROM User_Total_Payment
+    );
