@@ -55,3 +55,42 @@ SELECT U."Phone_Number", U."Email"
         SELECT AVG(Total_Payment)
         FROM User_Total_Payment
     );
+
+
+-- 7. Show the number of tickets sold for each transport type
+SELECT 'Airplane' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
+    FROM "Reservation" R
+    JOIN "Flight" F ON R."Ticket_ID" = F."Ticket_ID"
+
+UNION ALL
+
+SELECT 'Train' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
+    FROM "Reservation" R
+    JOIN "Train_Ride" T ON R."Ticket_ID" = T."Ticket_ID"
+
+UNION ALL
+
+SELECT 'Bus' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
+    FROM "Reservation" R
+    JOIN "Bus_Ride" B ON R."Ticket_ID" = B."Ticket_ID";
+
+
+-- 8. List the top 3 users who bought the most tickets in the past week
+SELECT P."User_ID", COUNT(R."Reservation_ID") AS "Tickets_Bought"
+    FROM "User" P
+    JOIN "Reservation" R ON P."User_ID" = R."User_ID"
+    WHERE R."Reservation_Date" >= CURRENT_DATE - INTERVAL '7 days'
+    GROUP BY P."User_ID"
+    ORDER BY "Tickets_Bought" DESC
+    LIMIT 3;
+
+
+-- 9. List number of tickets sold in Iran, grouped by city
+SELECT L."City", COUNT(RE."Reservation_ID") AS "Tickets_Sold"
+    FROM "Reservation" RE
+    JOIN "Ticket" T ON T."Ticket_ID" = RE."Ticket_ID"
+    JOIN "Route" RO ON T."Route_ID" = RO."Route_ID"
+    JOIN "Location" L ON L."Location_ID" = RO."Origin"
+    WHERE L."Country" = 'Iran'
+    GROUP BY L."City"
+    ORDER BY "Tickets_Sold" DESC;
