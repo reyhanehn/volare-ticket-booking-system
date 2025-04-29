@@ -1,18 +1,19 @@
 -- Insert into location table
 INSERT INTO "Location" ("Country", "City") VALUES
-('Iran', 'Tehran'),
-('Iran', 'Mashhad'),
-('Iran', 'Shiraz'),
-('Turkey', 'Istanbul'),
-('France', 'Paris'),
-('Germany', 'Berlin'),
+('Iran', 'Tehran'), 
+('Iran', 'Mashhad'), 
+('Iran', 'Shiraz'), 
+('Turkey', 'Istanbul'), 
+('France', 'Paris'), 
+('Germany', 'Berlin'), 
 ('USA', 'New York'),
 ('UK', 'London'),
 ('Japan', 'Tokyo'),
 ('UAE', 'Dubai')
-('Iran', 'Mashhad'),
+('Iran', 'esfahan'),
+('Iran', 'Ilam'),
+('Iran', 'Bojnord'),
 ('Iran', 'Tabriz'),
-('Iran', 'Shiraz'),
 ('Iran', 'Ahvaz'),
 ('Iran', 'Qom'),
 ('Iran', 'Kerman'),
@@ -29,15 +30,21 @@ INSERT INTO "Location" ("Country", "City") VALUES
 ('Iran', 'Khorramabad'),
 ('Iran', 'Gorgan'),
 ('Iran', 'Karaj'),
-('Iran', 'Zanjan');
+('Iran', 'Zanjan'),
+('Egypt', 'Cairo'),
+('Iran', 'Anzali'),
+('Iran', 'Alborz'),
+('Russia', 'Moscow'),
+('South Korea', 'Seoul'),
+('Australia', 'Melbourne'),
 ('Turkey', 'Ankara'),
 ('Germany', 'Munich'),
 ('France', 'Lyon'),
-('United Kingdom', 'London'),
+('Brazil', 'Rio de Janeiro'),
 ('United Kingdom', 'Manchester'),
 ('Italy', 'Rome'),
 ('Italy', 'Milan'),
-('United States', 'New York'),
+('Spain', 'Barcelona'),
 ('United States', 'Los Angeles'),
 ('Canada', 'Toronto'),
 ('Canada', 'Vancouver'),
@@ -129,18 +136,18 @@ INSERT INTO "Profile" ("User_ID", "Name", "Lastname", "City_ID") VALUES
 (22, 'Yasin', 'Shahbazi', 31),
 (23, 'Dorsa', 'Nikzad', 38),
 (24, 'Omid', 'Behzadi', 39),
-(25, 'Maryam', 'Ebrahimi', 40),
-(26, 'Shahram', 'Mirzaei', 41),
-(27, 'Samira', 'Fattahi', 42),
-(28, 'Behzad', 'Ansari', 43),
-(29, 'Tina', 'Keshavarz', 44),
-(30, 'Navid', 'Shafiei', 45),
-(31, 'Elham', 'Noori', 46),
-(32, 'Alireza', 'Mohammadi', 47),
-(33, 'Sara', 'Karimi', 48),
-(34, 'Mohsen', 'Taheri', 49),
-(35, 'Fatemeh', 'Ahmadi', 50),
-(36, 'Hossein', 'Hosseini', 51),
+(25, 'Maryam', 'Ebrahimi', 34),
+(26, 'Shahram', 'Mirzaei', 30),
+(27, 'Samira', 'Fattahi', 10),
+(28, 'Behzad', 'Ansari', 20),
+(29, 'Tina', 'Keshavarz', 4),
+(30, 'Navid', 'Shafiei', 13),
+(31, 'Elham', 'Noori', 24),
+(32, 'Alireza', 'Mohammadi', 15),
+(33, 'Sara', 'Karimi', 1),
+(34, 'Mohsen', 'Taheri', 1),
+(35, 'Fatemeh', 'Ahmadi', 5),
+(36, 'Hossein', 'Hosseini', 2),
 (37, 'Maryam', 'Jafari', 1),
 (38, 'Amir', 'Rezai', 2),
 (39, 'Zahra', 'Sadeghi', 3),
@@ -266,3 +273,236 @@ WHEN "User_ID" = 43 THEN '$2b$12$9YokOyzoHsuDoTQpWqaqveHrx1zoQLNv979To88HCeEWwc0
 END;
 
 -- insert into station 
+INSERT INTO "Station" ("Name", "Type", "Location_ID") VALUES
+('Tehran Bus Station', 'Bus_Station', 1),
+('Tehran Train Station', 'Train_Station', 1),
+('Tehran Airport', 'Airport', 1),
+
+('Mashhad Bus Station', 'Bus_Station', 2),
+('Mashhad Train Station', 'Train_Station', 2),
+('Mashhad Airport', 'Airport', 2),
+
+('Shiraz Bus Station', 'Bus_Station', 3),
+('Shiraz Train Station', 'Train_Station', 3),
+('Shiraz Airport', 'Airport', 3),
+
+('Istanbul Bus Station', 'Bus_Station', 4),
+('Istanbul Train Station', 'Train_Station', 4),
+('Istanbul Airport', 'Airport', 4),
+
+('Paris Bus Station', 'Bus_Station', 5),
+('Paris Train Station', 'Train_Station', 5),
+('Paris Airport', 'Airport', 5),
+
+('Berlin Bus Station', 'Bus_Station', 6),
+('Berlin Train Station', 'Train_Station', 6),
+('Berlin Airport', 'Airport', 6),
+
+('New York Bus Station', 'Bus_Station', 7),
+('New York Train Station', 'Train_Station', 7),
+('New York Airport', 'Airport', 7),
+
+('London Bus Station', 'Bus_Station', 8),
+('London Train Station', 'Train_Station', 8),
+('London Airport', 'Airport', 8),
+
+('Tokyo Bus Station', 'Bus_Station', 9),
+('Tokyo Train Station', 'Train_Station', 9),
+('Tokyo Airport', 'Airport', 9),
+
+('Dubai Bus Station', 'Bus_Station', 10),
+('Dubai Train Station', 'Train_Station', 10),
+('Dubai Airport', 'Airport', 10),
+
+('Esfahan Bus Station', 'Bus_Station', 11),
+('Esfahan Train Station', 'Train_Station', 11),
+('Esfahan Airport', 'Airport', 11),
+
+('Ilam Bus Station', 'Bus_Station', 12),
+('Ilam Train Station', 'Train_Station', 12),
+('Ilam Airport', 'Airport', 12),
+
+('Bojnord Bus Station', 'Bus_Station', 13),
+('Bojnord Train Station', 'Train_Station', 13),
+('Bojnord Airport', 'Airport', 13),
+
+('Tabriz Bus Station', 'Bus_Station', 14),
+('Tabriz Train Station', 'Train_Station', 14),
+('Tabriz Airport', 'Airport', 14),
+
+('Ahvaz Bus Station', 'Bus_Station', 15),
+('Ahvaz Train Station', 'Train_Station', 15),
+('Ahvaz Airport', 'Airport', 15),
+
+('Qom Bus Station', 'Bus_Station', 16),
+('Qom Train Station', 'Train_Station', 16),
+('Qom Airport', 'Airport', 16),
+
+('Kerman Bus Station', 'Bus_Station', 17),
+('Kerman Train Station', 'Train_Station', 17),
+('Kerman Airport', 'Airport', 17),
+
+('Hamedan Bus Station', 'Bus_Station', 18),
+('Hamedan Train Station', 'Train_Station', 18),
+('Hamedan Airport', 'Airport', 18),
+
+('Rasht Bus Station', 'Bus_Station', 19),
+('Rasht Train Station', 'Train_Station', 19),
+('Rasht Airport', 'Airport', 19),
+
+('Kermanshah Bus Station', 'Bus_Station', 20),
+('Kermanshah Train Station', 'Train_Station', 20),
+('Kermanshah Airport', 'Airport', 20),
+
+('Urmia Bus Station', 'Bus_Station', 21),
+('Urmia Train Station', 'Train_Station', 21),
+('Urmia Airport', 'Airport', 21),
+
+('Yazd Bus Station', 'Bus_Station', 22),
+('Yazd Train Station', 'Train_Station', 22),
+('Yazd Airport', 'Airport', 22),
+
+('Arak Bus Station', 'Bus_Station', 23),
+('Arak Train Station', 'Train_Station', 23),
+('Arak Airport', 'Airport', 23),
+
+('Bandar Abbas Bus Station', 'Bus_Station', 24),
+('Bandar Abbas Train Station', 'Train_Station', 24),
+('Bandar Abbas Airport', 'Airport', 24),
+
+('Sari Bus Station', 'Bus_Station', 25),
+('Sari Train Station', 'Train_Station', 25),
+('Sari Airport', 'Airport', 25),
+
+('Sanandaj Bus Station', 'Bus_Station', 26),
+('Sanandaj Train Station', 'Train_Station', 26),
+('Sanandaj Airport', 'Airport', 26),
+
+('Zahedan Bus Station', 'Bus_Station', 27),
+('Zahedan Train Station', 'Train_Station', 27),
+('Zahedan Airport', 'Airport', 27),
+
+('Khorramabad Bus Station', 'Bus_Station', 28),
+('Khorramabad Train Station', 'Train_Station', 28),
+('Khorramabad Airport', 'Airport', 28),
+
+('Gorgan Bus Station', 'Bus_Station', 29),
+('Gorgan Train Station', 'Train_Station', 29),
+('Gorgan Airport', 'Airport', 29),
+
+('Karaj Bus Station', 'Bus_Station', 30),
+('Karaj Train Station', 'Train_Station', 30),
+('Karaj Airport', 'Airport', 30),
+
+('Zanjan Bus Station', 'Bus_Station', 31),
+('Zanjan Train Station', 'Train_Station', 31),
+('Zanjan Airport', 'Airport', 31),
+
+('Cairo Bus Station', 'Bus_Station', 32),
+('Cairo Train Station', 'Train_Station', 32),
+('Cairo Airport', 'Airport', 32),
+
+('Anzali Bus Station', 'Bus_Station', 33),
+('Anzali Train Station', 'Train_Station', 33),
+('Anzali Airport', 'Airport', 33),
+
+('Alborz Bus Station', 'Bus_Station', 34),
+('Alborz Train Station', 'Train_Station', 34),
+('Alborz Airport', 'Airport', 34),
+
+('Moscow Bus Station', 'Bus_Station', 35),
+('Moscow Train Station', 'Train_Station', 35),
+('Moscow Airport', 'Airport', 35),
+
+('Seoul Bus Station', 'Bus_Station', 36),
+('Seoul Train Station', 'Train_Station', 36),
+('Seoul Airport', 'Airport', 36),
+
+('Melbourne Bus Station', 'Bus_Station', 37),
+('Melbourne Train Station', 'Train_Station', 37),
+('Melbourne Airport', 'Airport', 37),
+
+
+('Ankara Bus Station', 'Bus_Station', 38),
+('Ankara Train Station', 'Train_Station', 38),
+('Ankara Airport', 'Airport', 38),
+
+('Munich Bus Station', 'Bus_Station', 39),
+('Munich Train Station', 'Train_Station', 39),
+('Munich Airport', 'Airport', 39),
+
+('Lyon Bus Station', 'Bus_Station', 40),
+('Lyon Train Station', 'Train_Station', 40),
+('Lyon Airport', 'Airport', 40),
+
+('Rio de Janeiro Bus Station', 'Bus_Station', 41),
+('Rio de Janeiro Train Station', 'Train_Station', 41),
+('Rio de Janeiro Airport', 'Airport', 41),
+
+('Manchester Bus Station', 'Bus_Station', 42),
+('Manchester Train Station', 'Train_Station', 42),
+('Manchester Airport', 'Airport', 42),
+
+('Rome Bus Station', 'Bus_Station', 43),
+('Rome Train Station', 'Train_Station', 43),
+('Rome Airport', 'Airport', 43),
+
+('Milan Bus Station', 'Bus_Station', 44),
+('Milan Train Station', 'Train_Station', 44),
+('Milan Airport', 'Airport', 44),
+
+('Barcelona Bus Station', 'Bus_Station', 45),
+('Barcelona Train Station', 'Train_Station', 45),
+('Barcelona Airport', 'Airport', 45),
+
+('Los Angeles Bus Station', 'Bus_Station', 46),
+('Los Angeles Train Station', 'Train_Station', 46),
+('Los Angeles Airport', 'Airport', 46),
+
+('Toronto Bus Station', 'Bus_Station', 47),
+('Toronto Train Station', 'Train_Station', 47),
+('Toronto Airport', 'Airport', 47),
+
+('Vancouver Bus Station', 'Bus_Station', 48),
+('Vancouver Train Station', 'Train_Station', 48),
+('Vancouver Airport', 'Airport', 48),
+
+('Dubai Bus Station', 'Bus_Station', 49),
+('Dubai Train Station', 'Train_Station', 49),
+('Dubai Airport', 'Airport', 49),
+
+('Abu Dhabi Bus Station', 'Bus_Station', 50),
+('Abu Dhabi Train Station', 'Train_Station', 50),
+('Abu Dhabi Airport', 'Airport', 50),
+
+('Beijing Bus Station', 'Bus_Station', 51),
+('Beijing Train Station', 'Train_Station', 51),
+('Beijing Airport', 'Airport', 51),
+
+('Shanghai Bus Station', 'Bus_Station', 52),
+('Shanghai Train Station', 'Train_Station', 52),
+('Shanghai Airport', 'Airport', 52),
+
+('Mumbai Bus Station', 'Bus_Station', 53),
+('Mumbai Train Station', 'Train_Station', 53),
+('Mumbai Airport', 'Airport', 53),
+
+('Delhi Bus Station', 'Bus_Station', 54),
+('Delhi Train Station', 'Train_Station', 54),
+('Delhi Airport', 'Airport', 54),
+
+('Buenos Aires Bus Station', 'Bus_Station', 55),
+('Buenos Aires Train Station', 'Train_Station', 55),
+('Buenos Aires Airport', 'Airport', 55),
+
+('Cape Town Bus Station', 'Bus_Station', 56),
+('Cape Town Train Station', 'Train_Station', 56),
+('Cape Town Airport', 'Airport', 56),
+
+('Mexico City Bus Station', 'Bus_Station', 57),
+('Mexico City Train Station', 'Train_Station', 57),
+('Mexico City Airport', 'Airport', 57),
+
+('Amsterdam Bus Station', 'Bus_Station', 58),
+('Amsterdam Train Station', 'Train_Station', 58),
+('Amsterdam Airport', 'Airport', 58);
