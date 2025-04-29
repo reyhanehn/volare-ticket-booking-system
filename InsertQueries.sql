@@ -52,6 +52,7 @@ INSERT INTO "Location" ("Country", "City") VALUES
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
 VALUES
 ('+989121000001', 'alireza.rahimi@mail.com', 'Customer', 'AlirezaR@92'),
+('+989121000051', 'samaneh.rahimi@mail.com', 'Customer', 'SamanehR@2025')
 ('+989121000002', 'sara.karimi@mail.com', 'Customer', 'SaraKarimi!89'),
 ('+989121000003', 'mohammad.ahmadi@mail.com', 'Customer', 'MohammadA88'),
 ('+989121000004', 'fatemeh.hosseini@mail.com', 'Customer', 'FatiHoss!77'),
@@ -164,3 +165,104 @@ INSERT INTO "Company" ("Name", "Headquarters", "Year_Of_Establishment", "Contact
 ('SunWings', 'Shiraz', 2002, '02145678901'),
 ('GreenRoutes', 'Tabriz', 2010, '02156789012'),
 ('GlobalExpress', 'Yazd', 1995, '02167890123');
+
+-- insert into airplane table
+INSERT INTO "Airplane" ("Company_ID", "Name", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
+(1, 'Boeing 747', 20, 50, 300),
+(1, 'Airbus A320', 10, 30, 150),
+(4, 'Embraer 190', 5, 20, 80),
+(1, 'Boeing 777', 30, 60, 250),
+(4, 'Airbus A330', 15, 40, 220),
+(6, 'Bombardier CRJ900', 4, 16, 70),
+(6, 'Airbus A350', 25, 45, 270),
+(1, 'Boeing 737', 8, 24, 130),
+(4, 'ATR 72', 2, 10, 60),
+(6, 'Gulfstream G650', 5, 5, 10);
+
+--insert into bus table
+INSERT INTO "Bus" ("Company_ID", "Name", "Type", "Seats_Count", "Seats_In_Row") VALUES
+(2, 'Volvo 9700', 'VIP', 30, '1+2'),
+(2, 'Scania Touring', 'Normal', 44, '2+2'),
+(5, 'Mercedes-Benz Travego', 'VIP', 32, '1+2'),
+(2, 'MAN Lion''s Coach', 'Normal', 46, '2+2'),
+(5, 'Setra S 431 DT', 'VIP', 28, '1+2'),
+(2, 'Irizar i6', 'Normal', 48, '2+2'),
+(5, 'Neoplan Cityliner', 'VIP', 30, '1+2'),
+(2, 'King Long XMQ', 'Normal', 50, '2+2'),
+(5, 'Yutong ZK6122', 'VIP', 32, '1+2'),
+(5, 'Volvo B9R', 'Normal', 42, '2+2');
+
+--inser into train table
+INSERT INTO "Train" ("Company_ID", "Name", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
+(3, 'Raja Compartment', 'Compartment', 4, 200, 40, 8),
+(3, 'Raja Coach 1', 'Coach', 3, 250, 250, 10),
+(4, 'Shiraz Express', 'Compartment', 5, 180, 30, 7),
+(2, 'Mashhad Liner', 'Compartment', 4, 160, 40, 6),
+(6, 'Desert Express', 'Compartment', 5, 140, 28, 5),
+(5, 'Green Valley Rail', 'Compartment', 3, 180, 36, 8),
+(1, 'Capital Coach', 'Coach', 4, 260, 260, 11), 
+(6, 'Sunset Rail', 'Compartment', 4, 200, 40, 7),
+(5, 'Royal Compartment', 'Compartment', 5, 150, 30, 6),
+(1, 'Golden Line', 'Coach', 3, 220, 220, 9);  
+
+-- update the passwords in user table
+
+UPDATE "User"
+SET "Password_Hash" = CASE
+        WHEN "User_ID" = 1 THEN '$2b$12$RwhdqNNACUqIfOgbgNApf.FNLo1z1Gtq1yInaq1cGQq9o6CMTpY3i'
+        WHEN "User_ID" = 2 THEN '$2b$12$EiwdzGalRndcshwwbqek7.r0M8f0.vOh40VSfmiYCoSPZZCqPg1aq'
+        WHEN "User_ID" = 3 THEN '$2b$12$QAoO7Epw4VajVg2ADdK7wOOmxGhsu4ILWTouikSttetzUlg6qwWOq'
+        WHEN "User_ID" = 4 THEN '$2b$12$dP.T06kmj6.FeKGEVKxnoOzuUHmxhq05jpDI4Gv0LhAoW2JPWjiou'
+        WHEN "User_ID" = 5 THEN '$2b$12$R3JnGUdqXgudDQ2twPMEmOfJg2qF0kyCiOrIyPZBoxeHuAUv6Gdsq'
+        WHEN "User_ID" = 6 THEN '$2b$12$sgK1b8prvBsfwM6729V3puvvXlMG8Q7Wv09mhzbDS07YHjGRbkcSe'
+        WHEN "User_ID" = 7 THEN '$2b$12$A2Zpjs/ZOiDEWWYWMovS.OYkZ8Pku5lh54ZJXZHWpRNRqgBdeiZCm'
+        WHEN "User_ID" = 8 THEN '$2b$12$m.PpXc4hD3xF37Pbd8Yp9.katKH9P1CacNT8Y38PYuy1tVrKepFsm'
+        WHEN "User_ID" = 9 THEN '$2b$12$L7ewSLTjo4DdF9z0HKnT4ebUvyDvXIBUhUOS5RGQ1lf7p9j3fz..q'
+        WHEN "User_ID" = 10 THEN '$2b$12$1BBTL/OocombGhRbsjCJUu5N4ebkPK6txjhzrD9lUu1sdZ3yS3eXe'
+        WHEN "User_ID" = 11 THEN '$2b$12$yH04xV4nW70AGmPEp2L.M.w8u29aicB3QlCp4chEmByrH2fuvbAva'
+        WHEN "User_ID" = 12 THEN '$2b$12$UbjhPi.II2Ea2Bbb4eQ/..KvfiKBzGlJdAs09SxDcRiJnVPgRHuTW'
+        WHEN "User_ID" = 13 THEN '$2b$12$ZGj1x1nnwlHTPTo5mQ9g0OsSIB8dqf/.uYbLEdGInKII2yc.zFobi'
+        WHEN "User_ID" = 14 THEN '$2b$12$r9IwTRHLtALUtL0ddwlPHO3ypGHuw//1q3GaM4RppBDPa2Htmnsue'
+        WHEN "User_ID" = 15 THEN '$2b$12$RkAga0XOHVS.CjN0UV9Yk.l.u9tbS5.HDHzd4qyZ/sBJX1D22wGxO'
+        WHEN "User_ID" = 16 THEN '$2b$12$Jn2gSTuhXYaWdTTp25YglufMfLuYvByC0yUNbPeXHGDB2h39TDY/G'
+        WHEN "User_ID" = 17 THEN '$2b$12$5.0Oil90tEN9zK8G6ZZzGuB19FpWYgYDoHGGqRtf6vgUu07hcsrp6'
+        WHEN "User_ID" = 18 THEN '$2b$12$meOMTWRMBS9ZFZUIeuoFxuGpsRDpNYSAQ0AhToWGJT3Fsh5geLAbK'
+        WHEN "User_ID" = 19 THEN '$2b$12$3RxuT.43KHGwRYco3FRxPei/rHexibqd5ygUq8r4mzfik9DIzxMaG'
+        WHEN "User_ID" = 20 THEN '$2b$12$q03ywkxk25uWll1k.EUdY.sB5lzDib0r3UoT1MT7sZRYa2ZGqyIXG'
+        WHEN "User_ID" = 21 THEN '$2b$12$p44DdVV7Ly4XU7ZZo1h.nO2hQo.vmSI9YRY3YWboEERNR28rGAlye'
+        WHEN "User_ID" = 22 THEN '$2b$12$ILL0Dn0gk4S6JGbEwDkwSOsAmFkjc5U92z16qFinMyquK94j0ukvi'
+        WHEN "User_ID" = 23 THEN '$2b$12$.fuK8aa9jHLKH6beuKJB9OCE0rULPF9q1pgJHhW6R0W1f1Pxm5uHG'
+        WHEN "User_ID" = 24 THEN '$2b$12$cCt49M5BNawklorye0i2b.n8tPivvhDcezwtfvcg15ztPY6A0t9zK'
+        WHEN "User_ID" = 25 THEN '$2b$12$X5QxJXU0FSIq2DPHCNZLw.O/GVBvNr/yQF.RVbLC3PBdErGfmYMKa'
+        WHEN "User_ID" = 26 THEN '$2b$12$CG4jkb9l8QN6i8LqdZcTgOZc8NtWdusA5MN3Qof/QSS18FZ9KDKUC'
+        WHEN "User_ID" = 27 THEN '$2b$12$uC6NWMpyIg0QqxwDhAF0s.Ul99aswgF1Nt3NZP6xxFUOVpunY.OEK'
+        WHEN "User_ID" = 28 THEN '$2b$12$S5fJZmZPmuWPEzDfyMMpmOkgbGreei6nFBddpkV26uXUonwuh8KyS'
+        WHEN "User_ID" = 29 THEN '$2b$12$g1Hy13ZQIENGapMM9Fj0Z.Yuvurk.fWPy0Wm4cOpOkj1WXGN.YtKW'
+        WHEN "User_ID" = 30 THEN '$2b$12$vmtDJHgSY7CQjq.r17zQPe8ORlMiKFC/Azi3d1u90mBaDWnkG7HZq'
+        WHEN "User_ID" = 31 THEN '$2b$12$ba3gT45lFQmTdEmNcsXM2.n6hBbB/Hpa9YCHFX0Dl0ZlfCF36CuPi'
+        WHEN "User_ID" = 32 THEN '$2b$12$.zgVhzY9Tsh69J1SIEzCKuhqzqdWTCVdgbJvtQxs44z89R72VUvH6'
+        WHEN "User_ID" = 33 THEN '$2b$12$PTbALMV2x51Ix/EI2D6yxetE9obEjQnOn1nDNqRZoiKmdhMNhXl42'
+        WHEN "User_ID" = 34 THEN '$2b$12$haVcUe1k.MYdIKxSd8Is3eybr/HpT3pANY9quiRskCXxrDtY.VE4u'
+        WHEN "User_ID" = 35 THEN '$2b$12$eqBB2EZReQwEtZ/cJbEgKuLbjBJ3sjdSunvVvl0Zl4MPqumKzYs2u'
+        WHEN "User_ID" = 36 THEN '$2b$12$2OzDWEn0xiNUzQAhmMNEeOGisMYB5lWTyUQAfRX92usT1Fbnf40Jy'
+        WHEN "User_ID" = 37 THEN '$2b$12$z/1xwzW9lxGE9tR4mv0dMOxJMRxIURaiVI/A7z7xRY0F2RylrK0bq'
+        WHEN "User_ID" = 38 THEN '$2b$12$t0FxcwD5V5E56e7t/4S9u.4b3/D95yBbULUs8rMpEWsn80TIYD9RC'
+        WHEN "User_ID" = 39 THEN '$2b$12$/1yJQqDY1C1MXQQskOYI1uWP9CzG7De35ozWazyrrxAznu4zCEURG'
+        WHEN "User_ID" = 40 THEN '$2b$12$rsUpPPEWQWGGyNuNogPHkOOPza4KVt/Ui3w/iExePw7DB9tWQsuw.'
+        WHEN "User_ID" = 41 THEN '$2b$12$D83I9hcfZf.S5hGs/zAEL.o.v3XoGMKYOIQ/Br40dMLRiYBi//HmW'
+        WHEN "User_ID" = 42 THEN '$2b$12$jIDO4ZZJbR5CmbcMVKRSKuPB7oUSsVUILVknxb4p6H9U6Hlxcsdb.'
+
+
+WHEN "User_ID" = 43 THEN '$2b$12$9YokOyzoHsuDoTQpWqaqveHrx1zoQLNv979To88HCeEWwc0E.Mqxi'
+        WHEN "User_ID" = 44 THEN '$2b$12$54dGyThAY5rQulLz8IWhWuRK918LDDmgLGqLkNmE/nTnfIRqqFDZ.'
+        WHEN "User_ID" = 45 THEN '$2b$12$Q.SqPLdQ1tt2kYfqjLch7.JUeo3LepwqGM2yqVcwNMbh1PdGhO.0m'
+        WHEN "User_ID" = 46 THEN '$2b$12$acxCjlG1mB1mlwIgihqbM.D0VpLjewjhfGwY6FoLIqkvlHw8h2OIG'
+        WHEN "User_ID" = 47 THEN '$2b$12$gjwUPmPisX/ik4oEfi8Oiuei.l0i0mGgrwlJG2/PQ/4XIFM9PWg/y'
+        WHEN "User_ID" = 48 THEN '$2b$12$898iMIz6FNyJUkJUCo6U/.QucgXAM/e5k45syHWB7xYnQC8hWoO5O'
+        WHEN "User_ID" = 49 THEN '$2b$12$vKOKzTidk54xw.B2g2/Q6esZjomoy9OQu/CNeAmudZ9E/NWueC58m'
+        WHEN "User_ID" = 50 THEN '$2b$12$GNC36npqVTavGmoZLZ1Bze3QU7fLemQ1Uk.FNUT.Z34xhdFNg8VTG'
+        WHEN "User_ID" = 51 THEN '$2b$12$wxOgvuphOJAQsuRC6a5lz.9GFc2CtjVAElxw736lymIasFdnIVulC'
+        ELSE "Password_Hash"
+END;
+
+-- insert into station 

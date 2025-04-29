@@ -113,7 +113,7 @@ CREATE TABLE "Train" (
 -- Station Table
 CREATE TABLE "Station" (
     "Station_ID" SERIAL PRIMARY KEY,
-    "Name" VARCHAR(100) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z])*$'),
+    "Name" VARCHAR(100) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
     "Type" station_type NOT NULL,
     "Location_ID" INT REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
     UNIQUE("Name", "Location_ID")
