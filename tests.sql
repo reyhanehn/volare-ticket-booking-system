@@ -38,3 +38,66 @@ VALUES (1, 1, 500.00, 'Credit Card', 'Completed');
 
 SELECT * FROM "Ticket" WHERE "Price" <= 500 AND "Remaining_Capacity" > 0;
 
+
+
+-- For the new DATA
+INSERT INTO "Location" ("Country", "City") VALUES
+('Iran', 'Tehran'),
+('Iran', 'Mashhad');
+
+SELECT * FROM "Location"
+
+INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
+VALUES
+('+989121000001', 'alireza.rahimi@mail.com', 'Customer', 'AlirezaR@92');
+
+SELECT * FROM "User"
+
+INSERT INTO "Profile" ("User_ID", "Name", "Lastname", "City_ID") VALUES
+(2, 'Alireza', 'Rahimi', 3);
+
+INSERT INTO "Company" ("Name", "Headquarters", "Year_Of_Establishment", "Contact_Number") VALUES
+('SkyTravel', 'Tehran', 1998, '02112345678');
+
+SELECT * FROM "Company"
+
+INSERT INTO "Vehicle" ("Company_ID", "Name", "Type") VALUES
+(1, 'hahah', 'Airplane');
+
+SELECT * FROM "Vehicle"
+
+INSERT INTO "Airplane" ("Vehicle_ID", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
+(1, 20, 50, 300);
+
+SELECT * FROM "Airplane"
+
+INSERT INTO "Station" ("Name", "Type", "Location_ID") VALUES
+('TehranAirport', 'Airport', 3),
+('MashhadAirport', 'Airport', 4);
+
+SELECT * FROM "Station"
+
+INSERT INTO "Route" ("Origin", "Destination", "Origin_Station", "Destination_Station", "Departure_Date", "Departure_Time", "Arrival_Date", "Arrival_Time") VALUES
+(3, 4, 1, 2, DATE '2025-05-10', TIME '15:30:00', DATE '2025-05-10', TIME '17:30:00');
+
+SELECT * FROM "Route"
+
+INSERT INTO "Ticket" ("Vehicle_ID", "Route_ID", "Price","Remaining_Capacity", "Type") VALUES
+(1, 2, 10, 5, 'Flight');
+
+SELECT * FROM "Ticket"
+
+INSERT INTO "Flight" ("Ticket_ID", "Class_Code", "Type") VALUES
+(1,'First_Class', 'Domestic');
+
+SELECT * FROM "Flight"
+
+INSERT INTO "Reservation" ("User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number", "Status", "Expiration")
+VALUES (2, 1, 1, '12A', 'Confirmed', INTERVAL '1 day');
+
+SELECT * FROM "Reservation"
+
+INSERT INTO "Passenger" ("Name", "Lastname", "SSN", "Birthdate") VALUES
+('HEDI', 'tahmouresi', '0123456789', DATE '1989-05-10');
+
+SELECT * FROM "Passenger"
