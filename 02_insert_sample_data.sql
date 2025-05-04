@@ -9,7 +9,7 @@ INSERT INTO "Location" ("Country", "City") VALUES
 ('USA', 'New York'),
 ('UK', 'London'),
 ('Japan', 'Tokyo'),
-('UAE', 'Dubai')
+('UAE', 'Dubai'),
 ('Iran', 'esfahan'),
 ('Iran', 'Ilam'),
 ('Iran', 'Bojnord'),
@@ -59,7 +59,7 @@ INSERT INTO "Location" ("Country", "City") VALUES
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
 VALUES
 ('+989121000001', 'alireza.rahimi@mail.com', 'Customer', 'AlirezaR@92'),
-('+989121000051', 'samaneh.rahimi@mail.com', 'Customer', 'SamanehR@2025')
+('+989121000051', 'samaneh.rahimi@mail.com', 'Customer', 'SamanehR@2025'),
 ('+989121000002', 'sara.karimi@mail.com', 'Customer', 'SaraKarimi!89'),
 ('+989121000003', 'mohammad.ahmadi@mail.com', 'Customer', 'MohammadA88'),
 ('+989121000004', 'fatemeh.hosseini@mail.com', 'Customer', 'FatiHoss!77'),
@@ -213,7 +213,6 @@ INSERT INTO "Train" ("Company_ID", "Name", "Type", "Stars", "Seats_Count", "Seat
 (1, 'Golden Line', 'Coach', 3, 220, 220, 9);  
 
 -- update the passwords in user table
-
 UPDATE "User"
 SET "Password_Hash" = CASE
         WHEN "User_ID" = 1 THEN '$2b$12$RwhdqNNACUqIfOgbgNApf.FNLo1z1Gtq1yInaq1cGQq9o6CMTpY3i'
@@ -258,9 +257,7 @@ SET "Password_Hash" = CASE
         WHEN "User_ID" = 40 THEN '$2b$12$rsUpPPEWQWGGyNuNogPHkOOPza4KVt/Ui3w/iExePw7DB9tWQsuw.'
         WHEN "User_ID" = 41 THEN '$2b$12$D83I9hcfZf.S5hGs/zAEL.o.v3XoGMKYOIQ/Br40dMLRiYBi//HmW'
         WHEN "User_ID" = 42 THEN '$2b$12$jIDO4ZZJbR5CmbcMVKRSKuPB7oUSsVUILVknxb4p6H9U6Hlxcsdb.'
-
-
-WHEN "User_ID" = 43 THEN '$2b$12$9YokOyzoHsuDoTQpWqaqveHrx1zoQLNv979To88HCeEWwc0E.Mqxi'
+        WHEN "User_ID" = 43 THEN '$2b$12$9YokOyzoHsuDoTQpWqaqveHrx1zoQLNv979To88HCeEWwc0E.Mqxi'
         WHEN "User_ID" = 44 THEN '$2b$12$54dGyThAY5rQulLz8IWhWuRK918LDDmgLGqLkNmE/nTnfIRqqFDZ.'
         WHEN "User_ID" = 45 THEN '$2b$12$Q.SqPLdQ1tt2kYfqjLch7.JUeo3LepwqGM2yqVcwNMbh1PdGhO.0m'
         WHEN "User_ID" = 46 THEN '$2b$12$acxCjlG1mB1mlwIgihqbM.D0VpLjewjhfGwY6FoLIqkvlHw8h2OIG'
@@ -489,20 +486,147 @@ INSERT INTO "Station" ("Name", "Type", "Location_ID") VALUES
 
 ('Delhi Bus Station', 'Bus_Station', 54),
 ('Delhi Train Station', 'Train_Station', 54),
-('Delhi Airport', 'Airport', 54),
+('Delhi Airport', 'Airport', 54);
 
-('Buenos Aires Bus Station', 'Bus_Station', 55),
-('Buenos Aires Train Station', 'Train_Station', 55),
-('Buenos Aires Airport', 'Airport', 55),
+--  insert into passenger 
+INSERT INTO "Passenger" ("Name", "Lastname", "SSN", "Birthdate")
+SELECT
+  p."Name",
+  p."Lastname",
+  LPAD((ROW_NUMBER() OVER () + 1000000000)::TEXT, 10, '0') AS "SSN",
+  DATE '1960-01-01' + (random() * 20000)::INT  -- birthdates between ~1960–2015
+FROM "Profile" p;
 
-('Cape Town Bus Station', 'Bus_Station', 56),
-('Cape Town Train Station', 'Train_Station', 56),
-('Cape Town Airport', 'Airport', 56),
+INSERT INTO "Passenger" ("Name", "Lastname", "SSN", "Birthdate") VALUES
+('Ali',        'Karimi',       '3000000001', DATE '1985-03-12'),
+('Sara',       'Ahmadi',       '3000000002', DATE '1992-07-25'),
+('Reza',       'Mohammadi',    '3000000003', DATE '1978-11-09'),
+('Fatemeh',    'Hashemi',      '3000000004', DATE '1989-01-14'),
+('Hossein',    'Ghorbani',     '3000000005', DATE '1995-04-02'),
+('Narges',     'Alizadeh',     '3000000006', DATE '1970-10-20'),
+('Mehdi',      'Rahimi',       '3000000007', DATE '1982-06-06'),
+('Zahra',      'Kazemi',       '3000000008', DATE '1997-12-19'),
+('Milad',      'Ebrahimi',     '3000000009', DATE '2000-08-08'),
+('Leila',      'Najafi',       '3000000010', DATE '1986-05-27'),
+('Amir',       'Rostami',      '3000000011', DATE '1993-09-15'),
+('Maryam',     'Shahidi',      '3000000012', DATE '1975-04-30'),
+('Pouya',      'Jafari',       '3000000013', DATE '1988-02-11'),
+('Hanieh',     'Moradi',       '3000000014', DATE '1999-06-13'),
+('Saeed',      'Farhadi',      '3000000015', DATE '1969-07-04'),
+('Yasaman',    'Nouri',        '3000000016', DATE '1990-10-29'),
+('Alireza',    'Kaviani',      '3000000017', DATE '1973-01-19'),
+('Elham',      'Shahrami',     '3000000018', DATE '1983-03-03'),
+('Sina',       'Tavakoli',     '3000000019', DATE '1996-08-23'),
+('Arezoo',     'Taheri',       '3000000020', DATE '1977-12-01');
 
-('Mexico City Bus Station', 'Bus_Station', 57),
-('Mexico City Train Station', 'Train_Station', 57),
-('Mexico City Airport', 'Airport', 57),
+-- insert into route
+WITH RandomStations AS (
+    SELECT
+        s1."Station_ID" AS origin_station,
+        s2."Station_ID" AS destination_station,
+        s1."Type", 
+        l1."Location_ID" AS origin_location,  
+        l2."Location_ID" AS destination_location  
+    FROM
+        "Station" s1  
+    JOIN
+        "Station" s2 ON s1."Type" = s2."Type"  
+    JOIN
+        "Location" l1 ON l1."Location_ID" = s1."Location_ID"  
+    JOIN
+        "Location" l2 ON l2."Location_ID" = s2."Location_ID"  
+    WHERE
+        s1."Station_ID" != s2."Station_ID"  
+    ORDER BY
+        RANDOM()
+    LIMIT 40  
+),
+RandomDates AS (
+   
+    SELECT
+        TO_DATE('2025-06-01', 'YYYY-MM-DD') + (RANDOM() * 90) * INTERVAL '1 day' AS random_date,
+        TO_TIMESTAMP('2025-06-01 06:00:00', 'YYYY-MM-DD HH24:MI:SS') + (RANDOM() * (INTERVAL '12 hour')) AS departure_time,
+        TO_TIMESTAMP('2025-06-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS') + (RANDOM() * (INTERVAL '12 hour')) AS arrival_time
+    FROM
+        generate_series(1, 40)  
+)
 
-('Amsterdam Bus Station', 'Bus_Station', 58),
-('Amsterdam Train Station', 'Train_Station', 58),
-('Amsterdam Airport', 'Airport', 58);
+INSERT INTO "Route" ("Origin", "Destination", "Origin_Station", "Destination_Station", "Departure_Date", "Departure_Time", "Arrival_Date", "Arrival_Time")
+SELECT
+    rs.origin_location, rs.destination_location, rs.origin_station, rs.destination_station, rd.random_date, rd.departure_time, rd.random_date, rd.arrival_time
+FROM
+    RandomStations rs
+JOIN
+    RandomDates rd ON TRUE  
+WHERE
+    rd.departure_time < rd.arrival_time;  
+
+
+
+--insert into tickets
+WITH TicketData AS (
+    INSERT INTO "Flight" ("Class_Code", "Type", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
+    SELECT 
+        CASE
+            WHEN RANDOM() < 0.33 THEN 'Economy_Class'::vacation_class_code
+            WHEN RANDOM() < 0.66 THEN 'Business_Class'::vacation_class_code
+            ELSE 'First_Class'::vacation_class_code
+        END AS "Class_Code",
+        CASE
+            WHEN l1."Country" = 'Iran' AND l2."Country" = 'Iran' THEN 'Domestic'::flight_type
+            ELSE 'International'::flight_type
+        END AS "Type",  
+        FLOOR(RANDOM() * 10) + 1 AS "Vehicle_ID",  
+        r."Route_ID",
+        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",  
+        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"
+    FROM 
+        "Route" r
+    JOIN 
+        "Station" s1 ON r."Origin_Station" = s1."Station_ID"
+    JOIN 
+        "Station" s2 ON r."Destination_Station" = s2."Station_ID"
+    LEFT JOIN 
+        "Location" l1 ON l1."Location_ID" = s1."Location_ID"
+    LEFT JOIN 
+        "Location" l2 ON l2."Location_ID" = s2."Location_ID"
+    WHERE 
+        s1."Type" = 'Airport' OR s2."Type" = 'Airport'  
+    RETURNING "Ticket_ID"
+),
+TrainRideTickets AS (
+    INSERT INTO "Train_Ride" ("Has_Private_Compartment", "Freight_Wagons_Left", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
+    SELECT 
+        RANDOM() > 0.5 AS "Has_Private_Compartment",  
+        FLOOR(RANDOM() * 10) + 1 AS "Freight_Wagons_Left",  
+        FLOOR(RANDOM() * 10) + 25 AS "Vehicle_ID",  
+        r."Route_ID",
+        ROUND((RANDOM() * (200 - 30) + 30)::numeric, 2) AS "Price",
+        FLOOR(RANDOM() * (200 - 20) + 20) AS "Remaining_Capacity"
+    FROM 
+        "Route" r
+    JOIN 
+        "Station" s1 ON r."Origin_Station" = s1."Station_ID"
+    JOIN 
+        "Station" s2 ON r."Destination_Station" = s2."Station_ID"
+    WHERE 
+        s1."Type" = 'Train_Station' OR s2."Type" = 'Train_Station'  
+    RETURNING "Ticket_ID"
+)
+INSERT INTO "Bus_Ride" ("Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
+SELECT 
+    FLOOR(RANDOM() * 10) + 11 AS "Vehicle_ID",  
+    r."Route_ID",
+    ROUND((RANDOM() * (100 - 10) + 10)::numeric, 2) AS "Price",
+    FLOOR(RANDOM() * (50 - 10) + 10) AS "Remaining_Capacity"
+FROM 
+    "Route" r
+JOIN 
+    "Station" s1 ON r."Origin_Station" = s1."Station_ID"
+JOIN 
+    "Station" s2 ON r."Destination_Station" = s2."Station_ID"
+WHERE 
+    s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station';  
+
+
+-- insert into 
