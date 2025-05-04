@@ -252,6 +252,7 @@ CREATE TABLE "Wallet_Transactions" (
 CREATE TABLE "Cancellation" (
   "Cancellation_ID" BIGSERIAL PRIMARY KEY,
   "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
+  "Admin_ID" BIGINT NOT NULL UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Transaction_ID" BIGINT NOT NULL UNIQUE REFERENCES "Wallet_Transactions"("Transaction_ID") ON DELETE SET NULL,
   "Cancel_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Cancel_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
@@ -262,10 +263,17 @@ CREATE TABLE "Cancellation" (
 CREATE TABLE "Report" (
   "Report_ID" BIGSERIAL PRIMARY KEY,
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
+  "Admin_ID" BIGINT NOT NULL UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Type" report_type NOT NULL,
   "Status" report_status NOT NULL DEFAULT 'Pending',
   "Text" TEXT NOT NULL,
-  "Answer" TEXT
+  "Answer" TEXT,
+  CONSTRAINT chk_different_user_admin
+    CHECK ("User_ID" <> "Admin_ID"),
+  CONSTRAINT chk_admin_required_if_checked
+    CHECK (
+            NOT ("Status" = 'Checked' AND "Admin_ID" IS NULL)
+          )
 );
 
 -- Association Tables for Report
