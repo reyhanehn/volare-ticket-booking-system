@@ -629,4 +629,19 @@ WHERE
     s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station';  
 
 
--- insert into 
+-- insert into Service
+INSERT INTO "Service" ("Name") VALUES
+('Internet'),
+('With Bed'),
+('Air Conditioner'),
+('Service'),
+('Entertainment Screen');
+
+--insert into wallet
+INSERT INTO "Wallet" ("User_ID", "Balance")
+SELECT 
+  "User_ID",
+  ROUND((10 + RANDOM() * 90)::numeric, 2) AS "Balance"
+FROM "User"
+WHERE "User_ID" NOT IN (SELECT "User_ID" FROM "Wallet");
+
