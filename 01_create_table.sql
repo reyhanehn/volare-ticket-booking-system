@@ -188,7 +188,7 @@ CREATE TABLE "Train_Ride" (
 );
 
 CREATE TABLE "Bus_Ride" (
-  "Ticket_ID" BIGINT PRIMARY KEY REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
+  "Ticket_ID" BIGINT PRIMARY KEY REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE
 );
 
 -- Passenger Table
@@ -201,7 +201,8 @@ CREATE TABLE "Passenger" (
   "SSN" VARCHAR(10) UNIQUE CHECK (
       "SSN" ~ '^\d{10}$'
   ),
-  "Birthdate" DATE NOT NULL CHECK ("Birthdate" <= CURRENT_DATE)
+  "Birthdate" DATE NOT NULL CHECK ("Birthdate" <= CURRENT_DATE),
+  "Picture_URL" TEXT CHECK ("Picture_URL" ~* '^https?://.+\.(jpg|jpeg|png|gif)$')
 );
 
 -- Reservation Table
