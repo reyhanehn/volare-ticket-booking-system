@@ -96,3 +96,17 @@ SELECT L."City", COUNT(RE."Reservation_ID") AS "Tickets_Sold"
     WHERE L."Country" = 'Iran' AND RE."Status" = 'confirmed'
     GROUP BY L."City"
     ORDER BY "Tickets_Sold" DESC;
+
+
+-- 10. List cities where the oldest registered user has made a purchase
+SELECT DISTINCT L."City"
+    FROM "Profile" P
+    JOIN "Reservation" RE ON RE."User_ID" = P."User_ID"
+    JOIN "Ticket" T ON T."Ticket_ID" = RE."Ticket_ID"
+    JOIN "Route" RO ON T."Route_ID" = RO."Route_ID"
+    JOIN "Location" L ON L."Location_ID" = RO."Origin"
+    WHERE P."Registration_Date" = (
+    SELECT MIN(P2."Registration_Date")
+    FROM "Profile" P2
+    ) AND RE."Status" = 'confirmed'
+
