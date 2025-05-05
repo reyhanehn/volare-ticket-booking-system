@@ -1,3 +1,18 @@
+DO $$
+DECLARE
+    seq_name text;
+BEGIN
+    -- Loop through each sequence in the public schema
+    FOR seq_name IN
+        SELECT sequence_name
+        FROM information_schema.sequences
+        WHERE sequence_schema = 'public'
+    LOOP
+        -- Alter each sequence to restart with 1
+        EXECUTE 'ALTER SEQUENCE "' || seq_name || '"RESTART WITH 1';
+    END LOOP;
+END $$;
+
 -- Insert into location table
 INSERT INTO "Location" ("Country", "City") VALUES
 ('Iran', 'Tehran'), 
@@ -41,7 +56,7 @@ INSERT INTO "Location" ("Country", "City") VALUES
 ('Germany', 'Munich'),
 ('France', 'Lyon'),
 ('Brazil', 'Rio de Janeiro'),
-('United Kingdom', 'Manchester'),
+('UK', 'Manchester'),
 ('Italy', 'Rome'),
 ('Italy', 'Milan'),
 ('Spain', 'Barcelona'),
@@ -690,3 +705,58 @@ INSERT INTO "Valid_Stop_Type" ("Transport_Mode", "Stop_Type") VALUES
 ('Bus', 'Refuel'),
 ('Train', 'Transit'),
 ('Bus', 'Transit');
+
+WITH Airplane_Tickets AS (
+    SELECT
+        t."Ticket_ID",
+        t."Price",
+        r."Origin",
+        r."Destination",
+        NTILE(3) OVER (ORDER BY t."Price") AS price_tier
+    FROM "Ticket" t
+    JOIN "Airplane" a ON t."Vehicle_ID" = a."Vehicle_ID"
+    JOIN "Route" r ON t."Route_ID" = r."Route_ID"
+    LEFT JOIN "Flight" f ON t."Ticket_ID" = f."Ticket_ID"
+    WHERE f."Ticket_ID" IS NULL
+),
+Route_Countries AS (
+    SELECT
+        l."Location_ID",
+        l."Country"
+    FROM "Location" l
+),
+Classified AS (
+    SELECT
+        at."Ticket_ID",
+        CASE
+            WHEN at.price_tier = 1 THEN 'Economy_Class'::vacation_class_code
+            WHEN at.price_tier = 2 THEN 'Business_Class'::vacation_class_code
+            ELSE 'First_Class'::vacation_class_code
+        END AS "Class_Code",
+        CASE
+            WHEN lo."Country" = ld."Country" THEN 'Domestic'::flight_type
+            ELSE 'International'::flight_type
+        END AS "Type"
+    FROM Airplane_Tickets at
+    JOIN Route_Countries lo ON at."Origin" = lo."Location_ID"
+    JOIN Route_Countries ld ON at."Destination" = ld."Location_ID"
+)
+
+INSERT INTO "Flight" ("Ticket_ID", "Class_Code", "Type")
+SELECT
+    c."Ticket_ID",
+    c."Class_Code",
+    c."Type"
+FROM Classified c;
+
+
+INSERT INTO "Train_Ride" ("Ticket_ID", "Has_Private_Compartment", "Freight_Wagons_Left")
+SELECT
+    t."Ticket_ID",
+    (random() < 0.5) AS "Has_Private_Compartment",  -- 50/50 TRUE or FALSE
+    (floor(random() * 11))::smallint AS "Freight_Wagons_Left"  -- 0 to 10
+FROM "Ticket" t
+JOIN "Train" tr ON t."Vehicle_ID" = tr."Vehicle_ID"
+LEFT JOIN "Train_Ride" trr ON t."Ticket_ID" = trr."Ticket_ID"
+WHERE trr."Ticket_ID" IS NULL;
+

@@ -181,9 +181,6 @@ CREATE TABLE "Train_Ride" (
   "Freight_Wagons_Left" SMALLINT NOT NULL
 );
 
-CREATE TABLE "Bus_Ride" (
-  "Ticket_ID" BIGINT PRIMARY KEY REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE
-);
 
 -- Passenger Table
 CREATE TABLE "Passenger" (
