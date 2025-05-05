@@ -111,7 +111,17 @@ SELECT DISTINCT L."City"
     ) AND RE."Status" = 'confirmed'
 
 
-    -- 11. List support users (admins) of the website
+-- 11. List support users (admins) of the website
 SELECT U."User_ID", U."Name", U."Lastname"
     FROM "User" U
     WHERE U."Role" = 'Admin';
+
+
+
+-- 12. List users who have purchased at least 2 tickets
+SELECT P."User_ID", P."Name", P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+    WHERE R."Status" = 'confirmed'
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    HAVING COUNT(R."Reservation_ID") >= 2;
