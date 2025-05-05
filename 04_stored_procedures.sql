@@ -52,23 +52,3 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_cancelled_by_admin(input_identifier TEXT)
-RETURNS TABLE (
-    User_ID BIGINT,
-    Name TEXT,
-    Lastname TEXT
-)
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT DISTINCT
-        P."User_ID",
-        P."Name",
-        P."Lastname"
-    FROM "Profile" P
-    JOIN "Reservation" R ON P."User_ID" = R."User_ID"
-    JOIN "Cancellation" C ON C."Reservation_ID" = R."Reservation_ID"
-    JOIN "User" U ON C."Admin_ID" = U."User_ID"
-    WHERE U."Email" = input_identifier OR U."Phone_Number" = input_identifier;
-END;
-$$ LANGUAGE plpgsql;

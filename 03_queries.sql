@@ -110,3 +110,8 @@ SELECT DISTINCT L."City"
     FROM "Profile" P2
     ) AND RE."Status" = 'confirmed'
 
+
+    -- 11. List support users (admins) of the website
+SELECT U."User_ID", U."Name", U."Lastname"
+    FROM "User" U
+    WHERE U."Role" = 'Admin';
