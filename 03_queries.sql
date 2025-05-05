@@ -125,3 +125,38 @@ SELECT P."User_ID", P."Name", P."Lastname"
     WHERE R."Status" = 'confirmed'
     GROUP BY P."User_ID", P."Name", P."Lastname"
     HAVING COUNT(R."Reservation_ID") >= 2;
+
+
+-- 13. List users who bought at most 2 one type tickets
+SELECT P."User_ID", P."Name", P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+    JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
+    JOIN "Train_Ride" TR ON TR."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed'
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    HAVING COUNT(R."Reservation_ID") <= 2;
+
+INTERSECT
+
+SELECT P."User_ID", P."Name", P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+    JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
+    JOIN "Flight" F ON F."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed'
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    HAVING COUNT(R."Reservation_ID") <= 2;
+
+INTERSECT
+
+SELECT P."User_ID", P."Name", P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+    JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
+    JOIN "Bus_Ride" BR ON BR."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed'
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    HAVING COUNT(R."Reservation_ID") <= 2;
+
+
