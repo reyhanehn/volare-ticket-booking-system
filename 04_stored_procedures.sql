@@ -82,3 +82,41 @@ BEGIN
     WHERE LOWER(L."City") = LOWER(input_identifier);  
 END;
 $$ LANGUAGE plpgsql;
+
+-- 4. Search tickets by input phrase matching passenger name, route city, or class
+CREATE OR REPLACE FUNCTION search_tickets_by_phrase(input_phrase TEXT)
+RETURNS TABLE (
+    Reservation_ID INT,
+    Ticket_ID INT,
+    Seat_Number VARCHAR,
+    Status VARCHAR,
+    Reservation_Date DATE,
+    Reservation_Time TIME,
+    Expiration TIMESTAMP
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        R."Reservation_ID",
+        R."Ticket_ID",
+        R."Seat_Number",
+        R."Status",
+        R."Reservation_Date",
+        R."Reservation_Time",
+        R."Expiration"
+    FROM "Reservation" R
+    JOIN "User" U ON R."User_ID" = U."User_ID"
+    JOIN "Profile" P ON P."User_ID" = U."User_ID"
+    JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
+    JOIN "Route" Ro ON T."Route_ID" = Ro."Route_ID"
+    JOIN "Location" L1 ON L1."Location_ID" = Ro."Origin"
+    JOIN "Location" L2 ON L2."Location_ID" = Ro."Destination"
+    WHERE
+        LOWER(P."Name") LIKE LOWER('%' || input_phrase || '%')
+        OR LOWER(P."Lastname") LIKE LOWER('%' || input_phrase || '%')
+        OR LOWER(T."Class") LIKE LOWER('%' || input_phrase || '%')
+        OR LOWER(L1."City") LIKE LOWER('%' || input_phrase || '%')
+        OR LOWER(L2."City") LIKE LOWER('%' || input_phrase || '%');
+END;
+$$ LANGUAGE plpgsql;
