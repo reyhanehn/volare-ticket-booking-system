@@ -627,6 +627,45 @@ WITH TicketData AS (
 SELECT * FROM TicketData;
 
 
+--insert into flight and train and bus table
+SELECT 
+    t."Ticket_ID",
+    t."Vehicle_ID",
+    CASE
+        WHEN a."Vehicle_ID" IS NOT NULL THEN 'Airplane'
+        WHEN b."Vehicle_ID" IS NOT NULL THEN 'Bus'
+        WHEN tr."Vehicle_ID" IS NOT NULL THEN 'Train'
+        ELSE 'Unknown'
+    END AS "Vehicle_Type",  -- Determining vehicle type based on the vehicle table it belongs to
+    t."Route_ID",
+    t."Price",
+    t."Remaining_Capacity",
+    r."Departure_Date",
+    r."Departure_Time",
+    r."Arrival_Date",
+    r."Arrival_Time",
+    s1."Station_ID" AS "Origin_Station_ID",
+    s1."Type" AS "Origin_Station_Type",
+    s2."Station_ID" AS "Destination_Station_ID",
+    s2."Type" AS "Destination_Station_Type"
+FROM 
+    "Ticket" t
+JOIN 
+    "Route" r ON t."Route_ID" = r."Route_ID"
+JOIN 
+    "Station" s1 ON r."Origin_Station" = s1."Station_ID"
+JOIN 
+    "Station" s2 ON r."Destination_Station" = s2."Station_ID"
+LEFT JOIN 
+    "Airplane" a ON t."Vehicle_ID" = a."Vehicle_ID"
+LEFT JOIN 
+    "Bus" b ON t."Vehicle_ID" = b."Vehicle_ID"
+LEFT JOIN 
+    "Train" tr ON t."Vehicle_ID" = tr."Vehicle_ID"
+ORDER BY 
+    t."Ticket_ID";
+
+
 -- insert into Service
 INSERT INTO "Service" ("Name") VALUES
 ('Internet'),
