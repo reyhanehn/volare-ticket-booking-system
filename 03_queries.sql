@@ -246,3 +246,15 @@ UPDATE "Profile" P
     FROM Most_Cancelled_Reservations MCR
     WHERE MCR."User_ID" = P."User_ID";
 
+
+-- 19. Delete all reservations of the user with the most cancelled reservations
+DELETE FROM "Reservation"
+    USING Most_Cancelled_Reservations MCR
+    WHERE "Reservation"."User_ID" = MCR."User_ID";
+
+
+
+-- 20. Delete all cancelled reservations
+DELETE FROM "Reservation"
+    WHERE "Reservation"."Status" = 'cancelled';
+
