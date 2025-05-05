@@ -173,44 +173,77 @@ INSERT INTO "Company" ("Name", "Headquarters", "Year_Of_Establishment", "Contact
 ('GreenRoutes', 'Tabriz', 2010, '02156789012'),
 ('GlobalExpress', 'Yazd', 1995, '02167890123');
 
--- insert into airplane table
-INSERT INTO "Airplane" ("Company_ID", "Name", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
-(1, 'Boeing 747', 20, 50, 300),
-(1, 'Airbus A320', 10, 30, 150),
-(4, 'Embraer 190', 5, 20, 80),
-(1, 'Boeing 777', 30, 60, 250),
-(4, 'Airbus A330', 15, 40, 220),
-(6, 'Bombardier CRJ900', 4, 16, 70),
-(6, 'Airbus A350', 25, 45, 270),
-(1, 'Boeing 737', 8, 24, 130),
-(4, 'ATR 72', 2, 10, 60),
-(6, 'Gulfstream G650', 5, 5, 10);
+-- Insert vehicles into Vehicle table
+INSERT INTO "Vehicle" ("Company_ID", "Name") VALUES
+(1, 'Boeing 747'),
+(1, 'Airbus A320'),
+(4, 'Embraer 190'),
+(1, 'Boeing 777'),
+(4, 'Airbus A330'),
+(6, 'Bombardier CRJ900'),
+(6, 'Airbus A350'),
+(1, 'Boeing 737'),
+(4, 'ATR 72'),
+(6, 'Gulfstream G650'),
+(2, 'Volvo 9700'),
+(2, 'Scania Touring'),
+(5, 'Mercedes-Benz Travego'),
+(2, 'MAN Lion''s Coach'),
+(5, 'Setra S 431 DT'),
+(2, 'Irizar i6'),
+(5, 'Neoplan Cityliner'),
+(2, 'King Long XMQ'),
+(5, 'Yutong ZK6122'),
+(5, 'Volvo B9R'),
+(3, 'Raja Compartment'),
+(3, 'Raja Coach 1'),
+(4, 'Shiraz Express'),
+(2, 'Mashhad Liner'),
+(6, 'Desert Express'),
+(5, 'Green Valley Rail'),
+(1, 'Capital Coach'),
+(6, 'Sunset Rail'),
+(5, 'Royal Compartment'),
+(1, 'Golden Line');
 
---insert into bus table
-INSERT INTO "Bus" ("Company_ID", "Name", "Type", "Seats_Count", "Seats_In_Row") VALUES
-(2, 'Volvo 9700', 'VIP', 30, '1+2'),
-(2, 'Scania Touring', 'Normal', 44, '2+2'),
-(5, 'Mercedes-Benz Travego', 'VIP', 32, '1+2'),
-(2, 'MAN Lion''s Coach', 'Normal', 46, '2+2'),
-(5, 'Setra S 431 DT', 'VIP', 28, '1+2'),
-(2, 'Irizar i6', 'Normal', 48, '2+2'),
-(5, 'Neoplan Cityliner', 'VIP', 30, '1+2'),
-(2, 'King Long XMQ', 'Normal', 50, '2+2'),
-(5, 'Yutong ZK6122', 'VIP', 32, '1+2'),
-(5, 'Volvo B9R', 'Normal', 42, '2+2');
 
---inser into train table
-INSERT INTO "Train" ("Company_ID", "Name", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
-(3, 'Raja Compartment', 'Compartment', 4, 200, 40, 8),
-(3, 'Raja Coach 1', 'Coach', 3, 250, 250, 10),
-(4, 'Shiraz Express', 'Compartment', 5, 180, 30, 7),
-(2, 'Mashhad Liner', 'Compartment', 4, 160, 40, 6),
-(6, 'Desert Express', 'Compartment', 5, 140, 28, 5),
-(5, 'Green Valley Rail', 'Compartment', 3, 180, 36, 8),
-(1, 'Capital Coach', 'Coach', 4, 260, 260, 11), 
-(6, 'Sunset Rail', 'Compartment', 4, 200, 40, 7),
-(5, 'Royal Compartment', 'Compartment', 5, 150, 30, 6),
-(1, 'Golden Line', 'Coach', 3, 220, 220, 9);  
+INSERT INTO "Airplane" ("Vehicle_ID", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 747'), 20, 50, 300),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A320'), 10, 30, 150),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Embraer 190'), 5, 20, 80),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 777'), 30, 60, 250),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A330'), 15, 40, 220),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Bombardier CRJ900'), 4, 16, 70),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A350'), 25, 45, 270),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 737'), 8, 24, 130),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'ATR 72'), 2, 10, 60),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Gulfstream G650'), 5, 5, 10);
+
+INSERT INTO "Bus" ("Vehicle_ID", "Type", "Seats_Count", "Seats_In_Row") VALUES
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Volvo 9700'), 'VIP', 30, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Scania Touring'), 'Normal', 44, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Mercedes-Benz Travego'), 'VIP', 32, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'MAN Lion''s Coach'), 'Normal', 46, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Setra S 431 DT'), 'VIP', 28, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Irizar i6'), 'Normal', 48, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Neoplan Cityliner'), 'VIP', 30, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'King Long XMQ'), 'Normal', 50, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Yutong ZK6122'), 'VIP', 32, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Volvo B9R'), 'Normal', 42, '2+2');
+
+
+INSERT INTO "Train" ("Vehicle_ID", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Raja Compartment'), 'Compartment', 4, 200, 40, 8),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Raja Coach 1'), 'Coach', 3, 250, 250, 10),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Shiraz Express'), 'Compartment', 5, 180, 30, 7),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Mashhad Liner'), 'Compartment', 4, 160, 40, 6),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Desert Express'), 'Compartment', 5, 140, 28, 5),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Green Valley Rail'), 'Compartment', 3, 180, 36, 8),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Capital Coach'), 'Coach', 4, 260, 260, 11),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Sunset Rail'), 'Compartment', 4, 200, 40, 7),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Royal Compartment'), 'Compartment', 5, 150, 30, 6),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Golden Line'), 'Coach', 3, 220, 220, 9);
+
 
 -- update the passwords in user table
 UPDATE "User"
@@ -561,48 +594,26 @@ JOIN
 WHERE
     rd.departure_time < rd.arrival_time;  
 
-
-
---insert into tickets
+-- Insert data into the Ticket table
 WITH TicketData AS (
-    INSERT INTO "Flight" ("Class_Code", "Type", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
+    INSERT INTO "Ticket" ("Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
     SELECT 
-        CASE
-            WHEN RANDOM() < 0.33 THEN 'Economy_Class'::vacation_class_code
-            WHEN RANDOM() < 0.66 THEN 'Business_Class'::vacation_class_code
-            ELSE 'First_Class'::vacation_class_code
-        END AS "Class_Code",
-        CASE
-            WHEN l1."Country" = 'Iran' AND l2."Country" = 'Iran' THEN 'Domestic'::flight_type
-            ELSE 'International'::flight_type
-        END AS "Type",  
-        FLOOR(RANDOM() * 10) + 1 AS "Vehicle_ID",  
-        r."Route_ID",
-        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",  
-        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"
-    FROM 
-        "Route" r
-    JOIN 
-        "Station" s1 ON r."Origin_Station" = s1."Station_ID"
-    JOIN 
-        "Station" s2 ON r."Destination_Station" = s2."Station_ID"
-    LEFT JOIN 
-        "Location" l1 ON l1."Location_ID" = s1."Location_ID"
-    LEFT JOIN 
-        "Location" l2 ON l2."Location_ID" = s2."Location_ID"
-    WHERE 
-        s1."Type" = 'Airport' OR s2."Type" = 'Airport'  
-    RETURNING "Ticket_ID"
-),
-TrainRideTickets AS (
-    INSERT INTO "Train_Ride" ("Has_Private_Compartment", "Freight_Wagons_Left", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
-    SELECT 
-        RANDOM() > 0.5 AS "Has_Private_Compartment",  
-        FLOOR(RANDOM() * 10) + 1 AS "Freight_Wagons_Left",  
-        FLOOR(RANDOM() * 10) + 25 AS "Vehicle_ID",  
-        r."Route_ID",
-        ROUND((RANDOM() * (200 - 30) + 30)::numeric, 2) AS "Price",
-        FLOOR(RANDOM() * (200 - 20) + 20) AS "Remaining_Capacity"
+        -- Select a vehicle based on the station type (Airport -> Airplane, Train_Station -> Train, Bus_Station -> Bus)
+        CASE 
+            WHEN s1."Type" = 'Airport' OR s2."Type" = 'Airport' THEN
+                -- Select a random airplane vehicle
+                (SELECT "Vehicle_ID" FROM "Airplane" ORDER BY RANDOM() LIMIT 1)
+            WHEN s1."Type" = 'Train_Station' OR s2."Type" = 'Train_Station' THEN
+                -- Select a random train vehicle
+                (SELECT "Vehicle_ID" FROM "Train" ORDER BY RANDOM() LIMIT 1)
+            WHEN s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station' THEN
+                -- Select a random bus vehicle
+                (SELECT "Vehicle_ID" FROM "Bus" ORDER BY RANDOM() LIMIT 1)
+        END AS "Vehicle_ID",
+        
+        r."Route_ID",  -- From the Route table
+        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",  -- Random price between 50 and 500
+        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"  -- Random remaining capacity between 10 and 100
     FROM 
         "Route" r
     JOIN 
@@ -610,23 +621,72 @@ TrainRideTickets AS (
     JOIN 
         "Station" s2 ON r."Destination_Station" = s2."Station_ID"
     WHERE 
-        s1."Type" = 'Train_Station' OR s2."Type" = 'Train_Station'  
-    RETURNING "Ticket_ID"
+        s1."Type" IN ('Airport', 'Train_Station', 'Bus_Station') OR s2."Type" IN ('Airport', 'Train_Station', 'Bus_Station')
+    RETURNING "Ticket_ID", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity"
 )
-INSERT INTO "Bus_Ride" ("Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
+SELECT * FROM TicketData;
+
+
+--insert into flight and train and bus table
 SELECT 
-    FLOOR(RANDOM() * 10) + 11 AS "Vehicle_ID",  
-    r."Route_ID",
-    ROUND((RANDOM() * (100 - 10) + 10)::numeric, 2) AS "Price",
-    FLOOR(RANDOM() * (50 - 10) + 10) AS "Remaining_Capacity"
+    t."Ticket_ID",
+    t."Vehicle_ID",
+    CASE
+        WHEN a."Vehicle_ID" IS NOT NULL THEN 'Airplane'
+        WHEN b."Vehicle_ID" IS NOT NULL THEN 'Bus'
+        WHEN tr."Vehicle_ID" IS NOT NULL THEN 'Train'
+        ELSE 'Unknown'
+    END AS "Vehicle_Type",  -- Determining vehicle type based on the vehicle table it belongs to
+    t."Route_ID",
+    t."Price",
+    t."Remaining_Capacity",
+    r."Departure_Date",
+    r."Departure_Time",
+    r."Arrival_Date",
+    r."Arrival_Time",
+    s1."Station_ID" AS "Origin_Station_ID",
+    s1."Type" AS "Origin_Station_Type",
+    s2."Station_ID" AS "Destination_Station_ID",
+    s2."Type" AS "Destination_Station_Type"
 FROM 
-    "Route" r
+    "Ticket" t
+JOIN 
+    "Route" r ON t."Route_ID" = r."Route_ID"
 JOIN 
     "Station" s1 ON r."Origin_Station" = s1."Station_ID"
 JOIN 
     "Station" s2 ON r."Destination_Station" = s2."Station_ID"
-WHERE 
-    s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station';  
+LEFT JOIN 
+    "Airplane" a ON t."Vehicle_ID" = a."Vehicle_ID"
+LEFT JOIN 
+    "Bus" b ON t."Vehicle_ID" = b."Vehicle_ID"
+LEFT JOIN 
+    "Train" tr ON t."Vehicle_ID" = tr."Vehicle_ID"
+ORDER BY 
+    t."Ticket_ID";
 
 
--- insert into 
+-- insert into Service
+INSERT INTO "Service" ("Name") VALUES
+('Internet'),
+('With Bed'),
+('Air Conditioner'),
+('Service'),
+('Entertainment Screen');
+
+-- insert into wallet
+INSERT INTO "Wallet" ("User_ID", "Balance")
+SELECT 
+  "User_ID",
+  ROUND((10 + RANDOM() * 90)::numeric, 2) AS "Balance"
+FROM "User"
+WHERE "User_ID" NOT IN (SELECT "User_ID" FROM "Wallet");
+
+
+-- insert into Valid Stop Type
+INSERT INTO "Valid_Stop_Type" ("Transport_Mode", "Stop_Type") VALUES
+('Airplane', 'Layover'),
+('Bus', 'Meal'),
+('Bus', 'Refuel'),
+('Train', 'Transit'),
+('Bus', 'Transit');
