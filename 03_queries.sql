@@ -13,7 +13,7 @@ SELECT P."Name", P."Lastname"
     WHERE EXISTS (
         SELECT 1 
         FROM "Reservation" R
-        WHERE R."User_ID" = P."User_ID"
+        WHERE R."User_ID" = P."User_ID" AND R."Status" = 'confirmed'
     );
 
 -- 3. Find total payments by each user per month
@@ -28,17 +28,17 @@ SELECT P."User_ID"
     JOIN "Reservation" Re ON Re."User_ID" = P."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = Re."Ticket_ID"
     JOIN "Route" Ro ON T."Route_ID" = Ro."Route_ID"  
+    WHERE Re."Status" = 'confirmed'
     GROUP BY Ro."Origin", P."User_ID"
     HAVING COUNT(Re."Reservation_ID") = 1;
 
--- 5. Find user who purchased the newest ticket
+-- 5. Find the user who purchased the newest ticket
 SELECT P."User_ID", R."Reservation_Date", R."Reservation_Time"
     FROM "Profile" P
     JOIN "Reservation" R ON P."User_ID" = R."User_ID"   
+    WHERE R."Status" = 'confirmed'
     ORDER BY R."Reservation_Date" DESC, R."Reservation_Time" DESC
     LIMIT 1;
-
-
 
 -- 6. Find users (phone number and email) whose total payment is above the average total payment
 WITH User_Total_Payment AS (
@@ -59,27 +59,29 @@ SELECT U."Phone_Number", U."Email"
 
 -- 7. Show the number of tickets sold for each transport type
 SELECT 'Airplane' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
-    FROM "Reservation" R
-    JOIN "Flight" F ON R."Ticket_ID" = F."Ticket_ID"
+FROM "Reservation" R
+JOIN "Flight" F ON R."Ticket_ID" = F."Ticket_ID"
+WHERE R."Status" = 'confirmed'
 
 UNION ALL
 
 SELECT 'Train' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
-    FROM "Reservation" R
-    JOIN "Train_Ride" T ON R."Ticket_ID" = T."Ticket_ID"
+FROM "Reservation" R
+JOIN "Train_Ride" T ON R."Ticket_ID" = T."Ticket_ID"
+WHERE R."Status" = 'confirmed'
 
 UNION ALL
 
 SELECT 'Bus' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
-    FROM "Reservation" R
-    JOIN "Bus_Ride" B ON R."Ticket_ID" = B."Ticket_ID";
-
+FROM "Reservation" R
+JOIN "Bus_Ride" B ON R."Ticket_ID" = B."Ticket_ID"
+WHERE R."Status" = 'confirmed';
 
 -- 8. List the top 3 users who bought the most tickets in the past week
 SELECT P."User_ID", COUNT(R."Reservation_ID") AS "Tickets_Bought"
     FROM "User" P
     JOIN "Reservation" R ON P."User_ID" = R."User_ID"
-    WHERE R."Reservation_Date" >= CURRENT_DATE - INTERVAL '7 days'
+    WHERE R."Reservation_Date" >= CURRENT_DATE - INTERVAL '7 days' AND R."Status" = 'confirmed'
     GROUP BY P."User_ID"
     ORDER BY "Tickets_Bought" DESC
     LIMIT 3;
@@ -91,6 +93,6 @@ SELECT L."City", COUNT(RE."Reservation_ID") AS "Tickets_Sold"
     JOIN "Ticket" T ON T."Ticket_ID" = RE."Ticket_ID"
     JOIN "Route" RO ON T."Route_ID" = RO."Route_ID"
     JOIN "Location" L ON L."Location_ID" = RO."Origin"
-    WHERE L."Country" = 'Iran'
+    WHERE L."Country" = 'Iran' AND RE."Status" = 'confirmed'
     GROUP BY L."City"
     ORDER BY "Tickets_Sold" DESC;
