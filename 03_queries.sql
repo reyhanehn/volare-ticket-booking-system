@@ -160,3 +160,32 @@ SELECT P."User_ID", P."Name", P."Lastname"
     HAVING COUNT(R."Reservation_ID") <= 2;
 
 
+-- 14. Users who bought at least one ticket from all 3 vehicle types
+
+-- Users who bought a Flight
+SELECT DISTINCT U."Email", U."Phone_Number"
+    FROM "User" U
+    JOIN "Reservation" R ON R."User_ID" = U."User_ID"
+    JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
+    JOIN "Flight" F ON F."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed'
+
+INTERSECT
+
+-- Users who bought a Train ticket
+SELECT DISTINCT U."Email", U."Phone_Number"
+    FROM "User" U
+    JOIN "Reservation" R ON R."User_ID" = U."User_ID"
+    JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
+    JOIN "Train_Ride" TR ON TR."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed'
+
+INTERSECT
+
+-- Users who bought a Bus ticket
+SELECT DISTINCT U."Email", U."Phone_Number"
+    FROM "User" U
+    JOIN "Reservation" R ON R."User_ID" = U."User_ID"
+    JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
+    JOIN "Bus_Ride" B ON B."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed';
