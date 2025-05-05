@@ -3,16 +3,14 @@ CREATE TYPE user_role AS ENUM ('Customer', 'Admin');
 CREATE TYPE user_status AS ENUM ('Active', 'Banned');
 CREATE TYPE seats_layout AS ENUM ('1+2', '2+2');
 CREATE TYPE train_type AS ENUM ('Compartment', 'Coach');
-CREATE TYPE payment_method AS ENUM ('Credit Card','PayPal','Bank Transfer','Cash');
+CREATE TYPE payment_method AS ENUM ('Credit Card','PayPal','Bank Transfer','Cash', 'Wallet');
 CREATE TYPE payment_status AS ENUM ('Pending','Completed','Failed','Refunded');
 CREATE TYPE transaction_type AS ENUM ('Charge', 'Payment', 'Refund');
 CREATE TYPE station_type AS ENUM ('Train_Station', 'Bus_Station', 'Airport');
 CREATE TYPE flight_type AS ENUM ('Domestic', 'International');
 CREATE TYPE transport_type AS ENUM ('Train', 'Bus', 'Airplane');
-CREATE TYPE ticket_type AS ENUM ('Train_Ride', 'Bus_Ride', 'Flight');
 CREATE TYPE stop_type AS ENUM ('Transit', 'Meal', 'Refuel', 'Layover');
 CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
-CREATE TYPE report_type AS ENUM ('Payment', 'Reservation', 'Ticket');
 CREATE TYPE report_status AS ENUM ('Pending', 'Checked');
 CREATE TYPE vacation_class_code AS ENUM ('First_Class', 'Business_Class', 'Economy_Class');
 CREATE TYPE bus_type AS ENUM ('VIP', 'Normal');
@@ -20,10 +18,8 @@ CREATE TYPE bus_type AS ENUM ('VIP', 'Normal');
 -- Location Table
 CREATE TABLE "Location" (
     "Location_ID" SERIAL PRIMARY KEY,
-    "Country" VARCHAR(50) NOT NULL CHECK ("Country" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$')
-    ,
-    "City" VARCHAR(50) NOT NULL CHECK ("City" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$')
-    ,
+    "Country" VARCHAR(50) NOT NULL CHECK ("Country" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
+    "City" VARCHAR(50) NOT NULL CHECK ("City" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
     UNIQUE("Country", "City")
 );
 
@@ -76,8 +72,7 @@ CREATE TABLE "Service" (
 CREATE TABLE "Vehicle" (
   "Vehicle_ID" BIGSERIAL PRIMARY KEY,
   "Company_ID" BIGINT REFERENCES "Company"("Company_ID") ON DELETE CASCADE,
-  "Name" VARCHAR(50),
-  "Type" transport_type NOT NULL
+  "Name" VARCHAR(50)
 );
 
 -- Junction table to link Service and Vehicle
@@ -150,8 +145,7 @@ CREATE TABLE "Ticket" (
   "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID"),
   "Route_ID" BIGINT NOT NULL REFERENCES "Route"("Route_ID"),
   "Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
-  "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0),
-  "Type" ticket_type NOT NULL
+  "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0)
 );
 
 -- Valid Stop Type Table
@@ -167,7 +161,7 @@ CREATE TABLE "Ticket_Stop" (
   "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
   "Station_ID" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
   "Stop_Order" SMALLINT NOT NULL CHECK ("Stop_Order" > 0),
-  "Valid_Stop_Type_ID" INT NOT NULL REFERENCES "Valid_Stop_Type"("Valid_Stop_Type_ID"),
+  "Stop_ID" INT NOT NULL REFERENCES "Valid_Stop_Type"("Valid_Stop_Type_ID"),
   PRIMARY KEY("Ticket_ID", "Station_ID"),
   UNIQUE("Ticket_ID", "Stop_Order")
 );
@@ -226,7 +220,7 @@ CREATE TABLE "Payment" (
   "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
   "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
   "Payment_Method" payment_method NOT NULL,
-  "Status" payment_status NOT NULL,
+  "Status" payment_status NOT NULL DEFAULT 'Pending',
   "Payment_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
   "Payment_Date" DATE NOT NULL DEFAULT CURRENT_DATE
 );
@@ -265,7 +259,6 @@ CREATE TABLE "Report" (
   "Report_ID" BIGSERIAL PRIMARY KEY,
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
   "Admin_ID" BIGINT NOT NULL UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Type" report_type NOT NULL,
   "Status" report_status NOT NULL DEFAULT 'Pending',
   "Text" TEXT NOT NULL,
   "Answer" TEXT,
