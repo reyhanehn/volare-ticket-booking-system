@@ -258,3 +258,32 @@ DELETE FROM "Reservation"
 DELETE FROM "Reservation"
     WHERE "Reservation"."Status" = 'cancelled';
 
+
+
+-- 21. Decrease ticket prices by 10% for tickets sold yesterday by Mahan Airlines
+UPDATE "Ticket" T
+    SET "Price" = "Price" * 0.9
+    FROM "Reservation" R, "Vehicle" V, "Company" C
+    WHERE T."Ticket_ID" = R."Ticket_ID"
+        AND T."Vehicle_ID" = V."Vehicle_ID"
+        AND C."Company_ID" = V."Company_ID"
+        AND C."Name" = 'Mahan'
+        AND R."Status" = 'confirmed'
+        AND R."Reservation_Date" = CURRENT_DATE - INTERVAL '1 day';
+
+    
+-- 22. get reports for the most reported ticket
+SELECT R."Report_ID", R."Type"
+    FROM "Report" R
+    JOIN "Report_Ticket" RT ON R."Report_ID" = RT."Report_ID"
+    JOIN "Ticket" T ON T."Ticket_ID" = RT."Ticket_ID"
+    WHERE T."Ticket_ID" = (
+        SELECT Ti."Ticket_ID"
+        FROM "Ticket" Ti
+        JOIN "Report_Ticket" RTi ON Ti."Ticket_ID" = RTi."Ticket_ID"
+        GROUP BY Ti."Ticket_ID"
+        ORDER BY COUNT(*) DESC
+        LIMIT 1)
+
+
+
