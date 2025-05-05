@@ -637,7 +637,7 @@ INSERT INTO "Service" ("Name") VALUES
 ('Service'),
 ('Entertainment Screen');
 
---insert into wallet
+-- insert into wallet
 INSERT INTO "Wallet" ("User_ID", "Balance")
 SELECT 
   "User_ID",
@@ -645,3 +645,11 @@ SELECT
 FROM "User"
 WHERE "User_ID" NOT IN (SELECT "User_ID" FROM "Wallet");
 
+
+-- insert into Valid Stop Type
+INSERT INTO "Valid_Stop_Type" ("Transport_Mode", "Stop_Type") VALUES
+('Airplane', 'Layover'),
+('Bus', 'Meal'),
+('Bus', 'Refuel'),
+('Train', 'Transit'),
+('Bus', 'Transit');
