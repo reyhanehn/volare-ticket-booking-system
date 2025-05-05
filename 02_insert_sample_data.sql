@@ -753,10 +753,215 @@ FROM Classified c;
 INSERT INTO "Train_Ride" ("Ticket_ID", "Has_Private_Compartment", "Freight_Wagons_Left")
 SELECT
     t."Ticket_ID",
-    (random() < 0.5) AS "Has_Private_Compartment",  -- 50/50 TRUE or FALSE
-    (floor(random() * 11))::smallint AS "Freight_Wagons_Left"  -- 0 to 10
+    (random() < 0.5) AS "Has_Private_Compartment",
+    (floor(random() * 11))::smallint AS "Freight_Wagons_Left"
 FROM "Ticket" t
 JOIN "Train" tr ON t."Vehicle_ID" = tr."Vehicle_ID"
 LEFT JOIN "Train_Ride" trr ON t."Ticket_ID" = trr."Ticket_ID"
 WHERE trr."Ticket_ID" IS NULL;
 
+DO $$
+DECLARE
+    v_id BIGINT;
+    s_id INT;
+    svc_count INT;
+    svc_ids INT[];
+BEGIN
+    SELECT array_agg("Service_ID") INTO svc_ids
+    FROM "Service"
+    WHERE "Name" IN ('Internet', 'With Bed', 'Air Conditioner', 'Service', 'Entertainment Screen');
+
+    FOR v_id IN SELECT "Vehicle_ID" FROM "Vehicle" LOOP
+        svc_count := FLOOR(1 + RANDOM() * 3);
+
+        FOR i IN 1..svc_count LOOP
+            s_id := svc_ids[1 + FLOOR(random() * array_length(svc_ids, 1))];
+
+            BEGIN
+                INSERT INTO "Vehicle_Service" ("Vehicle_ID", "Service_ID")
+                VALUES (v_id, s_id);
+            EXCEPTION WHEN unique_violation THEN
+                CONTINUE;
+            END;
+        END LOOP;
+    END LOOP;
+END $$;
+
+
+DO $$
+DECLARE
+    t RECORD;
+    stop_count INT;
+    stop_type RECORD;
+    stop_order INT;
+    stop_id INT;
+    s RECORD;
+    origin_loc INT;
+    dest_loc INT;
+BEGIN
+    FOR t IN
+        SELECT tk."Ticket_ID", tk."Route_ID",
+               CASE
+                 WHEN f."Vehicle_ID" IS NOT NULL THEN 'Airplane'
+                 WHEN tr."Vehicle_ID" IS NOT NULL THEN 'Train'
+                 WHEN b."Vehicle_ID" IS NOT NULL THEN 'Bus'
+               END AS mode
+        FROM "Ticket" tk
+        LEFT JOIN "Flight" f ON tk."Vehicle_ID" = f."Vehicle_ID"
+        LEFT JOIN "Train" tr ON tk."Vehicle_ID" = tr."Vehicle_ID"
+        LEFT JOIN "Bus" b ON tk."Vehicle_ID" = b."Vehicle_ID"
+    LOOP
+        -- Get origin and destination location IDs from the route
+        SELECT r."Origin_ID", r."Destination_ID"
+        INTO origin_loc, dest_loc
+        FROM "Route" r
+        WHERE r."Route_ID" = t."Route_ID";
+
+        -- Define the number of stops for the ticket (between 1 and 3 stops)
+        stop_count := FLOOR(RANDOM() * 3 + 1);
+        stop_order := 1;
+
+        FOR stop_type IN
+            SELECT "Valid_Stop_Type_ID"
+            FROM "Valid_Stop_Type"
+            WHERE "Transport_Mode" = t.mode
+            ORDER BY RANDOM()
+            LIMIT stop_count
+        LOOP
+            -- Get random station excluding origin and destination locations
+            SELECT "Station_ID" INTO s
+            FROM "Station"
+            WHERE "Location_ID" NOT IN (origin_loc, dest_loc)
+            ORDER BY RANDOM()
+            LIMIT 1;
+
+            -- Insert into Ticket_Stop table
+            INSERT INTO "Ticket_Stop" (
+                "Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID"
+            ) VALUES (
+                t."Ticket_ID", s."Station_ID", stop_order, stop_type."Valid_Stop_Type_ID"
+            );
+
+            stop_order := stop_order + 1;
+        END LOOP;
+    END LOOP;
+END$$;
+
+
+WITH flight_tickets AS (
+    SELECT tk."Ticket_ID"
+    FROM "Ticket" tk
+    LEFT JOIN "Flight" f ON tk."Ticket_ID" = f."Ticket_ID"
+    WHERE f."Ticket_ID" IS NOT NULL
+),
+ticket_with_random_stops AS (
+    SELECT ticket."Ticket_ID",
+           FLOOR(RANDOM() * 4) AS num_stops
+    FROM flight_tickets ticket
+),
+stop_data AS (
+    SELECT DISTINCT ticket."Ticket_ID",
+           station."Station_ID",
+           ROW_NUMBER() OVER (PARTITION BY ticket."Ticket_ID" ORDER BY RANDOM()) AS stop_order
+    FROM ticket_with_random_stops ticket
+    CROSS JOIN "Station" station
+),
+filtered_stops AS (
+    SELECT *
+    FROM stop_data
+    WHERE stop_order <= (SELECT num_stops FROM ticket_with_random_stops WHERE "Ticket_ID" = stop_data."Ticket_ID")
+),
+valid_stop_types AS (
+    SELECT "Valid_Stop_Type_ID"
+    FROM "Valid_Stop_Type"
+    WHERE "Transport_Mode" = 'Airplane' AND "Stop_Type" = 'Layover'
+)
+INSERT INTO "Ticket_Stop" ("Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID")
+SELECT stop."Ticket_ID",
+       stop."Station_ID",
+       stop.stop_order,
+       vst."Valid_Stop_Type_ID"
+FROM filtered_stops stop
+JOIN valid_stop_types vst ON TRUE
+ORDER BY stop."Ticket_ID", stop.stop_order;
+
+
+
+WITH train_tickets AS (
+    SELECT tk."Ticket_ID"
+    FROM "Ticket" tk
+    LEFT JOIN "Train_Ride" tr ON tk."Ticket_ID" = tr."Ticket_ID"
+    WHERE tr."Ticket_ID" IS NOT NULL
+),
+ticket_with_random_stops AS (
+    SELECT ticket."Ticket_ID",
+           FLOOR(RANDOM() * 4) AS num_stops  -- 0 to 3 stops
+    FROM train_tickets ticket
+),
+stop_data AS (
+    SELECT DISTINCT ticket."Ticket_ID",
+           station."Station_ID",
+           ROW_NUMBER() OVER (PARTITION BY ticket."Ticket_ID" ORDER BY RANDOM()) AS stop_order
+    FROM ticket_with_random_stops ticket
+    CROSS JOIN "Station" station
+),
+filtered_stops AS (
+    SELECT *
+    FROM stop_data
+    WHERE stop_order <= (SELECT num_stops FROM ticket_with_random_stops WHERE "Ticket_ID" = stop_data."Ticket_ID")
+),
+valid_stop_types AS (
+    SELECT "Valid_Stop_Type_ID"
+    FROM "Valid_Stop_Type"
+    WHERE "Transport_Mode" = 'Train' AND "Stop_Type" = 'Transit'
+)
+INSERT INTO "Ticket_Stop" ("Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID")
+SELECT stop."Ticket_ID",
+       stop."Station_ID",
+       stop.stop_order,
+       vst."Valid_Stop_Type_ID"
+FROM filtered_stops stop
+JOIN valid_stop_types vst ON TRUE
+ORDER BY stop."Ticket_ID", stop.stop_order;
+
+WITH bus_tickets AS (
+    SELECT tk."Ticket_ID"
+    FROM "Ticket" tk
+    LEFT JOIN "Bus_Ride" br ON tk."Ticket_ID" = br."Ticket_ID"
+    WHERE br."Ticket_ID" IS NOT NULL
+),
+ticket_with_random_stops AS (
+    SELECT ticket."Ticket_ID",
+           FLOOR(RANDOM() * 4) AS num_stops
+    FROM bus_tickets ticket
+),
+stop_data AS (
+    SELECT DISTINCT ticket."Ticket_ID",
+           station."Station_ID",
+           stop_type."Stop_Type",
+           ROW_NUMBER() OVER (PARTITION BY ticket."Ticket_ID" ORDER BY RANDOM()) AS stop_order
+    FROM ticket_with_random_stops ticket
+    CROSS JOIN "Station" station
+    CROSS JOIN "Valid_Stop_Type" stop_type
+    WHERE stop_type."Transport_Mode" = 'Bus'
+),
+filtered_stops AS (
+    SELECT *
+    FROM stop_data
+    WHERE stop_order <= (SELECT num_stops FROM ticket_with_random_stops WHERE "Ticket_ID" = stop_data."Ticket_ID")
+),
+unique_station_stop_combinations AS (
+    SELECT DISTINCT "Ticket_ID", "Station_ID", "Stop_Type", stop_order
+    FROM filtered_stops
+    ORDER BY "Ticket_ID", stop_order
+)
+INSERT INTO "Ticket_Stop" ("Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID")
+SELECT stop."Ticket_ID",
+       stop."Station_ID",
+       stop.stop_order,
+       vst."Valid_Stop_Type_ID"
+FROM unique_station_stop_combinations stop
+JOIN "Valid_Stop_Type" vst
+    ON vst."Transport_Mode" = 'Bus'
+    AND vst."Stop_Type" = stop."Stop_Type"
+ORDER BY stop."Ticket_ID", stop.stop_order;
