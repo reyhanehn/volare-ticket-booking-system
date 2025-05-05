@@ -205,3 +205,44 @@ SELECT T."Ticket_ID", T."Price"
     ORDER BY COUNT(R."Reservation_ID") DESC
     OFFSET 1 LIMIT 1;
 
+
+-- 17. Get the name of the admin who canceled the most reservations and their percentage
+WITH Admin_Cancellation_Count AS (
+    SELECT C."Admin_ID", COUNT(*) AS cancel_count
+    FROM "Cancellation" C
+    JOIN "User" U ON U."User_ID" = C."Admin_ID"
+    WHERE U."Role" = 'Admin'
+    GROUP BY C."Admin_ID"
+    ORDER BY cancel_count DESC
+    LIMIT 1
+),
+
+Total AS (
+    SELECT COUNT(*) AS total
+    FROM "Cancellation"
+)
+
+SELECT P."Name",
+       ROUND((ACC.cancel_count * 100.0) / T.total, 2) AS "Cancel_Percentage"
+FROM Admin_Cancellation_Count ACC
+JOIN "Profile" P ON P."User_ID" = ACC."Admin_ID"
+JOIN Total T ON true;
+
+
+
+-- 18. Update the last name of the user with the most cancelled reservations
+WITH Most_Cancelled_Reservations AS (
+    SELECT P."User_ID"
+        FROM "Profile" P
+        JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+        WHERE R."Status" = 'cancelled'
+        GROUP BY P."User_ID"
+        ORDER BY COUNT(R."Reservation_ID") DESC
+        OFFSET 1
+)
+
+UPDATE "Profile" P
+    SET "Lastname" = 'redington'
+    FROM Most_Cancelled_Reservations MCR
+    WHERE MCR."User_ID" = P."User_ID";
+
