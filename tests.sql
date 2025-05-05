@@ -101,3 +101,69 @@ INSERT INTO "Passenger" ("Name", "Lastname", "SSN", "Birthdate") VALUES
 ('HEDI', 'tahmouresi', '0123456789', DATE '1989-05-10');
 
 SELECT * FROM "Passenger"
+
+SELECT * FROM "User"
+SELECT * FROM "Location"
+SELECT * FROM "Profile"
+SELECT * FROM "Airplane"
+SELECT * FROM "Company"
+SELECT * FROM "Flight"
+SELECT * FROM "Vehicle"
+SELECT * FROM "Ticket"
+SELECT * FROM "Route"
+SELECT * FROM "Reservation"
+SELECT * FROM "Station"
+
+INSERT INTO "Service" ("Name")VALUES
+('Internet'),
+('With_Bed');
+
+SELECT * FROM "Service"
+
+INSERT INTO "Vehicle_Service" ("Vehicle_ID", "Service_ID") VALUES
+(1, 1);
+
+
+INSERT INTO "Valid_Stop_Type" ("Transport_Mode", "Stop_Type") VALUES
+('Airplane', 'Layover');
+
+SELECT * FROM "Valid_Stop_Type"
+
+INSERT INTO "Ticket_Stop" ("Ticket_ID", "Station_ID", "Stop_Order", "Valid_Stop_Type_ID") VALUES
+(1, 2, 1, 1);
+
+SELECT * FROM "Valid_Stop_Type"
+
+INSERT INTO "Wallet" ("User_ID", "Balance") VALUES
+(2, 10);
+
+SELECT * FROM "Wallet"
+
+INSERT INTO "Payment" ("User_ID", "Reservation_ID", "Amount", "Payment_Method", "Status") VALUES
+(2, 1, 5, 'Cash', 'Completed');
+
+SELECT * FROM "Payment"
+
+INSERT INTO "Wallet_Transactions" ("Wallet_ID", "Related_Payment_ID", "Amount", "Type") VALUES
+(1, 1, 3, 'Refund');
+
+SELECT * FROM "Wallet_Transactions"
+
+INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
+VALUES
+('+989121000051', 'samaneh.rahimi@mail.com', 'Admin', 'SamanehR@2025');
+
+INSERT INTO "Cancellation" ("Reservation_ID", "Admin_ID", "Transaction_ID", "Refund_Amount") VALUES
+(1, 3, 1, 3);
+
+SELECT * FROM "Cancellation"
+
+INSERT INTO "Report" ("User_ID", "Admin_ID", "Type", "Status", "Text", "Answer") VALUES
+(2, 3, 'Payment', 'Checked', 'I hate your system', 'I dont give a shit');
+
+SELECT * FROM "Report"
+
+INSERT INTO "Report_Payment" ("Report_ID", "Payment_ID") VALUES
+(1, 1);
+
+SELECT * FROM "Report_Payment"
