@@ -245,19 +245,6 @@ INSERT INTO "Train" ("Vehicle_ID", "Type", "Stars", "Seats_Count", "Seats_In_Cab
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Golden Line'), 'Coach', 3, 220, 220, 9);
 
 
---inser into train table
-INSERT INTO "Train" ("Company_ID", "Name", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
-(3, 'Raja Compartment', 'Compartment', 4, 200, 40, 8),
-(3, 'Raja Coach 1', 'Coach', 3, 250, 250, 10),
-(4, 'Shiraz Express', 'Compartment', 5, 180, 30, 7),
-(2, 'Mashhad Liner', 'Compartment', 4, 160, 40, 6),
-(6, 'Desert Express', 'Compartment', 5, 140, 28, 5),
-(5, 'Green Valley Rail', 'Compartment', 3, 180, 36, 8),
-(1, 'Capital Coach', 'Coach', 4, 260, 260, 11), 
-(6, 'Sunset Rail', 'Compartment', 4, 200, 40, 7),
-(5, 'Royal Compartment', 'Compartment', 5, 150, 30, 6),
-(1, 'Golden Line', 'Coach', 3, 220, 220, 9);  
-
 -- update the passwords in user table
 UPDATE "User"
 SET "Password_Hash" = CASE
@@ -607,48 +594,26 @@ JOIN
 WHERE
     rd.departure_time < rd.arrival_time;  
 
-
-
---insert into tickets
+-- Insert data into the Ticket table
 WITH TicketData AS (
-    INSERT INTO "Flight" ("Class_Code", "Type", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
+    INSERT INTO "Ticket" ("Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
     SELECT 
-        CASE
-            WHEN RANDOM() < 0.33 THEN 'Economy_Class'::vacation_class_code
-            WHEN RANDOM() < 0.66 THEN 'Business_Class'::vacation_class_code
-            ELSE 'First_Class'::vacation_class_code
-        END AS "Class_Code",
-        CASE
-            WHEN l1."Country" = 'Iran' AND l2."Country" = 'Iran' THEN 'Domestic'::flight_type
-            ELSE 'International'::flight_type
-        END AS "Type",  
-        FLOOR(RANDOM() * 10) + 1 AS "Vehicle_ID",  
-        r."Route_ID",
-        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",  
-        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"
-    FROM 
-        "Route" r
-    JOIN 
-        "Station" s1 ON r."Origin_Station" = s1."Station_ID"
-    JOIN 
-        "Station" s2 ON r."Destination_Station" = s2."Station_ID"
-    LEFT JOIN 
-        "Location" l1 ON l1."Location_ID" = s1."Location_ID"
-    LEFT JOIN 
-        "Location" l2 ON l2."Location_ID" = s2."Location_ID"
-    WHERE 
-        s1."Type" = 'Airport' OR s2."Type" = 'Airport'  
-    RETURNING "Ticket_ID"
-),
-TrainRideTickets AS (
-    INSERT INTO "Train_Ride" ("Has_Private_Compartment", "Freight_Wagons_Left", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
-    SELECT 
-        RANDOM() > 0.5 AS "Has_Private_Compartment",  
-        FLOOR(RANDOM() * 10) + 1 AS "Freight_Wagons_Left",  
-        FLOOR(RANDOM() * 10) + 25 AS "Vehicle_ID",  
-        r."Route_ID",
-        ROUND((RANDOM() * (200 - 30) + 30)::numeric, 2) AS "Price",
-        FLOOR(RANDOM() * (200 - 20) + 20) AS "Remaining_Capacity"
+        -- Select a vehicle based on the station type (Airport -> Airplane, Train_Station -> Train, Bus_Station -> Bus)
+        CASE 
+            WHEN s1."Type" = 'Airport' OR s2."Type" = 'Airport' THEN
+                -- Select a random airplane vehicle
+                (SELECT "Vehicle_ID" FROM "Airplane" ORDER BY RANDOM() LIMIT 1)
+            WHEN s1."Type" = 'Train_Station' OR s2."Type" = 'Train_Station' THEN
+                -- Select a random train vehicle
+                (SELECT "Vehicle_ID" FROM "Train" ORDER BY RANDOM() LIMIT 1)
+            WHEN s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station' THEN
+                -- Select a random bus vehicle
+                (SELECT "Vehicle_ID" FROM "Bus" ORDER BY RANDOM() LIMIT 1)
+        END AS "Vehicle_ID",
+        
+        r."Route_ID",  -- From the Route table
+        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",  -- Random price between 50 and 500
+        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"  -- Random remaining capacity between 10 and 100
     FROM 
         "Route" r
     JOIN 
@@ -656,23 +621,10 @@ TrainRideTickets AS (
     JOIN 
         "Station" s2 ON r."Destination_Station" = s2."Station_ID"
     WHERE 
-        s1."Type" = 'Train_Station' OR s2."Type" = 'Train_Station'  
-    RETURNING "Ticket_ID"
+        s1."Type" IN ('Airport', 'Train_Station', 'Bus_Station') OR s2."Type" IN ('Airport', 'Train_Station', 'Bus_Station')
+    RETURNING "Ticket_ID", "Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity"
 )
-INSERT INTO "Bus_Ride" ("Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
-SELECT 
-    FLOOR(RANDOM() * 10) + 11 AS "Vehicle_ID",  
-    r."Route_ID",
-    ROUND((RANDOM() * (100 - 10) + 10)::numeric, 2) AS "Price",
-    FLOOR(RANDOM() * (50 - 10) + 10) AS "Remaining_Capacity"
-FROM 
-    "Route" r
-JOIN 
-    "Station" s1 ON r."Origin_Station" = s1."Station_ID"
-JOIN 
-    "Station" s2 ON r."Destination_Station" = s2."Station_ID"
-WHERE 
-    s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station';  
+SELECT * FROM TicketData;
 
 
 -- insert into Service
