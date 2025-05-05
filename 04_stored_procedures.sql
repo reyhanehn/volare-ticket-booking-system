@@ -1,26 +1,74 @@
--- Given Email or Phone Number show all the tickets the user has bought
-CREATE OR REPLACE FUNCTION get_reservations_by_contact(
-    input_identifier VARCHAR()
+-- 1. Show all tickets purchased by a user using Email or Phone Number
+CREATE OR REPLACE FUNCTION get_reservations_by_contact(input_identifier TEXT)
+RETURNS TABLE (
+    Reservation_ID INT,
+    Ticket_ID INT,
+    Seat_Number VARCHAR,
+    Status VARCHAR,
+    Reservation_Date DATE,
+    Reservation_Time TIME,
+    Expiration TIMESTAMP
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
-        r."Reservation_ID",
-        r."Ticket_ID",
-        r."Seat_Number",
-        r."Status",
-        r."Reservation_Date",
-        r."Reservation_Time",
-        r."Expiration"
-    FROM
-        "Reservation" r
-        JOIN "User" u ON r."User_ID" = u."User_ID"
-    WHERE
-        (input_email IS NOT NULL AND u."Email" = input_email)
-        OR
-        (input_phone IS NOT NULL AND u."Phone_Number" = input_phone)
-    ORDER BY
-        r."Reservation_Date" ASC, r."Reservation_Time" ASC;
+        R."Reservation_ID",
+        R."Ticket_ID",
+        R."Seat_Number",
+        R."Status",
+        R."Reservation_Date",
+        R."Reservation_Time",
+        R."Expiration"
+    FROM "Reservation" R
+
+    JOIN "User" U ON R."User_ID" = U."User_ID"
+    WHERE U."Email" = input_identifier OR U."Phone_Number" = input_identifier
+    ORDER BY R."Reservation_Date", R."Reservation_Time";
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- 2. Show users whose reservations were cancelled by a given admin (using Email or Phone Number)
+CREATE OR REPLACE FUNCTION get_cancelled_by_admin(input_identifier TEXT)
+RETURNS TABLE (
+    User_ID BIGINT,
+    Name TEXT,
+    Lastname TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT DISTINCT
+        P."User_ID",
+        P."Name",
+        P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON P."User_ID" = R."User_ID"
+    JOIN "Cancellation" C ON C."Reservation_ID" = R."Reservation_ID"
+    JOIN "User" U ON C."Admin_ID" = U."User_ID"
+    WHERE U."Email" = input_identifier OR U."Phone_Number" = input_identifier;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_cancelled_by_admin(input_identifier TEXT)
+RETURNS TABLE (
+    User_ID BIGINT,
+    Name TEXT,
+    Lastname TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT DISTINCT
+        P."User_ID",
+        P."Name",
+        P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON P."User_ID" = R."User_ID"
+    JOIN "Cancellation" C ON C."Reservation_ID" = R."Reservation_ID"
+    JOIN "User" U ON C."Admin_ID" = U."User_ID"
+    WHERE U."Email" = input_identifier OR U."Phone_Number" = input_identifier;
 END;
 $$ LANGUAGE plpgsql;
