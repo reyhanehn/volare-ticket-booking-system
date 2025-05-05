@@ -173,31 +173,77 @@ INSERT INTO "Company" ("Name", "Headquarters", "Year_Of_Establishment", "Contact
 ('GreenRoutes', 'Tabriz', 2010, '02156789012'),
 ('GlobalExpress', 'Yazd', 1995, '02167890123');
 
--- insert into airplane table
-INSERT INTO "Airplane" ("Company_ID", "Name", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
-(1, 'Boeing 747', 20, 50, 300),
-(1, 'Airbus A320', 10, 30, 150),
-(4, 'Embraer 190', 5, 20, 80),
-(1, 'Boeing 777', 30, 60, 250),
-(4, 'Airbus A330', 15, 40, 220),
-(6, 'Bombardier CRJ900', 4, 16, 70),
-(6, 'Airbus A350', 25, 45, 270),
-(1, 'Boeing 737', 8, 24, 130),
-(4, 'ATR 72', 2, 10, 60),
-(6, 'Gulfstream G650', 5, 5, 10);
+-- Insert vehicles into Vehicle table
+INSERT INTO "Vehicle" ("Company_ID", "Name") VALUES
+(1, 'Boeing 747'),
+(1, 'Airbus A320'),
+(4, 'Embraer 190'),
+(1, 'Boeing 777'),
+(4, 'Airbus A330'),
+(6, 'Bombardier CRJ900'),
+(6, 'Airbus A350'),
+(1, 'Boeing 737'),
+(4, 'ATR 72'),
+(6, 'Gulfstream G650'),
+(2, 'Volvo 9700'),
+(2, 'Scania Touring'),
+(5, 'Mercedes-Benz Travego'),
+(2, 'MAN Lion''s Coach'),
+(5, 'Setra S 431 DT'),
+(2, 'Irizar i6'),
+(5, 'Neoplan Cityliner'),
+(2, 'King Long XMQ'),
+(5, 'Yutong ZK6122'),
+(5, 'Volvo B9R'),
+(3, 'Raja Compartment'),
+(3, 'Raja Coach 1'),
+(4, 'Shiraz Express'),
+(2, 'Mashhad Liner'),
+(6, 'Desert Express'),
+(5, 'Green Valley Rail'),
+(1, 'Capital Coach'),
+(6, 'Sunset Rail'),
+(5, 'Royal Compartment'),
+(1, 'Golden Line');
 
---insert into bus table
-INSERT INTO "Bus" ("Company_ID", "Name", "Type", "Seats_Count", "Seats_In_Row") VALUES
-(2, 'Volvo 9700', 'VIP', 30, '1+2'),
-(2, 'Scania Touring', 'Normal', 44, '2+2'),
-(5, 'Mercedes-Benz Travego', 'VIP', 32, '1+2'),
-(2, 'MAN Lion''s Coach', 'Normal', 46, '2+2'),
-(5, 'Setra S 431 DT', 'VIP', 28, '1+2'),
-(2, 'Irizar i6', 'Normal', 48, '2+2'),
-(5, 'Neoplan Cityliner', 'VIP', 30, '1+2'),
-(2, 'King Long XMQ', 'Normal', 50, '2+2'),
-(5, 'Yutong ZK6122', 'VIP', 32, '1+2'),
-(5, 'Volvo B9R', 'Normal', 42, '2+2');
+
+INSERT INTO "Airplane" ("Vehicle_ID", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 747'), 20, 50, 300),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A320'), 10, 30, 150),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Embraer 190'), 5, 20, 80),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 777'), 30, 60, 250),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A330'), 15, 40, 220),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Bombardier CRJ900'), 4, 16, 70),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A350'), 25, 45, 270),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 737'), 8, 24, 130),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'ATR 72'), 2, 10, 60),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Gulfstream G650'), 5, 5, 10);
+
+INSERT INTO "Bus" ("Vehicle_ID", "Type", "Seats_Count", "Seats_In_Row") VALUES
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Volvo 9700'), 'VIP', 30, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Scania Touring'), 'Normal', 44, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Mercedes-Benz Travego'), 'VIP', 32, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'MAN Lion''s Coach'), 'Normal', 46, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Setra S 431 DT'), 'VIP', 28, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Irizar i6'), 'Normal', 48, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Neoplan Cityliner'), 'VIP', 30, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'King Long XMQ'), 'Normal', 50, '2+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Yutong ZK6122'), 'VIP', 32, '1+2'),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Volvo B9R'), 'Normal', 42, '2+2');
+
+
+INSERT INTO "Train" ("Vehicle_ID", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Raja Compartment'), 'Compartment', 4, 200, 40, 8),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Raja Coach 1'), 'Coach', 3, 250, 250, 10),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Shiraz Express'), 'Compartment', 5, 180, 30, 7),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Mashhad Liner'), 'Compartment', 4, 160, 40, 6),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Desert Express'), 'Compartment', 5, 140, 28, 5),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Green Valley Rail'), 'Compartment', 3, 180, 36, 8),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Capital Coach'), 'Coach', 4, 260, 260, 11),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Sunset Rail'), 'Compartment', 4, 200, 40, 7),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Royal Compartment'), 'Compartment', 5, 150, 30, 6),
+((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Golden Line'), 'Coach', 3, 220, 220, 9);
+
 
 --inser into train table
 INSERT INTO "Train" ("Company_ID", "Name", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
