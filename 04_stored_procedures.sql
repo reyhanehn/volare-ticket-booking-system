@@ -120,3 +120,92 @@ BEGIN
         OR LOWER(L2."City") LIKE LOWER('%' || input_phrase || '%');
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- 5. Get other users who live in the same city as the given user (by phone or email)
+CREATE OR REPLACE FUNCTION get_users_from_same_city(input_identifier TEXT)
+RETURNS TABLE (
+    User_ID BIGINT,
+    Name TEXT,
+    Lastname TEXT,
+    City TEXT
+)
+AS $$
+DECLARE
+    target_city TEXT;
+BEGIN
+    SELECT P."City" INTO target_city
+    FROM "User" U
+    JOIN "Profile" P ON U."User_ID" = P."User_ID"
+    WHERE U."Email" = input_identifier OR U."Phone_Number" = input_identifier;
+
+    RETURN QUERY
+    SELECT
+        P."User_ID",
+        P."Name",
+        P."Lastname",
+        P."City"
+    FROM "Profile" P
+    WHERE P."City" = target_city
+    AND P."User_ID" NOT IN (
+        SELECT U."User_ID"
+        FROM "User" U
+        WHERE U."Email" = input_identifier OR U."Phone_Number" = input_identifier
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- 6. Get top n users with the most ticket purchases from a given date onward
+CREATE OR REPLACE FUNCTION get_top_buyers_from_date(start_date DATE, count_limit INT)
+RETURNS TABLE (
+    User_ID BIGINT,
+    Name TEXT,
+    Lastname TEXT,
+    Ticket_Count INT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        P."User_ID",
+        P."Name",
+        P."Lastname",
+        COUNT(R."Ticket_ID") AS Ticket_Count
+    FROM "Reservation" R
+    JOIN "Profile" P ON R."User_ID" = P."User_ID"
+    WHERE R."Reservation_Date" >= start_date
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    ORDER BY Ticket_Count DESC
+    LIMIT count_limit;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- 7. Show reservations (that were cancelled) for a specific vehicle type, ordered by reservation date
+CREATE OR REPLACE FUNCTION get_cancelled_reservations_by_vehicle_type(vehicle_type TEXT)
+RETURNS TABLE (
+    Reservation_ID BIGINT,
+    Ticket_ID BIGINT,
+    Reservation_Date DATE,
+    Reservation_Time TIME,
+    Vehicle_Type TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        R."Reservation_ID",
+        R."Ticket_ID",
+        R."Reservation_Date",
+        R."Reservation_Time",
+        V."Type" AS Vehicle_Type
+    FROM "Reservation" R
+    JOIN "Cancellation" C ON C."Reservation_ID" = R."Reservation_ID"
+    JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
+    JOIN "Route" Ro ON Ro."Route_ID" = T."Route_ID"
+    JOIN "Vehicle" V ON V."Vehicle_ID" = Ro."Vehicle_ID"
+    WHERE V."Type" = vehicle_type
+    ORDER BY R."Reservation_Date", R."Reservation_Time";
+END;
+$$ LANGUAGE plpgsql;
