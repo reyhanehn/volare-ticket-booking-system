@@ -161,7 +161,6 @@ SELECT P."User_ID", P."Name", P."Lastname"
 
 
 -- 14. Users who bought at least one ticket from all 3 vehicle types
-
 -- Users who bought a Flight
 SELECT DISTINCT U."Email", U."Phone_Number"
     FROM "User" U
@@ -189,3 +188,20 @@ SELECT DISTINCT U."Email", U."Phone_Number"
     JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
     JOIN "Bus_Ride" B ON B."Ticket_ID" = T."Ticket_ID"
     WHERE R."Status" = 'confirmed';
+
+
+-- 15. Get confirmed reservations made for today, ordered by time
+SELECT R."Reservation_ID", R."Reservation_Time"
+    FROM "Reservation" R 
+    WHERE R."Status" = 'Confirmed' AND R."Reservation_Date" = CURRENT_DATE
+    ORDER BY R."Reservation_Time";
+
+-- 16. Get the second most reserved ticket and its price
+SELECT T."Ticket_ID", T."Price"
+    FROM "Ticket" T 
+    JOIN "Reservation" R ON R."Ticket_ID" = T."Ticket_ID"
+    WHERE R."Status" = 'confirmed'
+    GROUP BY T."Ticket_ID", T."Price"
+    ORDER BY COUNT(R."Reservation_ID") DESC
+    OFFSET 1 LIMIT 1;
+
