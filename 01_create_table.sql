@@ -14,7 +14,7 @@ CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
 CREATE TYPE report_status AS ENUM ('Pending', 'Checked');
 CREATE TYPE vacation_class_code AS ENUM ('First_Class', 'Business_Class', 'Economy_Class');
 CREATE TYPE bus_type AS ENUM ('VIP', 'Normal');
-CREATE TYPE report_type ENUM ('reservation', 'payment', 'ticket');
+CREATE TYPE report_type AS ENUM ('reservation', 'payment', 'ticket');
 
 
 -- Location Table
