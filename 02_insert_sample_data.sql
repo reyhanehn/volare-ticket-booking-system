@@ -965,3 +965,104 @@ JOIN "Valid_Stop_Type" vst
     ON vst."Transport_Mode" = 'Bus'
     AND vst."Stop_Type" = stop."Stop_Type"
 ORDER BY stop."Ticket_ID", stop.stop_order;
+
+
+INSERT INTO "User" ("Phone_Number", "Email", "Role", "Status", "Password_Hash")
+SELECT
+  '+989' || LPAD(FLOOR(RANDOM() * 1000000000)::TEXT, 9, '0') AS "Phone_Number",
+  'banned_customer_' || gs::TEXT || '@example.com' AS "Email",
+  'Customer'::user_role,
+  'Banned'::user_status,
+  md5('password' || gs::TEXT) AS "Password_Hash"
+FROM generate_series(1, 10) AS gs;
+
+INSERT INTO "Profile" ("User_ID", "Name", "Lastname", "City_ID") VALUES
+(52, 'Alireza', 'Rahmati', 1),
+(53, 'Saman', 'babaee', 1),
+(54, 'Sarvenaz', 'Karimi', 2),
+(55, 'hosein', 'Amiri', 3),
+(56, 'Fatemeh', 'Asadi', 14),
+(57, 'Hedie', 'Tahsom', 15),
+(58, 'Shahram', 'shabpare', 16),
+(59, 'Hamed', 'khare', 17),
+(60, 'Niki', 'Nasimi', 18),
+(61, 'Ali', 'Moradi', 19);
+
+INSERT INTO "Wallet" ("User_ID", "Balance") VALUES
+(52, 10),
+(53, 0),
+(54, 0),
+(55, 30),
+(56, 0),
+(57, 14),
+(58, 12.5),
+(59, 0),
+(60, 18.2),
+(61, 45);
+
+INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
+VALUES
+('+989953658868', 'zhurst@yahoo.com', 'Admin', '2p(YQJ%G$R'),
+('+989440211786', 'cartereric@gmail.com', 'Admin', '4tqAZQ+i+y'),
+('+989217715343', 'rodriguezmichael@yahoo.com', 'Admin', 'w&NHiisN$0'),
+('+989867434732', 'raymond57@hayes.com', 'Admin', '4^8Htp^sb)'),
+('+989358103140', 'glee@hotmail.com', 'Admin', 'Mf&y5HNn62'),
+('+989798452180', 'nancyjones@hotmail.com', 'Admin', 'nxuo0NUr@G'),
+('+989401020191', 'jamesrobinson@gmail.com', 'Admin', 'B)N8R%Bo^x'),
+('+989309786262', 'harveyrobert@cunningham.com', 'Admin', 'b$4hMezz^3'),
+('+989292361221', 'justin78@turner.net', 'Admin', '8q7rJ+8v!c'),
+('+989797044253', 'ccalderon@cook.com', 'Admin', '#!^7RwnV_)'),
+('+989875507676', 'gomezanita@dickson-brady.com', 'Admin', '#uj2bN6adG'),
+('+989743945329', 'jeffreykeller@yahoo.com', 'Admin', '^4HyCv(x1y'),
+('+989438731403', 'jessica56@hotmail.com', 'Admin', '2sKQ1Mvg2('),
+('+989393316329', 'snguyen@yahoo.com', 'Admin', 'bGh2UGnn3('),
+('+989651820474', 'donnacampbell@hotmail.com', 'Admin', 'mhb92@Kco_'),
+('+989296221379', 'dylanwatts@gmail.com', 'Admin', 'wQ$6oLFz&3'),
+('+989824640650', 'juliawells@yahoo.com', 'Admin', 'Q$4Y98yR_5'),
+('+989488753990', 'amy60@gmail.com', 'Admin', 'w@rYNvAs&6'),
+('+989205338736', 'ryan06@caldwell-yates.com', 'Admin', '@*T#2Tr$G3'),
+('+989331104161', 'currybrett@yahoo.com', 'Admin', '##1oYuN(w$'),
+('+989541989806', 'tamirodriguez@hickman.biz', 'Admin', 'd3*joCsy&D'),
+('+989967604102', 'tina54@webb.com', 'Admin', 'O0#Yqev2Zw'),
+('+989325671709', 'rodriguezandrew@yahoo.com', 'Admin', 'gkKzx3LW9!'),
+('+989758164129', 'adamsbrandy@hotmail.com', 'Admin', 'V3t#kMbCqG'),
+('+989852203111', 'bthomas@yahoo.com', 'Admin', 'sN#eT4yrmZ'),
+('+989655984840', 'samantha33@gmail.com', 'Admin', 'buv^2Jhz8O'),
+('+989708900607', 'alexander20@hotmail.com', 'Admin', 'ZRm%3Pfq)H'),
+('+989292850624', 'catherinejohnson@yahoo.com', 'Admin', 'LKq#r3^wU5'),
+('+989636612020', 'kevin40@lang.com', 'Admin', 'X*t2!YqKk9'),
+('+989614550979', 'ashley76@edwards.com', 'Admin', 'Wfy7pMv$3!');
+
+
+INSERT INTO "Profile" ("User_ID", "Name", "Lastname", "City_ID", "Registration_Date")
+VALUES
+(62, 'Saeed', 'Nikbakht', 3, CURRENT_DATE),
+(63, 'Parinaz', 'Ranjbar', 5, CURRENT_DATE),
+(64, 'Hossein', 'Jalali', 1, CURRENT_DATE),
+(65, 'Niloofar', 'Mehrabi', 8, CURRENT_DATE),
+(66, 'Kian', 'Daneshvar', 4, CURRENT_DATE),
+(67, 'Farideh', 'Asgari', 6, CURRENT_DATE),
+(68, 'Amirhossein', 'Ghaffari', 2, CURRENT_DATE),
+(69, 'Ladan', 'Rostami', 7, CURRENT_DATE),
+(70, 'Babak', 'Nazari', 10, CURRENT_DATE),
+(71, 'Sanaz', 'Khalili', 9, CURRENT_DATE),
+(72, 'Milad', 'Shojaei', 12, CURRENT_DATE),
+(73, 'Zahra', 'Rahbar', 11, CURRENT_DATE),
+(74, 'Mehdi', 'Etemadi', 13, CURRENT_DATE),
+(75, 'Shahrzad', 'Talebi', 14, CURRENT_DATE),
+(76, 'Mahan', 'Sotoudeh', 15, CURRENT_DATE),
+(77, 'Elham', 'Javadi', 16, CURRENT_DATE),
+(78, 'Peyman', 'Moshiri', 17, CURRENT_DATE),
+(79, 'Leila', 'Barzegar', 18, CURRENT_DATE),
+(80, 'Kourosh', 'Ebadi', 19, CURRENT_DATE),
+(81, 'Nasim', 'Kamali', 20, CURRENT_DATE),
+(82, 'Reza', 'Kiani', 1, CURRENT_DATE),
+(83, 'Sara', 'Vahidi', 3, CURRENT_DATE),
+(84, 'Alireza', 'Farhadi', 4, CURRENT_DATE),
+(85, 'Yasmin', 'Ramezani', 6, CURRENT_DATE),
+(86, 'Hamid', 'Keshavarz', 7, CURRENT_DATE),
+(87, 'Mahshid', 'Afshar', 8, CURRENT_DATE),
+(88, 'Behnam', 'Rahimi', 2, CURRENT_DATE),
+(89, 'Sepideh', 'Fazel', 5, CURRENT_DATE),
+(90, 'Omid', 'Soleimani', 9, CURRENT_DATE),
+(91, 'Roya', 'Mousavi', 10, CURRENT_DATE);
