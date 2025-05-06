@@ -1,5 +1,5 @@
 -- 1. Find users who have never reserved a ticket
-SELECT P."Name", P."Lastname"
+SELECT P."Name", P."Lastname", 
 FROM "Profile" P
 JOIN "User" U ON P."User_ID" = U."User_ID"
 WHERE U."Role" = 'Customer' 
@@ -13,6 +13,7 @@ AND NOT EXISTS (
 SELECT DISTINCT U."User_ID"
 FROM "User" U
 JOIN "Reservation" R ON R."User_ID" = U."User_ID"
+WHERE R."Status" = 'Confirmed'
 
 
 -- 2. Find users who have reserved at least one ticket
@@ -21,7 +22,7 @@ SELECT P."Name", P."Lastname"
     WHERE EXISTS (
         SELECT 1 
         FROM "Reservation" R
-        WHERE R."User_ID" = P."User_ID" AND R."Status" = 'confirmed'
+        WHERE R."User_ID" = P."User_ID" AND R."Status" = 'Confirmed'
     );
 
 -- 3. Find total payments by each user per month
@@ -31,12 +32,12 @@ SELECT P."User_ID", DATE_TRUNC('month', P."Payment_Date") AS "Month", SUM(P."Amo
     ORDER BY P."User_ID", "Month";
 
 -- 4. Find users who purchased only one ticket per city
-SELECT P."User_ID"
+SELECT DISTINCT P."User_ID"
     FROM "Profile" P
     JOIN "Reservation" Re ON Re."User_ID" = P."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = Re."Ticket_ID"
     JOIN "Route" Ro ON T."Route_ID" = Ro."Route_ID"  
-    WHERE Re."Status" = 'confirmed'
+    WHERE Re."Status" = 'Confirmed'
     GROUP BY Ro."Origin", P."User_ID"
     HAVING COUNT(Re."Reservation_ID") = 1;
 
@@ -44,7 +45,7 @@ SELECT P."User_ID"
 SELECT P."User_ID", R."Reservation_Date", R."Reservation_Time"
     FROM "Profile" P
     JOIN "Reservation" R ON P."User_ID" = R."User_ID"   
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
     ORDER BY R."Reservation_Date" DESC, R."Reservation_Time" DESC
     LIMIT 1;
 
@@ -69,27 +70,27 @@ SELECT U."Phone_Number", U."Email"
 SELECT 'Airplane' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
 FROM "Reservation" R
 JOIN "Flight" F ON R."Ticket_ID" = F."Ticket_ID"
-WHERE R."Status" = 'confirmed'
+WHERE R."Status" = 'Confirmed'
 
 UNION ALL
 
 SELECT 'Train' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
 FROM "Reservation" R
 JOIN "Train_Ride" T ON R."Ticket_ID" = T."Ticket_ID"
-WHERE R."Status" = 'confirmed'
+WHERE R."Status" = 'Confirmed'
 
 UNION ALL
 
 SELECT 'Bus' AS "Transportation", COUNT(R."Reservation_ID") AS "Tickets_Sold"
 FROM "Reservation" R
 JOIN "Bus_Ride" B ON R."Ticket_ID" = B."Ticket_ID"
-WHERE R."Status" = 'confirmed';
+WHERE R."Status" = 'Confirmed';
 
 -- 8. List the top 3 users who bought the most tickets in the past week
 SELECT P."User_ID", COUNT(R."Reservation_ID") AS "Tickets_Bought"
     FROM "User" P
     JOIN "Reservation" R ON P."User_ID" = R."User_ID"
-    WHERE R."Reservation_Date" >= CURRENT_DATE - INTERVAL '7 days' AND R."Status" = 'confirmed'
+    WHERE R."Reservation_Date" >= CURRENT_DATE - INTERVAL '7 days' AND R."Status" = 'Confirmed'
     GROUP BY P."User_ID"
     ORDER BY "Tickets_Bought" DESC
     LIMIT 3;
@@ -101,7 +102,7 @@ SELECT L."City", COUNT(RE."Reservation_ID") AS "Tickets_Sold"
     JOIN "Ticket" T ON T."Ticket_ID" = RE."Ticket_ID"
     JOIN "Route" RO ON T."Route_ID" = RO."Route_ID"
     JOIN "Location" L ON L."Location_ID" = RO."Origin"
-    WHERE L."Country" = 'Iran' AND RE."Status" = 'confirmed'
+    WHERE L."Country" = 'Iran' AND RE."Status" = 'Confirmed'
     GROUP BY L."City"
     ORDER BY "Tickets_Sold" DESC;
 
@@ -117,56 +118,58 @@ SELECT DISTINCT L."City"
     WHERE P."Registration_Date" = (
     SELECT MIN(P2."Registration_Date")
     FROM "Profile" P2
-    ) AND RE."Status" = 'confirmed' AND U."Role" = 'Customer'
+    ) AND RE."Status" = 'Confirmed' AND U."Role" = 'Customer'
 
 
 -- 11. List support users (admins) of the website
-SELECT U."User_ID", U."Name", U."Lastname"
+SELECT U."User_ID", P."Name", P."Lastname"
     FROM "User" U
+	JOIN "Profile" P ON P."User_ID" = U."User_ID"
     WHERE U."Role" = 'Admin';
-
 
 
 -- 12. List users who have purchased at least 2 tickets
 SELECT P."User_ID", P."Name", P."Lastname"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
     GROUP BY P."User_ID", P."Name", P."Lastname"
     HAVING COUNT(R."Reservation_ID") >= 2;
 
 
 -- 13. List users who bought at most 2 one type tickets
-SELECT P."User_ID", P."Name", P."Lastname"
+(
+    SELECT P."User_ID", P."Name", P."Lastname"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
     JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
     JOIN "Train_Ride" TR ON TR."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
     GROUP BY P."User_ID", P."Name", P."Lastname"
-    HAVING COUNT(R."Reservation_ID") <= 2;
-
+    HAVING COUNT(R."Reservation_ID") <= 2
+)
 INTERSECT
-
-SELECT P."User_ID", P."Name", P."Lastname"
+(
+    SELECT P."User_ID", P."Name", P."Lastname"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
     JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
     JOIN "Flight" F ON F."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
     GROUP BY P."User_ID", P."Name", P."Lastname"
-    HAVING COUNT(R."Reservation_ID") <= 2;
-
+    HAVING COUNT(R."Reservation_ID") <= 2
+)
 INTERSECT
-
-SELECT P."User_ID", P."Name", P."Lastname"
+(
+    SELECT P."User_ID", P."Name", P."Lastname"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
     JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
     JOIN "Bus_Ride" BR ON BR."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
     GROUP BY P."User_ID", P."Name", P."Lastname"
-    HAVING COUNT(R."Reservation_ID") <= 2;
+    HAVING COUNT(R."Reservation_ID") <= 2
+);
 
 
 -- 14. Users who bought at least one ticket from all 3 vehicle types
@@ -176,7 +179,7 @@ SELECT DISTINCT U."Email", U."Phone_Number"
     JOIN "Reservation" R ON R."User_ID" = U."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
     JOIN "Flight" F ON F."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
 
 INTERSECT
 
@@ -186,7 +189,7 @@ SELECT DISTINCT U."Email", U."Phone_Number"
     JOIN "Reservation" R ON R."User_ID" = U."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
     JOIN "Train_Ride" TR ON TR."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
 
 INTERSECT
 
@@ -196,7 +199,7 @@ SELECT DISTINCT U."Email", U."Phone_Number"
     JOIN "Reservation" R ON R."User_ID" = U."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID"
     JOIN "Bus_Ride" B ON B."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed';
+    WHERE R."Status" = 'Confirmed';
 
 
 -- 15. Get confirmed reservations made for today, ordered by time
@@ -206,10 +209,10 @@ SELECT R."Reservation_ID", R."Reservation_Time"
     ORDER BY R."Reservation_Time";
 
 -- 16. Get the second most reserved ticket and its price
-SELECT T."Ticket_ID", T."Price"
+SELECT T."Ticket_ID", T."Price", COUNT(R."Reservation_ID") AS "count"
     FROM "Ticket" T 
     JOIN "Reservation" R ON R."Ticket_ID" = T."Ticket_ID"
-    WHERE R."Status" = 'confirmed'
+    WHERE R."Status" = 'Confirmed'
     GROUP BY T."Ticket_ID", T."Price"
     ORDER BY COUNT(R."Reservation_ID") DESC
     OFFSET 1 LIMIT 1;
@@ -244,18 +247,19 @@ WITH Most_Cancelled_Reservations AS (
     SELECT P."User_ID"
         FROM "Profile" P
         JOIN "Reservation" R ON R."User_ID" = P."User_ID"
-        WHERE R."Status" = 'cancelled'
+        WHERE R."Status" = 'Cancelled'
         GROUP BY P."User_ID"
         ORDER BY COUNT(R."Reservation_ID") DESC
         LIMIT 1
 )
 
 UPDATE "Profile" P
+    WHERE MCR."User_ID" = P."User_ID";
     SET "Lastname" = 'redington'
     FROM Most_Cancelled_Reservations MCR
-    FROM 
-    WHERE MCR."User_ID" = P."User_ID";
 
+
+SELECT * FROM "Reservation" 
 
 -- 19. Delete all reservations of the user with the most cancelled reservations
 DELETE FROM "Reservation"
@@ -266,7 +270,7 @@ DELETE FROM "Reservation"
 
 -- 20. Delete all cancelled reservations
 DELETE FROM "Reservation"
-    WHERE "Reservation"."Status" = 'cancelled';
+    WHERE "Reservation"."Status" = 'Cancelled';
 
 
 
@@ -278,10 +282,19 @@ UPDATE "Ticket" T
         AND T."Vehicle_ID" = V."Vehicle_ID"
         AND C."Company_ID" = V."Company_ID"
         AND C."Name" = 'Mahan'
-        AND R."Status" = 'confirmed'
+        AND R."Status" = 'Confirmed'
         AND R."Reservation_Date" = CURRENT_DATE - INTERVAL '1 day';
 
-    
+SELECT T."Price", C."Name"
+	FROM "Ticket" T
+	JOIN "Reservation" R ON R."Ticket_ID" = T."Ticket_ID"
+	JOIN "Vehicle" V ON V."Vehicle_ID" = T."Vehicle_ID"
+	JOIN "Company" C ON C."Company_ID" = V."Company_ID"
+	WHERE C."Name" = 'GreenRoutes'
+    AND R."Status" = 'Confirmed'
+    AND R."Reservation_Date" = CURRENT_DATE - INTERVAL '1 day';
+	
+
 -- 22. get reports for the most reported ticket
 SELECT R."Report_ID", R."Type"
     FROM "Report" R
