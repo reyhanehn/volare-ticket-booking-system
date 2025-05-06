@@ -1,11 +1,14 @@
 -- 1. Find users who have never reserved a ticket
 SELECT P."Name", P."Lastname"
-    FROM "Profile" P
-    WHERE NOT EXISTS (
-        SELECT 1 
-        FROM "Reservation" R
-        WHERE R."User_ID" = P."User_ID"
-    );
+FROM "Profile" P
+JOIN "User" U ON P."User_ID" = U."User_ID"
+WHERE U."Role" = 'Customer' 
+AND NOT EXISTS (
+    SELECT 1 
+    FROM "Reservation" R 
+    WHERE R."User_ID" = P."User_ID"
+);
+
 
 -- 2. Find users who have reserved at least one ticket
 SELECT P."Name", P."Lastname"
@@ -101,6 +104,7 @@ SELECT L."City", COUNT(RE."Reservation_ID") AS "Tickets_Sold"
 -- 10. List cities where the oldest registered user has made a purchase
 SELECT DISTINCT L."City"
     FROM "Profile" P
+    JOIN "User" U ON U."User_ID" = P."User_ID"
     JOIN "Reservation" RE ON RE."User_ID" = P."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = RE."Ticket_ID"
     JOIN "Route" RO ON T."Route_ID" = RO."Route_ID"
@@ -108,7 +112,7 @@ SELECT DISTINCT L."City"
     WHERE P."Registration_Date" = (
     SELECT MIN(P2."Registration_Date")
     FROM "Profile" P2
-    ) AND RE."Status" = 'confirmed'
+    ) AND RE."Status" = 'confirmed' AND U."Role" = 'Customer'
 
 
 -- 11. List support users (admins) of the website
@@ -238,12 +242,13 @@ WITH Most_Cancelled_Reservations AS (
         WHERE R."Status" = 'cancelled'
         GROUP BY P."User_ID"
         ORDER BY COUNT(R."Reservation_ID") DESC
-        OFFSET 1
+        LIMIT 1
 )
 
 UPDATE "Profile" P
     SET "Lastname" = 'redington'
     FROM Most_Cancelled_Reservations MCR
+    FROM 
     WHERE MCR."User_ID" = P."User_ID";
 
 
