@@ -208,6 +208,7 @@ CREATE TABLE "Reservation" (
   "Reservation_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
   "Expiration" INTERVAL NOT NULL,
   UNIQUE("Ticket_ID", "Seat_Number")
+  -- UNIQUE("Ticket_ID", "Seat_Number")
 );
 
 -- Payment Table

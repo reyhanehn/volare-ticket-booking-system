@@ -1066,3 +1066,100 @@ VALUES
 (89, 'Sepideh', 'Fazel', 5, CURRENT_DATE),
 (90, 'Omid', 'Soleimani', 9, CURRENT_DATE),
 (91, 'Roya', 'Mousavi', 10, CURRENT_DATE);
+
+
+WITH active_customers AS (
+    SELECT "User_ID"
+    FROM "User"
+    WHERE "Status" = 'Active' AND "Role" = 'Customer'
+),
+random_passengers AS (
+    SELECT "Passenger_ID"
+    FROM "Passenger"
+),
+random_tickets AS (
+    SELECT "Ticket_ID"
+    FROM "Ticket"
+),
+combinations AS (
+    SELECT
+        ac."User_ID",
+        rp."Passenger_ID",
+        rt."Ticket_ID",
+        ROW_NUMBER() OVER () as rownum
+    FROM active_customers ac
+    CROSS JOIN random_passengers rp
+    CROSS JOIN random_tickets rt
+),
+filtered_combinations AS (
+    SELECT * FROM combinations
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM "Reservation" r
+        WHERE r."Passenger_ID" = combinations."Passenger_ID"
+          AND r."Ticket_ID" = combinations."Ticket_ID"
+    )
+    LIMIT 900
+),
+final_data AS (
+    SELECT
+        "User_ID",
+        "Passenger_ID",
+        "Ticket_ID",
+        LPAD((FLOOR(RANDOM() * 30) + 1)::TEXT, 2, '0') || CHR(65 + FLOOR(RANDOM() * 6)::INT) AS "Seat_Number",
+        (ARRAY['Pending', 'Confirmed', 'Cancelled'])[FLOOR(RANDOM() * 3 + 1)]::reservation_status AS "Status",
+        CURRENT_DATE - (FLOOR(RANDOM() * 30)) * INTERVAL '1 day' AS "Reservation_Date",
+        CURRENT_TIME - (FLOOR(RANDOM() * 86400)) * INTERVAL '1 second' AS "Reservation_Time",
+        INTERVAL '1 day' AS "Expiration"
+    FROM filtered_combinations
+)
+INSERT INTO "Reservation"
+("User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number", "Status", "Reservation_Date", "Reservation_Time", "Expiration")
+SELECT * FROM final_data;
+
+
+UPDATE "Reservation"
+SET "Status" = 'Cancelled'
+WHERE "Status" = 'Pending'
+  AND CURRENT_TIMESTAMP > ("Reservation_Date" + "Expiration")
+  AND "Status" != 'Cancelled';
+
+
+SELECT * FROM "Reservation" WHERE "Status" = 'Confirmed';
+
+
+WITH confirmed_reservations AS (
+    SELECT r."Reservation_ID", r."User_ID", r."Ticket_ID", t."Price", r."Reservation_Date", r."Reservation_Time"
+    FROM "Reservation" r
+    JOIN "Ticket" t ON r."Ticket_ID" = t."Ticket_ID"
+    WHERE r."Status" = 'Confirmed'
+)
+INSERT INTO "Payment" ("User_ID", "Reservation_ID", "Amount", "Payment_Method", "Status", "Payment_Time", "Payment_Date")
+SELECT
+    r."User_ID",
+    r."Reservation_ID",
+    r."Price" AS "Amount",
+    (ARRAY['Credit Card', 'PayPal', 'Bank Transfer', 'Cash', 'Wallet'])[FLOOR(RANDOM() * 5) + 1]::payment_method AS "Payment_Method",
+    'Completed' AS "Status",
+    r."Reservation_Time" AS "Payment_Time",
+    r."Reservation_Date" AS "Payment_Date"
+FROM confirmed_reservations r;
+
+
+WITH pending_reservations AS (
+    SELECT r."Reservation_ID", r."User_ID", r."Ticket_ID", t."Price", r."Reservation_Date", r."Reservation_Time"
+    FROM "Reservation" r
+    JOIN "Ticket" t ON r."Ticket_ID" = t."Ticket_ID"
+    WHERE r."Status" = 'Pending'
+    LIMIT 5
+)
+INSERT INTO "Payment" ("User_ID", "Reservation_ID", "Amount", "Payment_Method", "Status", "Payment_Time", "Payment_Date")
+SELECT
+    r."User_ID",
+    r."Reservation_ID",
+    r."Price" AS "Amount",
+    (ARRAY['Credit Card', 'PayPal', 'Bank Transfer', 'Cash', 'Wallet'])[FLOOR(RANDOM() * 5) + 1]::payment_method AS "Payment_Method",
+    'Pending' AS "Status",
+    r."Reservation_Time" AS "Payment_Time",
+    r."Reservation_Date" AS "Payment_Date"
+FROM pending_reservations r;
