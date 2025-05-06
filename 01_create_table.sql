@@ -188,7 +188,6 @@ CREATE TABLE "Bus_Ride" (
 );
 
 
-
 -- Passenger Table
 CREATE TABLE "Passenger" (
   "Passenger_ID" BIGSERIAL PRIMARY KEY,

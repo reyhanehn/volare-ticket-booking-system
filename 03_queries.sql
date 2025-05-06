@@ -10,6 +10,11 @@ AND NOT EXISTS (
 );
 
 
+SELECT DISTINCT U."User_ID"
+FROM "User" U
+JOIN "Reservation" R ON R."User_ID" = U."User_ID"
+
+
 -- 2. Find users who have reserved at least one ticket
 SELECT P."Name", P."Lastname"
     FROM "Profile" P
