@@ -15,6 +15,7 @@ CREATE TYPE report_status AS ENUM ('Pending', 'Checked');
 CREATE TYPE vacation_class_code AS ENUM ('First_Class', 'Business_Class', 'Economy_Class');
 CREATE TYPE bus_type AS ENUM ('VIP', 'Normal');
 
+
 -- Location Table
 CREATE TABLE "Location" (
     "Location_ID" SERIAL PRIMARY KEY,

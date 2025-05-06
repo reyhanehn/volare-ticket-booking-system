@@ -1068,55 +1068,81 @@ VALUES
 (91, 'Roya', 'Mousavi', 10, CURRENT_DATE);
 
 
-WITH active_customers AS (
+CREATE OR REPLACE FUNCTION insert_random_reservations(n INTEGER)
+RETURNS VOID AS $$
+DECLARE
+  i             INTEGER := 0;
+  v_user_id     BIGINT;
+  v_passenger_id BIGINT;
+  v_ticket_id   BIGINT;
+  v_seat        VARCHAR(10);
+  v_status      reservation_status;
+  v_rand_ts     TIMESTAMP;
+  v_res_date    DATE;
+  v_res_time    TIME;
+BEGIN
+  FOR i IN 1..n LOOP
+    -- 1) pick a random active customer
     SELECT "User_ID"
+      INTO v_user_id
     FROM "User"
-    WHERE "Status" = 'Active' AND "Role" = 'Customer'
-),
-random_passengers AS (
-    SELECT "Passenger_ID"
-    FROM "Passenger"
-),
-random_tickets AS (
-    SELECT "Ticket_ID"
-    FROM "Ticket"
-),
-combinations AS (
-    SELECT
-        ac."User_ID",
-        rp."Passenger_ID",
-        rt."Ticket_ID",
-        ROW_NUMBER() OVER () as rownum
-    FROM active_customers ac
-    CROSS JOIN random_passengers rp
-    CROSS JOIN random_tickets rt
-),
-filtered_combinations AS (
-    SELECT * FROM combinations
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM "Reservation" r
-        WHERE r."Passenger_ID" = combinations."Passenger_ID"
-          AND r."Ticket_ID" = combinations."Ticket_ID"
-    )
-    LIMIT 900
-),
-final_data AS (
-    SELECT
-        "User_ID",
-        "Passenger_ID",
-        "Ticket_ID",
-        LPAD((FLOOR(RANDOM() * 30) + 1)::TEXT, 2, '0') || CHR(65 + FLOOR(RANDOM() * 6)::INT) AS "Seat_Number",
-        (ARRAY['Pending', 'Confirmed', 'Cancelled'])[FLOOR(RANDOM() * 3 + 1)]::reservation_status AS "Status",
-        CURRENT_DATE - (FLOOR(RANDOM() * 30)) * INTERVAL '1 day' AS "Reservation_Date",
-        CURRENT_TIME - (FLOOR(RANDOM() * 86400)) * INTERVAL '1 second' AS "Reservation_Time",
-        INTERVAL '1 day' AS "Expiration"
-    FROM filtered_combinations
-)
-INSERT INTO "Reservation"
-("User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number", "Status", "Reservation_Date", "Reservation_Time", "Expiration")
-SELECT * FROM final_data;
+    WHERE "Status" = 'Active'
+      AND "Role" = 'Customer'
+    ORDER BY RANDOM()
+    LIMIT 1;
 
+    -- 2) pick a random passenger
+    SELECT "Passenger_ID"
+      INTO v_passenger_id
+    FROM "Passenger"
+    ORDER BY RANDOM()
+    LIMIT 1;
+
+    -- 3) pick a random ticket
+    SELECT "Ticket_ID"
+      INTO v_ticket_id
+    FROM "Ticket"
+    ORDER BY RANDOM()
+    LIMIT 1;
+
+    -- 4) generate a unique seat for that ticket
+    LOOP
+      v_seat :=
+        LPAD((FLOOR(RANDOM() * 30) + 1)::TEXT, 2, '0')
+        || CHR((65 + FLOOR(RANDOM() * 26))::INT);
+      EXIT WHEN NOT EXISTS(
+        SELECT 1 FROM "Reservation"
+        WHERE "Ticket_ID" = v_ticket_id
+          AND "Seat_Number" = v_seat
+      );
+    END LOOP;
+
+    -- 5) random status
+    v_status := (
+      ARRAY['Pending','Confirmed','Cancelled']::reservation_status[]
+    )[FLOOR(RANDOM() * 3 + 1)];
+
+    -- 6) random timestamp within past year
+    v_rand_ts := NOW()
+      - ((FLOOR(RANDOM() * 365))::INT || ' days')::INTERVAL
+      - ((FLOOR(RANDOM() * 86400))::INT || ' seconds')::INTERVAL;
+    v_res_date := v_rand_ts::DATE;
+    v_res_time := v_rand_ts::TIME;
+
+    -- 7) insert
+    INSERT INTO "Reservation" (
+      "User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number",
+      "Status", "Reservation_Date", "Reservation_Time", "Expiration"
+    ) VALUES (
+      v_user_id, v_passenger_id, v_ticket_id, v_seat,
+      v_status, v_res_date, v_res_time, INTERVAL '1 day'
+    );
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+SELECT insert_random_reservations(1000);
 
 UPDATE "Reservation"
 SET "Status" = 'Cancelled'
@@ -1180,4 +1206,21 @@ SELECT
     p."Payment_Date"
 FROM wallet_payments p
 JOIN "Wallet" w ON w."User_ID" = p."User_ID";
+
+
+WITH random_wallets AS (
+    SELECT w."Wallet_ID", w."User_ID"
+    FROM "Wallet" w
+    ORDER BY RANDOM()
+    LIMIT 100
+)
+INSERT INTO "Wallet_Transactions" ("Wallet_ID", "Related_Payment_ID", "Amount", "Type", "Transaction_Date", "Transaction_Time")
+SELECT
+    rw."Wallet_ID",
+    NULL AS "Related_Payment_ID",
+    ROUND((RANDOM() * 100 + 1)::numeric, 2) AS "Amount",  -- Explicitly casting RANDOM() to numeric
+    'Charge' AS "Type",
+    CURRENT_DATE - (FLOOR(RANDOM() * 30) + 1) * INTERVAL '1 day' AS "Transaction_Date",  -- Fix: casting to INTERVAL
+    CURRENT_TIME - INTERVAL '1 hour' * FLOOR(RANDOM() * 24) AS "Transaction_Time"  -- Random time in the past 24 hours
+FROM random_wallets rw;
 
