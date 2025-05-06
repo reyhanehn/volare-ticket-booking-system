@@ -1163,3 +1163,21 @@ SELECT
     r."Reservation_Time" AS "Payment_Time",
     r."Reservation_Date" AS "Payment_Date"
 FROM pending_reservations r;
+
+
+WITH wallet_payments AS (
+    SELECT p."Payment_ID", p."User_ID", p."Amount", p."Payment_Time", p."Payment_Date"
+    FROM "Payment" p
+    WHERE p."Payment_Method" = 'Wallet'
+)
+INSERT INTO "Wallet_Transactions" ("Wallet_ID", "Related_Payment_ID", "Amount", "Type", "Transaction_Time", "Transaction_Date")
+SELECT
+    w."Wallet_ID",
+    p."Payment_ID" AS "Related_Payment_ID",
+    p."Amount",
+    'Payment' AS "Type",
+    p."Payment_Time",
+    p."Payment_Date"
+FROM wallet_payments p
+JOIN "Wallet" w ON w."User_ID" = p."User_ID";
+
