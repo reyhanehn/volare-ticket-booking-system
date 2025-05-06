@@ -1218,9 +1218,121 @@ INSERT INTO "Wallet_Transactions" ("Wallet_ID", "Related_Payment_ID", "Amount", 
 SELECT
     rw."Wallet_ID",
     NULL AS "Related_Payment_ID",
-    ROUND((RANDOM() * 100 + 1)::numeric, 2) AS "Amount",  -- Explicitly casting RANDOM() to numeric
+    ROUND((RANDOM() * 100 + 1)::numeric, 2) AS "Amount",
     'Charge' AS "Type",
-    CURRENT_DATE - (FLOOR(RANDOM() * 30) + 1) * INTERVAL '1 day' AS "Transaction_Date",  -- Fix: casting to INTERVAL
-    CURRENT_TIME - INTERVAL '1 hour' * FLOOR(RANDOM() * 24) AS "Transaction_Time"  -- Random time in the past 24 hours
+    CURRENT_DATE - (FLOOR(RANDOM() * 30) + 1) * INTERVAL '1 day' AS "Transaction_Date",
+    CURRENT_TIME - INTERVAL '1 hour' * FLOOR(RANDOM() * 24) AS "Transaction_Time"
 FROM random_wallets rw;
+
+
+UPDATE "Wallet" w
+SET "Balance" = "Balance" + sub.total_charge
+FROM (
+    SELECT "Wallet_ID", SUM("Amount") AS total_charge
+    FROM "Wallet_Transactions"
+    WHERE "Type" = 'Charge'
+    GROUP BY "Wallet_ID"
+) sub
+WHERE w."Wallet_ID" = sub."Wallet_ID";
+
+
+INSERT INTO "Payment" (
+    "User_ID",
+    "Reservation_ID",
+    "Amount",
+    "Payment_Method",
+    "Status",
+    "Payment_Time",
+    "Payment_Date"
+)
+SELECT
+    r."User_ID",
+    r."Reservation_ID",
+    t."Price" AS "Amount",
+    (ARRAY['Credit Card','PayPal','Bank Transfer','Cash', 'Wallet'])[FLOOR(RANDOM() * 5 + 1)]::payment_method,
+    'Completed'::payment_status,
+    r."Reservation_Time",
+    r."Reservation_Date"
+FROM (
+    SELECT *
+    FROM "Reservation"
+    WHERE "Status" = 'Cancelled'
+      AND "Reservation_ID" NOT IN (SELECT "Reservation_ID" FROM "Payment")
+    ORDER BY RANDOM()
+    LIMIT 100
+) r
+JOIN "Ticket" t ON r."Ticket_ID" = t."Ticket_ID";
+
+
+INSERT INTO "Wallet_Transactions" (
+    "Wallet_ID",
+    "Related_Payment_ID",
+    "Amount",
+    "Type",
+    "Transaction_Date",
+    "Transaction_Time"
+)
+SELECT
+    w."Wallet_ID",
+    p."Payment_ID",
+    p."Amount",
+    'Refund'::transaction_type,
+    p."Payment_Date" + (FLOOR(RANDOM() * 3 + 1)) * INTERVAL '1 day',
+    (p."Payment_Time" + (INTERVAL '1 hour' * FLOOR(RANDOM() * 24)))::time
+FROM "Payment" p
+JOIN "Reservation" r ON p."Reservation_ID" = r."Reservation_ID"
+JOIN "Wallet" w ON p."User_ID" = w."User_ID"
+WHERE r."Status" = 'Cancelled'
+  AND p."Payment_ID" NOT IN (
+    SELECT "Related_Payment_ID" FROM "Wallet_Transactions"
+    WHERE "Type" = 'Refund'
+  );
+
+CREATE OR REPLACE PROCEDURE insert_cancellations_with_random_admins()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    rec RECORD;
+    admin_id BIGINT;
+BEGIN
+    FOR rec IN
+        SELECT r."Reservation_ID", wt."Transaction_ID", wt."Transaction_Date", wt."Transaction_Time", wt."Amount"
+        FROM "Reservation" r
+        JOIN "Payment" p ON r."Reservation_ID" = p."Reservation_ID"
+        JOIN "Wallet_Transactions" wt ON p."Payment_ID" = wt."Related_Payment_ID"
+        WHERE r."Status" = 'Cancelled'
+          AND wt."Type" = 'Refund'
+          AND NOT EXISTS (
+              SELECT 1 FROM "Cancellation" c WHERE c."Reservation_ID" = r."Reservation_ID"
+          )
+    LOOP
+        -- Select a random admin for each cancellation
+        SELECT "User_ID"
+        INTO admin_id
+        FROM "User"
+        WHERE "Role" = 'Admin'
+        ORDER BY RANDOM()
+        LIMIT 1;
+
+        INSERT INTO "Cancellation" (
+            "Reservation_ID",
+            "Admin_ID",
+            "Transaction_ID",
+            "Cancel_Date",
+            "Cancel_Time",
+            "Refund_Amount"
+        ) VALUES (
+            rec."Reservation_ID",
+            admin_id,
+            rec."Transaction_ID",
+            rec."Transaction_Date" - INTERVAL '0 day',
+            rec."Transaction_Time" - INTERVAL '1 hour',
+            rec."Amount"
+        );
+    END LOOP;
+END;
+$$;
+
+
+CALL insert_cancellations_with_random_admins();
 
