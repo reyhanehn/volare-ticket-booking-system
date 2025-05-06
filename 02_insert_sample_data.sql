@@ -1234,3 +1234,33 @@ $$;
 
 CALL insert_cancellations();
 
+
+-- insert into reports
+
+-- reservation
+DO $$
+DECLARE
+  report_id BIGINT;
+  reservation_rec RECORD;
+BEGIN
+  FOR reservation_rec IN
+    SELECT r."Reservation_ID", r."User_ID", c."Admin_ID"
+    FROM "Cancellation" c
+    JOIN "Reservation" r ON r."Reservation_ID" = c."Reservation_ID"
+  LOOP
+
+    INSERT INTO "Report" ("User_ID", "Admin_ID", "Status", "Text", "Answer", "Type")
+    VALUES (
+      reservation_rec."User_ID",
+      reservation_rec."Admin_ID",
+      'Checked',
+      'Please end this',
+      'For sure',
+	  'reservation'
+    )
+    RETURNING "Report_ID" INTO report_id;
+
+    INSERT INTO "Report_Reservation" ("Report_ID", "Reservation_ID")
+    VALUES (report_id, reservation_rec."Reservation_ID");
+  END LOOP;
+END $$;
