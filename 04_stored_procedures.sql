@@ -209,3 +209,36 @@ BEGIN
     ORDER BY R."Reservation_Date", R."Reservation_Time";
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- 8. Show users who have the most reports for a given topic
+CREATE OR REPLACE FUNCTION get_top_reporters_by_topic(topic_input TEXT)
+RETURNS TABLE (
+    User_ID BIGINT,
+    Name TEXT,
+    Lastname TEXT,
+    Report_Count INT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        P."User_ID",
+        P."Name",
+        P."Lastname",
+        COUNT(RP."Report_ID") AS Report_Count
+    FROM "Report" RP
+    JOIN "Profile" P ON RP."User_ID" = P."User_ID"
+    WHERE RP."Type" = topic_input
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    HAVING COUNT(RP."Report_ID") = (
+        SELECT MAX(Report_Count)
+        FROM (
+            SELECT COUNT(*) AS Report_Count
+            FROM "Report"
+            WHERE "Type" = topic_input
+            GROUP BY "User_ID"
+        ) AS Sub
+    );
+END;
+$$ LANGUAGE plpgsql;

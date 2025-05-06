@@ -183,6 +183,10 @@ CREATE TABLE "Train_Ride" (
   "Freight_Wagons_Left" SMALLINT NOT NULL
 );
 
+CREATE TABLE "Bus_Ride" (
+  "Ticket_ID" BIGINT PRIMARY KEY REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE
+);
+
 
 
 -- Passenger Table
@@ -248,7 +252,7 @@ CREATE TABLE "Wallet_Transactions" (
 CREATE TABLE "Cancellation" (
   "Cancellation_ID" BIGSERIAL PRIMARY KEY,
   "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
-  "Admin_ID" BIGINT NOT NULL UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "Admin_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Transaction_ID" BIGINT NOT NULL UNIQUE REFERENCES "Wallet_Transactions"("Transaction_ID") ON DELETE SET NULL,
   "Cancel_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Cancel_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
