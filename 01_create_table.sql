@@ -14,6 +14,7 @@ CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
 CREATE TYPE report_status AS ENUM ('Pending', 'Checked');
 CREATE TYPE vacation_class_code AS ENUM ('First_Class', 'Business_Class', 'Economy_Class');
 CREATE TYPE bus_type AS ENUM ('VIP', 'Normal');
+CREATE TYPE report_type ENUM ('reservation', 'payment', 'ticket');
 
 
 -- Location Table
@@ -187,6 +188,7 @@ CREATE TABLE "Bus_Ride" (
 );
 
 
+
 -- Passenger Table
 CREATE TABLE "Passenger" (
   "Passenger_ID" BIGSERIAL PRIMARY KEY,
@@ -261,10 +263,11 @@ CREATE TABLE "Cancellation" (
 CREATE TABLE "Report" (
   "Report_ID" BIGSERIAL PRIMARY KEY,
   "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
-  "Admin_ID" BIGINT NOT NULL UNIQUE REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "Admin_ID" BIGINT REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Status" report_status NOT NULL DEFAULT 'Pending',
   "Text" TEXT NOT NULL,
   "Answer" TEXT,
+  "Type" report_type NOT NULL,
   CONSTRAINT chk_different_user_admin
     CHECK ("User_ID" <> "Admin_ID"),
   CONSTRAINT chk_admin_required_if_checked

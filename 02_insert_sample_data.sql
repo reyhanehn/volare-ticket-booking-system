@@ -753,8 +753,8 @@ BEGIN
     END LOOP;
 END $$;
 
--- insert into ticket_stop
--- for flights
+
+
 WITH flight_tickets AS (
     SELECT tk."Ticket_ID"
     FROM "Ticket" tk
@@ -791,7 +791,9 @@ SELECT stop."Ticket_ID",
 FROM filtered_stops stop
 JOIN valid_stop_types vst ON TRUE
 ORDER BY stop."Ticket_ID", stop.stop_order;
--- for train_rides
+
+
+
 WITH train_tickets AS (
     SELECT tk."Ticket_ID"
     FROM "Ticket" tk
@@ -828,7 +830,7 @@ SELECT stop."Ticket_ID",
 FROM filtered_stops stop
 JOIN valid_stop_types vst ON TRUE
 ORDER BY stop."Ticket_ID", stop.stop_order;
--- for bus_rides
+
 WITH bus_tickets AS (
     SELECT tk."Ticket_ID"
     FROM "Ticket" tk
@@ -871,7 +873,7 @@ JOIN "Valid_Stop_Type" vst
     AND vst."Stop_Type" = stop."Stop_Type"
 ORDER BY stop."Ticket_ID", stop.stop_order;
 
--- insert banned users
+
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Status", "Password_Hash")
 SELECT
   '+989' || LPAD(FLOOR(RANDOM() * 1000000000)::TEXT, 9, '0') AS "Phone_Number",
@@ -905,7 +907,6 @@ INSERT INTO "Wallet" ("User_ID", "Balance") VALUES
 (60, 18.2),
 (61, 45);
 
--- insert admins
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
 VALUES
 ('+989953658868', 'zhurst@yahoo.com', 'Admin', '2p(YQJ%G$R'),
@@ -973,7 +974,7 @@ VALUES
 (90, 'Omid', 'Soleimani', 9, CURRENT_DATE),
 (91, 'Roya', 'Mousavi', 10, CURRENT_DATE);
 
--- insert into reservation
+
 CREATE OR REPLACE FUNCTION insert_random_reservations(n INTEGER)
 RETURNS VOID AS $$
 DECLARE
@@ -1050,7 +1051,10 @@ WHERE "Status" = 'Pending'
   AND CURRENT_TIMESTAMP > ("Reservation_Date" + "Expiration")
   AND "Status" != 'Cancelled';
 
--- insert payment
+
+SELECT * FROM "Reservation" WHERE "Status" = 'Confirmed';
+
+
 WITH confirmed_reservations AS (
     SELECT r."Reservation_ID", r."User_ID", r."Ticket_ID", t."Price", r."Reservation_Date", r."Reservation_Time"
     FROM "Reservation" r
@@ -1105,7 +1109,7 @@ SELECT
 FROM wallet_payments p
 JOIN "Wallet" w ON w."User_ID" = p."User_ID";
 
--- charge
+
 WITH random_wallets AS (
     SELECT w."Wallet_ID", w."User_ID"
     FROM "Wallet" w
@@ -1264,3 +1268,50 @@ BEGIN
     VALUES (report_id, reservation_rec."Reservation_ID");
   END LOOP;
 END $$;
+=======
+--insert into report(payment and ticket)
+WITH report_data AS (
+  SELECT
+    gs AS idx,
+    -- Random customer for User_ID
+    (SELECT "User_ID" FROM "User" WHERE "Role" = 'Customer' ORDER BY random() LIMIT 1) AS "User_ID",
+    -- Admin_ID is only set for checked reports
+    CASE 
+      WHEN gs <= 50 THEN NULL
+      ELSE (SELECT "User_ID" FROM "User" WHERE "Role" = 'Admin' ORDER BY random() LIMIT 1)
+    END AS "Admin_ID",
+    CASE 
+      WHEN gs <= 50 THEN 'Pending'
+      ELSE 'Checked'
+    END::report_status AS "Status",
+    'This is report #' || gs AS "Text",
+    -- Answer is NULL for pending, filled for checked
+    CASE 
+      WHEN gs <= 50 THEN NULL
+      ELSE 'Answer for report #' || gs
+    END AS "Answer",
+    -- Alternate evenly between 'payment' and 'ticket'
+    CASE 
+      WHEN gs % 2 = 0 THEN 'payment'
+      ELSE 'ticket'
+    END::report_type AS "Type"
+  FROM generate_series(1, 100) gs
+)
+INSERT INTO "Report" ("User_ID", "Admin_ID", "Status", "Text", "Answer", "Type")
+SELECT "User_ID", "Admin_ID", "Status", "Text", "Answer", "Type"
+FROM report_data;
+
+-- Insert into Report_Payment table for reports of type 'payment'
+INSERT INTO "Report_Payment" ("Report_ID", "Payment_ID")
+SELECT r."Report_ID", 
+       (SELECT "Payment_ID" FROM "Payment" ORDER BY random() LIMIT 1)
+FROM "Report" r
+WHERE r."Type" = 'payment' AND r."Report_ID" NOT IN (SELECT "Report_ID" FROM "Report_Payment");
+
+
+-- Insert into Report_Ticket table for reports of type 'ticket'
+INSERT INTO "Report_Ticket" ("Report_ID", "Ticket_ID")
+SELECT r."Report_ID", 
+       (SELECT "Ticket_ID" FROM "Ticket" ORDER BY random() LIMIT 1)
+FROM "Report" r
+WHERE r."Type" = 'ticket' AND r."Report_ID" NOT IN (SELECT "Report_ID" FROM "Report_Ticket");
