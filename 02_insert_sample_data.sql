@@ -1,19 +1,18 @@
+-- reset sequences
 DO $$
 DECLARE
     seq_name text;
 BEGIN
-    -- Loop through each sequence in the public schema
     FOR seq_name IN
         SELECT sequence_name
         FROM information_schema.sequences
         WHERE sequence_schema = 'public'
     LOOP
-        -- Alter each sequence to restart with 1
         EXECUTE 'ALTER SEQUENCE "' || seq_name || '"RESTART WITH 1';
     END LOOP;
 END $$;
 
--- Insert into location table
+-- insert into location table
 INSERT INTO "Location" ("Country", "City") VALUES
 ('Iran', 'Tehran'), 
 ('Iran', 'Mashhad'), 
@@ -70,7 +69,7 @@ INSERT INTO "Location" ("Country", "City") VALUES
 ('India', 'Mumbai'),
 ('India', 'Delhi');
 
--- Insert into user table
+-- insert into user table
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
 VALUES
 ('+989121000001', 'alireza.rahimi@mail.com', 'Customer', 'AlirezaR@92'),
@@ -188,7 +187,7 @@ INSERT INTO "Company" ("Name", "Headquarters", "Year_Of_Establishment", "Contact
 ('GreenRoutes', 'Tabriz', 2010, '02156789012'),
 ('GlobalExpress', 'Yazd', 1995, '02167890123');
 
--- Insert vehicles into Vehicle table
+-- Insert vehicles into vehicle table
 INSERT INTO "Vehicle" ("Company_ID", "Name") VALUES
 (1, 'Boeing 747'),
 (1, 'Airbus A320'),
@@ -221,7 +220,7 @@ INSERT INTO "Vehicle" ("Company_ID", "Name") VALUES
 (5, 'Royal Compartment'),
 (1, 'Golden Line');
 
-
+-- insert into airplane's table
 INSERT INTO "Airplane" ("Vehicle_ID", "First_Class_Capacity", "Business_Class_Capacity", "Economy_Class_Capacity") VALUES
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Boeing 747'), 20, 50, 300),
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Airbus A320'), 10, 30, 150),
@@ -234,6 +233,7 @@ INSERT INTO "Airplane" ("Vehicle_ID", "First_Class_Capacity", "Business_Class_Ca
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'ATR 72'), 2, 10, 60),
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Gulfstream G650'), 5, 5, 10);
 
+-- insert into bus table
 INSERT INTO "Bus" ("Vehicle_ID", "Type", "Seats_Count", "Seats_In_Row") VALUES
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Volvo 9700'), 'VIP', 30, '1+2'),
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Scania Touring'), 'Normal', 44, '2+2'),
@@ -246,7 +246,7 @@ INSERT INTO "Bus" ("Vehicle_ID", "Type", "Seats_Count", "Seats_In_Row") VALUES
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Yutong ZK6122'), 'VIP', 32, '1+2'),
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Volvo B9R'), 'Normal', 42, '2+2');
 
-
+-- insert into  train's table
 INSERT INTO "Train" ("Vehicle_ID", "Type", "Stars", "Seats_Count", "Seats_In_Cabin", "Freight_Wagons_Count") VALUES
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Raja Compartment'), 'Compartment', 4, 200, 40, 8),
 ((SELECT "Vehicle_ID" FROM "Vehicle" WHERE "Name" = 'Raja Coach 1'), 'Coach', 3, 250, 250, 10),
@@ -609,26 +609,22 @@ JOIN
 WHERE
     rd.departure_time < rd.arrival_time;  
 
--- Insert data into the Ticket table
+-- insert into the ticket table
 WITH TicketData AS (
     INSERT INTO "Ticket" ("Vehicle_ID", "Route_ID", "Price", "Remaining_Capacity")
-    SELECT 
-        -- Select a vehicle based on the station type (Airport -> Airplane, Train_Station -> Train, Bus_Station -> Bus)
+    SELECT
         CASE 
             WHEN s1."Type" = 'Airport' OR s2."Type" = 'Airport' THEN
-                -- Select a random airplane vehicle
                 (SELECT "Vehicle_ID" FROM "Airplane" ORDER BY RANDOM() LIMIT 1)
             WHEN s1."Type" = 'Train_Station' OR s2."Type" = 'Train_Station' THEN
-                -- Select a random train vehicle
                 (SELECT "Vehicle_ID" FROM "Train" ORDER BY RANDOM() LIMIT 1)
             WHEN s1."Type" = 'Bus_Station' OR s2."Type" = 'Bus_Station' THEN
-                -- Select a random bus vehicle
                 (SELECT "Vehicle_ID" FROM "Bus" ORDER BY RANDOM() LIMIT 1)
         END AS "Vehicle_ID",
         
-        r."Route_ID",  -- From the Route table
-        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",  -- Random price between 50 and 500
-        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"  -- Random remaining capacity between 10 and 100
+        r."Route_ID",
+        ROUND((RANDOM() * (500 - 50) + 50)::numeric, 2) AS "Price",
+        FLOOR(RANDOM() * (100 - 10) + 10) AS "Remaining_Capacity"
     FROM 
         "Route" r
     JOIN 
@@ -641,47 +637,7 @@ WITH TicketData AS (
 )
 SELECT * FROM TicketData;
 
-
---insert into flight and train and bus table
-SELECT 
-    t."Ticket_ID",
-    t."Vehicle_ID",
-    CASE
-        WHEN a."Vehicle_ID" IS NOT NULL THEN 'Airplane'
-        WHEN b."Vehicle_ID" IS NOT NULL THEN 'Bus'
-        WHEN tr."Vehicle_ID" IS NOT NULL THEN 'Train'
-        ELSE 'Unknown'
-    END AS "Vehicle_Type",  -- Determining vehicle type based on the vehicle table it belongs to
-    t."Route_ID",
-    t."Price",
-    t."Remaining_Capacity",
-    r."Departure_Date",
-    r."Departure_Time",
-    r."Arrival_Date",
-    r."Arrival_Time",
-    s1."Station_ID" AS "Origin_Station_ID",
-    s1."Type" AS "Origin_Station_Type",
-    s2."Station_ID" AS "Destination_Station_ID",
-    s2."Type" AS "Destination_Station_Type"
-FROM 
-    "Ticket" t
-JOIN 
-    "Route" r ON t."Route_ID" = r."Route_ID"
-JOIN 
-    "Station" s1 ON r."Origin_Station" = s1."Station_ID"
-JOIN 
-    "Station" s2 ON r."Destination_Station" = s2."Station_ID"
-LEFT JOIN 
-    "Airplane" a ON t."Vehicle_ID" = a."Vehicle_ID"
-LEFT JOIN 
-    "Bus" b ON t."Vehicle_ID" = b."Vehicle_ID"
-LEFT JOIN 
-    "Train" tr ON t."Vehicle_ID" = tr."Vehicle_ID"
-ORDER BY 
-    t."Ticket_ID";
-
-
--- insert into Service
+-- insert into service
 INSERT INTO "Service" ("Name") VALUES
 ('Internet'),
 ('With Bed'),
@@ -698,7 +654,7 @@ FROM "User"
 WHERE "User_ID" NOT IN (SELECT "User_ID" FROM "Wallet");
 
 
--- insert into Valid Stop Type
+-- insert into valid stop type
 INSERT INTO "Valid_Stop_Type" ("Transport_Mode", "Stop_Type") VALUES
 ('Airplane', 'Layover'),
 ('Bus', 'Meal'),
@@ -706,6 +662,7 @@ INSERT INTO "Valid_Stop_Type" ("Transport_Mode", "Stop_Type") VALUES
 ('Train', 'Transit'),
 ('Bus', 'Transit');
 
+-- insert into flight
 WITH Airplane_Tickets AS (
     SELECT
         t."Ticket_ID",
@@ -749,7 +706,7 @@ SELECT
     c."Type"
 FROM Classified c;
 
-
+-- insert into train ride
 INSERT INTO "Train_Ride" ("Ticket_ID", "Has_Private_Compartment", "Freight_Wagons_Left")
 SELECT
     t."Ticket_ID",
@@ -760,6 +717,15 @@ JOIN "Train" tr ON t."Vehicle_ID" = tr."Vehicle_ID"
 LEFT JOIN "Train_Ride" trr ON t."Ticket_ID" = trr."Ticket_ID"
 WHERE trr."Ticket_ID" IS NULL;
 
+-- insert into bus_ride
+INSERT INTO "Bus_Ride" ("Ticket_ID")
+SELECT t."Ticket_ID"
+FROM "Ticket" t
+JOIN "Bus" b ON t."Vehicle_ID" = b."Vehicle_ID"
+LEFT JOIN "Bus_Ride" br ON t."Ticket_ID" = br."Ticket_ID"
+WHERE br."Ticket_ID" IS NULL;
+
+-- insert into vehicle_service
 DO $$
 DECLARE
     v_id BIGINT;
@@ -787,67 +753,8 @@ BEGIN
     END LOOP;
 END $$;
 
-
-DO $$
-DECLARE
-    t RECORD;
-    stop_count INT;
-    stop_type RECORD;
-    stop_order INT;
-    stop_id INT;
-    s RECORD;
-    origin_loc INT;
-    dest_loc INT;
-BEGIN
-    FOR t IN
-        SELECT tk."Ticket_ID", tk."Route_ID",
-               CASE
-                 WHEN f."Vehicle_ID" IS NOT NULL THEN 'Airplane'
-                 WHEN tr."Vehicle_ID" IS NOT NULL THEN 'Train'
-                 WHEN b."Vehicle_ID" IS NOT NULL THEN 'Bus'
-               END AS mode
-        FROM "Ticket" tk
-        LEFT JOIN "Flight" f ON tk."Vehicle_ID" = f."Vehicle_ID"
-        LEFT JOIN "Train" tr ON tk."Vehicle_ID" = tr."Vehicle_ID"
-        LEFT JOIN "Bus" b ON tk."Vehicle_ID" = b."Vehicle_ID"
-    LOOP
-        -- Get origin and destination location IDs from the route
-        SELECT r."Origin_ID", r."Destination_ID"
-        INTO origin_loc, dest_loc
-        FROM "Route" r
-        WHERE r."Route_ID" = t."Route_ID";
-
-        -- Define the number of stops for the ticket (between 1 and 3 stops)
-        stop_count := FLOOR(RANDOM() * 3 + 1);
-        stop_order := 1;
-
-        FOR stop_type IN
-            SELECT "Valid_Stop_Type_ID"
-            FROM "Valid_Stop_Type"
-            WHERE "Transport_Mode" = t.mode
-            ORDER BY RANDOM()
-            LIMIT stop_count
-        LOOP
-            -- Get random station excluding origin and destination locations
-            SELECT "Station_ID" INTO s
-            FROM "Station"
-            WHERE "Location_ID" NOT IN (origin_loc, dest_loc)
-            ORDER BY RANDOM()
-            LIMIT 1;
-
-            -- Insert into Ticket_Stop table
-            INSERT INTO "Ticket_Stop" (
-                "Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID"
-            ) VALUES (
-                t."Ticket_ID", s."Station_ID", stop_order, stop_type."Valid_Stop_Type_ID"
-            );
-
-            stop_order := stop_order + 1;
-        END LOOP;
-    END LOOP;
-END$$;
-
-
+-- insert into ticket_stop
+-- for flights
 WITH flight_tickets AS (
     SELECT tk."Ticket_ID"
     FROM "Ticket" tk
@@ -884,9 +791,7 @@ SELECT stop."Ticket_ID",
 FROM filtered_stops stop
 JOIN valid_stop_types vst ON TRUE
 ORDER BY stop."Ticket_ID", stop.stop_order;
-
-
-
+-- for train_rides
 WITH train_tickets AS (
     SELECT tk."Ticket_ID"
     FROM "Ticket" tk
@@ -923,7 +828,7 @@ SELECT stop."Ticket_ID",
 FROM filtered_stops stop
 JOIN valid_stop_types vst ON TRUE
 ORDER BY stop."Ticket_ID", stop.stop_order;
-
+-- for bus_rides
 WITH bus_tickets AS (
     SELECT tk."Ticket_ID"
     FROM "Ticket" tk
@@ -966,7 +871,7 @@ JOIN "Valid_Stop_Type" vst
     AND vst."Stop_Type" = stop."Stop_Type"
 ORDER BY stop."Ticket_ID", stop.stop_order;
 
-
+-- insert banned users
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Status", "Password_Hash")
 SELECT
   '+989' || LPAD(FLOOR(RANDOM() * 1000000000)::TEXT, 9, '0') AS "Phone_Number",
@@ -1000,6 +905,7 @@ INSERT INTO "Wallet" ("User_ID", "Balance") VALUES
 (60, 18.2),
 (61, 45);
 
+-- insert admins
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Password_Hash")
 VALUES
 ('+989953658868', 'zhurst@yahoo.com', 'Admin', '2p(YQJ%G$R'),
@@ -1067,7 +973,7 @@ VALUES
 (90, 'Omid', 'Soleimani', 9, CURRENT_DATE),
 (91, 'Roya', 'Mousavi', 10, CURRENT_DATE);
 
-
+-- insert into reservation
 CREATE OR REPLACE FUNCTION insert_random_reservations(n INTEGER)
 RETURNS VOID AS $$
 DECLARE
@@ -1082,7 +988,6 @@ DECLARE
   v_res_time    TIME;
 BEGIN
   FOR i IN 1..n LOOP
-    -- 1) pick a random active customer
     SELECT "User_ID"
       INTO v_user_id
     FROM "User"
@@ -1091,21 +996,18 @@ BEGIN
     ORDER BY RANDOM()
     LIMIT 1;
 
-    -- 2) pick a random passenger
     SELECT "Passenger_ID"
       INTO v_passenger_id
     FROM "Passenger"
     ORDER BY RANDOM()
     LIMIT 1;
 
-    -- 3) pick a random ticket
     SELECT "Ticket_ID"
       INTO v_ticket_id
     FROM "Ticket"
     ORDER BY RANDOM()
     LIMIT 1;
 
-    -- 4) generate a unique seat for that ticket
     LOOP
       v_seat :=
         LPAD((FLOOR(RANDOM() * 30) + 1)::TEXT, 2, '0')
@@ -1117,19 +1019,16 @@ BEGIN
       );
     END LOOP;
 
-    -- 5) random status
     v_status := (
       ARRAY['Pending','Confirmed','Cancelled']::reservation_status[]
     )[FLOOR(RANDOM() * 3 + 1)];
 
-    -- 6) random timestamp within past year
     v_rand_ts := NOW()
       - ((FLOOR(RANDOM() * 365))::INT || ' days')::INTERVAL
       - ((FLOOR(RANDOM() * 86400))::INT || ' seconds')::INTERVAL;
     v_res_date := v_rand_ts::DATE;
     v_res_time := v_rand_ts::TIME;
 
-    -- 7) insert
     INSERT INTO "Reservation" (
       "User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number",
       "Status", "Reservation_Date", "Reservation_Time", "Expiration"
@@ -1144,16 +1043,14 @@ $$ LANGUAGE plpgsql;
 
 SELECT insert_random_reservations(1000);
 
+-- update expired reservations
 UPDATE "Reservation"
 SET "Status" = 'Cancelled'
 WHERE "Status" = 'Pending'
   AND CURRENT_TIMESTAMP > ("Reservation_Date" + "Expiration")
   AND "Status" != 'Cancelled';
 
-
-SELECT * FROM "Reservation" WHERE "Status" = 'Confirmed';
-
-
+-- insert payment
 WITH confirmed_reservations AS (
     SELECT r."Reservation_ID", r."User_ID", r."Ticket_ID", t."Price", r."Reservation_Date", r."Reservation_Time"
     FROM "Reservation" r
@@ -1171,7 +1068,7 @@ SELECT
     r."Reservation_Date" AS "Payment_Date"
 FROM confirmed_reservations r;
 
-
+-- insert pending payments
 WITH pending_reservations AS (
     SELECT r."Reservation_ID", r."User_ID", r."Ticket_ID", t."Price", r."Reservation_Date", r."Reservation_Time"
     FROM "Reservation" r
@@ -1190,7 +1087,8 @@ SELECT
     r."Reservation_Date" AS "Payment_Date"
 FROM pending_reservations r;
 
-
+-- insert wallet transactions
+-- payment
 WITH wallet_payments AS (
     SELECT p."Payment_ID", p."User_ID", p."Amount", p."Payment_Time", p."Payment_Date"
     FROM "Payment" p
@@ -1207,7 +1105,7 @@ SELECT
 FROM wallet_payments p
 JOIN "Wallet" w ON w."User_ID" = p."User_ID";
 
-
+-- charge
 WITH random_wallets AS (
     SELECT w."Wallet_ID", w."User_ID"
     FROM "Wallet" w
@@ -1224,7 +1122,7 @@ SELECT
     CURRENT_TIME - INTERVAL '1 hour' * FLOOR(RANDOM() * 24) AS "Transaction_Time"
 FROM random_wallets rw;
 
-
+-- update charged wallets
 UPDATE "Wallet" w
 SET "Balance" = "Balance" + sub.total_charge
 FROM (
@@ -1235,7 +1133,7 @@ FROM (
 ) sub
 WHERE w."Wallet_ID" = sub."Wallet_ID";
 
-
+-- insert payments for cancelled reservations for cancellation
 INSERT INTO "Payment" (
     "User_ID",
     "Reservation_ID",
@@ -1263,7 +1161,7 @@ FROM (
 ) r
 JOIN "Ticket" t ON r."Ticket_ID" = t."Ticket_ID";
 
-
+-- insert refunds for cancellations
 INSERT INTO "Wallet_Transactions" (
     "Wallet_ID",
     "Related_Payment_ID",
@@ -1288,7 +1186,8 @@ WHERE r."Status" = 'Cancelled'
     WHERE "Type" = 'Refund'
   );
 
-CREATE OR REPLACE PROCEDURE insert_cancellations_with_random_admins()
+-- insert_cancellation
+CREATE OR REPLACE PROCEDURE insert_cancellations()
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -1306,7 +1205,6 @@ BEGIN
               SELECT 1 FROM "Cancellation" c WHERE c."Reservation_ID" = r."Reservation_ID"
           )
     LOOP
-        -- Select a random admin for each cancellation
         SELECT "User_ID"
         INTO admin_id
         FROM "User"
@@ -1334,5 +1232,5 @@ END;
 $$;
 
 
-CALL insert_cancellations_with_random_admins();
+CALL insert_cancellations();
 
