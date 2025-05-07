@@ -263,17 +263,27 @@ WITH Most_Cancelled_Reservations AS (
 )
 
 UPDATE "Profile" P
-    WHERE MCR."User_ID" = P."User_ID";
-    SET "Lastname" = 'redington'
-    FROM Most_Cancelled_Reservations MCR
+SET "Lastname" = 'redington'
+FROM Most_Cancelled_Reservations MCR
+WHERE MCR."User_ID" = P."User_ID";
 
 
 SELECT * FROM "Reservation" 
 
 -- 19. Delete all reservations of the user with the most cancelled reservations
+WITH Most_Cancelled_Reservations AS (
+    SELECT P."User_ID"
+        FROM "Profile" P
+        JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+        WHERE R."Status" = 'Cancelled'
+        GROUP BY P."User_ID"
+        ORDER BY COUNT(R."Reservation_ID") DESC
+        LIMIT 1
+)
+
 DELETE FROM "Reservation"
     USING Most_Cancelled_Reservations MCR
-    WHERE "Reservation"."User_ID" = MCR."User_ID";
+    WHERE "Reservation"."User_ID" = MCR."User_ID" AND "Reservation"."Status" = 'Cancelled';
 
 
 
@@ -290,7 +300,7 @@ UPDATE "Ticket" T
     WHERE T."Ticket_ID" = R."Ticket_ID"
         AND T."Vehicle_ID" = V."Vehicle_ID"
         AND C."Company_ID" = V."Company_ID"
-        AND C."Name" = 'Mahan'
+        AND C."Name" = 'SkyTravel'
         AND R."Status" = 'Confirmed'
         AND R."Reservation_Date" = CURRENT_DATE - INTERVAL '1 day';
 
@@ -299,7 +309,7 @@ SELECT T."Price", C."Name"
 	JOIN "Reservation" R ON R."Ticket_ID" = T."Ticket_ID"
 	JOIN "Vehicle" V ON V."Vehicle_ID" = T."Vehicle_ID"
 	JOIN "Company" C ON C."Company_ID" = V."Company_ID"
-	WHERE C."Name" = 'GreenRoutes'
+	WHERE C."Name" = 'SkyTravel'
     AND R."Status" = 'Confirmed'
     AND R."Reservation_Date" = CURRENT_DATE - INTERVAL '1 day';
 	
