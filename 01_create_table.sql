@@ -47,7 +47,7 @@ CREATE TABLE "Profile" (
   "User_ID" BIGINT PRIMARY KEY REFERENCES "User"("User_ID") ON DELETE CASCADE,
   "Name" VARCHAR(50) NOT NULL CHECK ("Name" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
   "Lastname" VARCHAR(50) NOT NULL CHECK ("Lastname" ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
-  "City_ID" BIGINT REFERENCES "Location"("Location_ID") NOT NULL,
+  "City_ID" BIGINT REFERENCES "Location"("Location_ID") ON DELETE SET NULL,
   "Registration_Date" DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
@@ -125,10 +125,10 @@ CREATE TABLE "Station" (
 -- Route Table
 CREATE TABLE "Route" (
   "Route_ID" BIGSERIAL PRIMARY KEY,
-  "Origin" INT NOT NULL REFERENCES "Location"("Location_ID"),
-  "Destination" INT NOT NULL REFERENCES "Location"("Location_ID"),
-  "Origin_Station" INT REFERENCES "Station"("Station_ID"),
-  "Destination_Station" INT REFERENCES "Station"("Station_ID"),
+  "Origin" INT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
+  "Destination" INT NOT NULL REFERENCES "Location"("Location_ID") ON DELETE CASCADE,
+  "Origin_Station" INT REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
+  "Destination_Station" INT REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
   "Departure_Date" DATE NOT NULL,
   "Departure_Time" TIME NOT NULL,
   "Arrival_Date" DATE NOT NULL,
@@ -144,8 +144,8 @@ CREATE TABLE "Route" (
 -- Ticket Table
 CREATE TABLE "Ticket" (
   "Ticket_ID" BIGSERIAL PRIMARY KEY,
-  "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID"),
-  "Route_ID" BIGINT NOT NULL REFERENCES "Route"("Route_ID"),
+  "Vehicle_ID" BIGINT NOT NULL REFERENCES "Vehicle"("Vehicle_ID") ON DELETE CASCADE,
+  "Route_ID" BIGINT NOT NULL REFERENCES "Route"("Route_ID") ON DELETE CASCADE,
   "Price" DECIMAL(10,2) NOT NULL CHECK ("Price" > 0),
   "Remaining_Capacity" SMALLINT NOT NULL CHECK ("Remaining_Capacity" >= 0)
 );
@@ -163,7 +163,7 @@ CREATE TABLE "Ticket_Stop" (
   "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE,
   "Station_ID" INT NOT NULL REFERENCES "Station"("Station_ID") ON DELETE CASCADE,
   "Stop_Order" SMALLINT NOT NULL CHECK ("Stop_Order" > 0),
-  "Stop_ID" INT NOT NULL REFERENCES "Valid_Stop_Type"("Valid_Stop_Type_ID"),
+  "Stop_ID" INT NOT NULL REFERENCES "Valid_Stop_Type"("Valid_Stop_Type_ID") ON DELETE SET NULL,
   PRIMARY KEY("Ticket_ID", "Station_ID"),
   UNIQUE("Ticket_ID", "Stop_Order")
 );
@@ -240,7 +240,7 @@ CREATE TABLE "Wallet" (
 CREATE TABLE "Wallet_Transactions" (
   "Transaction_ID" BIGSERIAL PRIMARY KEY,
   "Wallet_ID" BIGINT NOT NULL REFERENCES "Wallet"("Wallet_ID") ON DELETE CASCADE,
-  "Related_Payment_ID" BIGINT UNIQUE REFERENCES "Payment"("Payment_ID") ON DELETE SET NULL,
+  "Related_Payment_ID" BIGINT UNIQUE REFERENCES "Payment"("Payment_ID") ON DELETE CASCADE,
   "Amount" DECIMAL(10,2) NOT NULL CHECK ("Amount" > 0),
   "Type" transaction_type NOT NULL,
   "Transaction_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -251,8 +251,8 @@ CREATE TABLE "Wallet_Transactions" (
 CREATE TABLE "Cancellation" (
   "Cancellation_ID" BIGSERIAL PRIMARY KEY,
   "Reservation_ID" BIGINT NOT NULL UNIQUE REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE,
-  "Admin_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE CASCADE,
-  "Transaction_ID" BIGINT NOT NULL UNIQUE REFERENCES "Wallet_Transactions"("Transaction_ID") ON DELETE SET NULL,
+  "Admin_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE SET NULL,
+  "Transaction_ID" BIGINT NOT NULL UNIQUE REFERENCES "Wallet_Transactions"("Transaction_ID") ON DELETE CASCADE,
   "Cancel_Date" DATE NOT NULL DEFAULT CURRENT_DATE,
   "Cancel_Time" TIME NOT NULL DEFAULT CURRENT_TIME,
   "Refund_Amount" DECIMAL(10,2) CHECK ("Refund_Amount" >= 0)
@@ -261,8 +261,8 @@ CREATE TABLE "Cancellation" (
 -- Report Table
 CREATE TABLE "Report" (
   "Report_ID" BIGSERIAL PRIMARY KEY,
-  "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID"),
-  "Admin_ID" BIGINT REFERENCES "User"("User_ID") ON DELETE CASCADE,
+  "User_ID" BIGINT NOT NULL REFERENCES "User"("User_ID") ON DELETE SET NULL,
+  "Admin_ID" BIGINT REFERENCES "User"("User_ID") ON DELETE SET NULL,
   "Status" report_status NOT NULL DEFAULT 'Pending',
   "Text" TEXT NOT NULL,
   "Answer" TEXT,
@@ -278,15 +278,15 @@ CREATE TABLE "Report" (
 -- Association Tables for Report
 CREATE TABLE "Report_Reservation" (
   "Report_ID" BIGINT PRIMARY KEY REFERENCES "Report"("Report_ID") ON DELETE CASCADE,
-  "Reservation_ID" BIGINT NOT NULL REFERENCES "Reservation"("Reservation_ID")
+  "Reservation_ID" BIGINT NOT NULL REFERENCES "Reservation"("Reservation_ID") ON DELETE CASCADE
 );
 
 CREATE TABLE "Report_Payment" (
   "Report_ID" BIGINT PRIMARY KEY REFERENCES "Report"("Report_ID") ON DELETE CASCADE,
-  "Payment_ID" BIGINT NOT NULL REFERENCES "Payment"("Payment_ID")
+  "Payment_ID" BIGINT NOT NULL REFERENCES "Payment"("Payment_ID") ON DELETE CASCADE
 );
 
 CREATE TABLE "Report_Ticket" (
   "Report_ID" BIGINT PRIMARY KEY REFERENCES "Report"("Report_ID") ON DELETE CASCADE,
-  "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID")
+  "Ticket_ID" BIGINT NOT NULL REFERENCES "Ticket"("Ticket_ID") ON DELETE CASCADE
 );

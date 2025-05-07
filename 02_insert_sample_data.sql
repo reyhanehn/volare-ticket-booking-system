@@ -1407,3 +1407,198 @@ SELECT fs."Ticket_ID",
 FROM filtered_stops fs
 JOIN valid_stop_types vst ON TRUE
 ORDER BY fs."Ticket_ID", fs.stop_order;
+
+
+-- insert 20 users so that they have no reservations
+WITH inserted_users AS (
+  INSERT INTO "User" ("Phone_Number", "Role", "Password_Hash")
+  VALUES
+    ('+989900000001', 'Customer', 'hashed1'),
+    ('+989900000002', 'Customer', 'hashed2'),
+    ('+989900000003', 'Customer', 'hashed3'),
+    ('+989900000004', 'Customer', 'hashed4'),
+    ('+989900000005', 'Customer', 'hashed5'),
+    ('+989900000006', 'Customer', 'hashed6'),
+    ('+989900000007', 'Customer', 'hashed7'),
+    ('+989900000008', 'Customer', 'hashed8'),
+    ('+989900000009', 'Customer', 'hashed9'),
+    ('+989900000010', 'Customer', 'hashed10')
+  RETURNING "User_ID"
+),
+numbered_users AS (
+  SELECT "User_ID", ROW_NUMBER() OVER () AS rn FROM inserted_users
+),
+profile_data AS (
+  SELECT * FROM (
+    VALUES
+      ('Ali', 'Azimi', 1),
+      ('Narges', 'Moradi', 2),
+      ('Reza', 'Shahbazi', 3),
+      ('Ladan', 'Jalali', 4),
+      ('Javad', 'Kazemi', 5),
+      ('Sahar', 'Zare', 6),
+      ('Kian', 'Farhadi', 7),
+      ('Mina', 'Esmaili', 8),
+      ('Arman', 'Hosseini', 9),
+      ('Taraneh', 'Ghaffari', 10)
+  ) AS p("Name", "Lastname", "City_ID")
+),
+numbered_profiles AS (
+  SELECT *, ROW_NUMBER() OVER () AS rn FROM profile_data
+)
+INSERT INTO "Profile" ("User_ID", "Name", "Lastname", "City_ID")
+SELECT u."User_ID", p."Name", p."Lastname", p."City_ID"
+FROM numbered_users u
+JOIN numbered_profiles p ON u.rn = p.rn;
+
+WITH inserted_users AS (
+  INSERT INTO "User" ("Email", "Role", "Password_Hash")
+  VALUES
+    ('alina.azari@mail.com', 'Customer', 'hashed11'),
+    ('majid.taheri@mail.com', 'Customer', 'hashed12'),
+    ('roya.khalili@mail.com', 'Customer', 'hashed13'),
+    ('behnam.karimi@mail.com', 'Customer', 'hashed14'),
+    ('elham.rashidi@mail.com', 'Customer', 'hashed15'),
+    ('arman.jafari@mail.com', 'Customer', 'hashed16'),
+    ('shiva.moradi@mail.com', 'Customer', 'hashed17'),
+    ('masoud.golzar@mail.com', 'Customer', 'hashed18'),
+    ('zahra.akbari@mail.com', 'Customer', 'hashed19'),
+    ('omid.shahbaz@mail.com', 'Customer', 'hashed20')
+  RETURNING "User_ID"
+),
+numbered_users AS (
+  SELECT "User_ID", ROW_NUMBER() OVER () AS rn FROM inserted_users
+),
+profile_data AS (
+  SELECT * FROM (
+    VALUES
+      ('Alina', 'Azari', 11),
+      ('Majid', 'Taheri', 12),
+      ('Roya', 'Khalili', 13),
+      ('Behnam', 'Karimi', 14),
+      ('Elham', 'Rashidi', 15),
+      ('Arman', 'Jafari', 16),
+      ('Shiva', 'Moradi', 17),
+      ('Masoud', 'Golzar', 18),
+      ('Zahra', 'Akbari', 19),
+      ('Omid', 'Shahbaz', 20)
+  ) AS p("Name", "Lastname", "City_ID")
+),
+numbered_profiles AS (
+  SELECT *, ROW_NUMBER() OVER () AS rn FROM profile_data
+)
+INSERT INTO "Profile" ("User_ID", "Name", "Lastname", "City_ID")
+SELECT u."User_ID", p."Name", p."Lastname", p."City_ID"
+FROM numbered_users u
+JOIN numbered_profiles p ON u.rn = p.rn;
+
+-- insert reservation from the same origin for users
+CREATE OR REPLACE PROCEDURE insert_reservations_and_payments()
+LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    rec RECORD;
+    new_ticket_id BIGINT;
+    new_seat VARCHAR(10);
+    new_reservation_id BIGINT;
+    ticket_price DECIMAL(10,2);
+    original_datetime TIMESTAMP;
+    new_datetime TIMESTAMP;
+BEGIN
+    FOR rec IN
+        SELECT DISTINCT r."User_ID", r."Passenger_ID", t."Ticket_ID"
+        FROM "Reservation" r
+        JOIN "Ticket" t ON r."Ticket_ID" = t."Ticket_ID"
+        WHERE r."Status" = 'Confirmed'
+    LOOP
+        SELECT t2."Ticket_ID" INTO new_ticket_id
+        FROM "Ticket" t1
+        JOIN "Route" r1 ON r1."Route_ID" = t1."Route_ID"
+        JOIN "Ticket" t2 ON t2."Route_ID" = r1."Route_ID"
+        WHERE t1."Ticket_ID" = rec."Ticket_ID"
+          AND r1."Origin" = (SELECT "Origin" FROM "Route" WHERE "Route_ID" = t1."Route_ID")
+        LIMIT 1;
+
+        LOOP
+            new_seat := CONCAT(FLOOR(RANDOM() * 30 + 1), CHR(65 + FLOOR(RANDOM() * 26)::INT));
+            EXIT WHEN NOT EXISTS (
+                SELECT 1
+                FROM "Reservation"
+                WHERE "Ticket_ID" = new_ticket_id
+                  AND "Seat_Number" = new_seat
+            );  -- Continue loop until a unique seat number is found
+        END LOOP;
+
+        SELECT make_timestamp(
+                   EXTRACT(YEAR FROM r."Reservation_Date")::INT,
+                   EXTRACT(MONTH FROM r."Reservation_Date")::INT,
+                   EXTRACT(DAY FROM r."Reservation_Date")::INT,
+                   EXTRACT(HOUR FROM r."Reservation_Time")::INT,
+                   EXTRACT(MINUTE FROM r."Reservation_Time")::INT,
+                   EXTRACT(SECOND FROM r."Reservation_Time")::INT
+               ) + INTERVAL '5 hours'
+        INTO new_datetime
+        FROM "Reservation" r
+        WHERE r."User_ID" = rec."User_ID"
+          AND r."Ticket_ID" = rec."Ticket_ID"
+        LIMIT 1;
+
+        INSERT INTO "Reservation" (
+            "User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number",
+            "Status", "Reservation_Date", "Reservation_Time", "Expiration"
+        )
+        VALUES (
+            rec."User_ID", rec."Passenger_ID", new_ticket_id, new_seat,
+            'Confirmed',
+            new_datetime::DATE,
+            new_datetime::TIME,
+            INTERVAL '1 day'
+        )
+        RETURNING "Reservation_ID" INTO new_reservation_id;
+
+        SELECT "Price" INTO ticket_price
+        FROM "Ticket"
+        WHERE "Ticket_ID" = new_ticket_id;
+
+        INSERT INTO "Payment" (
+            "User_ID", "Reservation_ID", "Amount", "Payment_Method", "Status", "Payment_Time", "Payment_Date"
+        )
+        VALUES (
+            rec."User_ID", new_reservation_id, ticket_price,
+            (ARRAY['Credit Card', 'PayPal', 'Bank Transfer', 'Cash', 'Wallet'])[FLOOR(RANDOM() * 5) + 1]::payment_method,
+            'Completed', NOW(), CURRENT_DATE
+        );
+    END LOOP;
+END;
+$$;
+
+CALL insert_reservations_and_payments();
+
+-- since now no user exists who have bought only 1 ticket per city we delete some of the reservations
+DELETE FROM "Reservation"
+WHERE "Reservation_ID" IN (
+    SELECT "Reservation_ID"
+    FROM "Reservation"
+    ORDER BY "Reservation_ID" DESC
+    LIMIT 56
+);
+
+SELECT * FROM "User" ORDER BY "User_ID" DESC;
+
+SELECT * FROM "Reservation" R WHERE R."Ticket_ID" = 1;
+
+INSERT INTO "Reservation" ("User_ID", "Passenger_ID", "Ticket_ID", "Seat_Number", "Status", "Reservation_Date", "Reservation_Time", "Expiration") VALUES
+  (98, 1, 1, '01A', 'Confirmed', CURRENT_DATE, CURRENT_TIME, INTERVAL'1 day'),
+  (99, 1, 1, '02A', 'Confirmed', CURRENT_DATE, CURRENT_TIME, INTERVAL'1 day'),
+  (100, 1, 1, '03A', 'Confirmed', CURRENT_DATE, CURRENT_TIME, INTERVAL'1 day');
+
+SELECT * FROM "Reservation" R JOIN "Ticket" T ON T."Ticket_ID" = R."Ticket_ID" WHERE R."User_ID" = 99;
+
+INSERT INTO "Payment" (
+    "User_ID", "Reservation_ID", "Amount", "Payment_Method", "Status"
+  )
+  VALUES
+  (98, 2469, 237.80, 'Cash', 'Completed'),
+  (99, 2470, 237.80, 'Cash', 'Completed'),
+  (100, 2471, 237.80, 'Cash', 'Completed');

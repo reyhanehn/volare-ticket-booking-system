@@ -108,16 +108,18 @@ SELECT L."City", COUNT(RE."Reservation_ID") AS "Tickets_Sold"
 
 
 -- 10. List cities where the oldest registered user has made a purchase
-SELECT DISTINCT L."City"
+SELECT DISTINCT L."City", P."User_ID"
     FROM "Profile" P
     JOIN "User" U ON U."User_ID" = P."User_ID"
     JOIN "Reservation" RE ON RE."User_ID" = P."User_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = RE."Ticket_ID"
     JOIN "Route" RO ON T."Route_ID" = RO."Route_ID"
     JOIN "Location" L ON L."Location_ID" = RO."Origin"
-    WHERE P."Registration_Date" = (
-    SELECT MIN(P2."Registration_Date")
+    WHERE P."User_ID" = (
+    SELECT P2."User_ID"
     FROM "Profile" P2
+	ORDER BY P2."Registration_Date"
+	LIMIT 1
     ) AND RE."Status" = 'Confirmed' AND U."Role" = 'Customer'
 
 
@@ -136,10 +138,17 @@ SELECT P."User_ID", P."Name", P."Lastname"
     GROUP BY P."User_ID", P."Name", P."Lastname"
     HAVING COUNT(R."Reservation_ID") >= 2;
 
+SELECT P."User_ID", P."Name", P."Lastname"
+    FROM "Profile" P
+    JOIN "Reservation" R ON R."User_ID" = P."User_ID"
+    WHERE R."Status" = 'Confirmed'
+    GROUP BY P."User_ID", P."Name", P."Lastname"
+    HAVING COUNT(R."Reservation_ID") = 1;
+
 
 -- 13. List users who bought at most 2 one type tickets
 (
-    SELECT P."User_ID", P."Name", P."Lastname"
+    SELECT P."User_ID", P."Name", P."Lastname", 'Train' AS "Type"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
     JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
@@ -148,9 +157,9 @@ SELECT P."User_ID", P."Name", P."Lastname"
     GROUP BY P."User_ID", P."Name", P."Lastname"
     HAVING COUNT(R."Reservation_ID") <= 2
 )
-INTERSECT
+UNION
 (
-    SELECT P."User_ID", P."Name", P."Lastname"
+    SELECT P."User_ID", P."Name", P."Lastname", 'Airplane' AS "Type"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
     JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
@@ -159,9 +168,9 @@ INTERSECT
     GROUP BY P."User_ID", P."Name", P."Lastname"
     HAVING COUNT(R."Reservation_ID") <= 2
 )
-INTERSECT
+UNION
 (
-    SELECT P."User_ID", P."Name", P."Lastname"
+    SELECT P."User_ID", P."Name", P."Lastname", 'Bus' AS "Type"
     FROM "Profile" P
     JOIN "Reservation" R ON R."User_ID" = P."User_ID"
     JOIN "Ticket" T ON R."Ticket_ID" = T."Ticket_ID"
@@ -203,7 +212,7 @@ SELECT DISTINCT U."Email", U."Phone_Number"
 
 
 -- 15. Get confirmed reservations made for today, ordered by time
-SELECT R."Reservation_ID", R."Reservation_Time"
+SELECT R."Reservation_ID", R."Reservation_Date", R."Reservation_Time"
     FROM "Reservation" R 
     WHERE R."Status" = 'Confirmed' AND R."Reservation_Date" = CURRENT_DATE
     ORDER BY R."Reservation_Time";
@@ -296,7 +305,7 @@ SELECT T."Price", C."Name"
 	
 
 -- 22. get reports for the most reported ticket
-SELECT R."Report_ID", R."Type"
+SELECT R."Report_ID", R."Type", R."Text"
     FROM "Report" R
     JOIN "Report_Ticket" RT ON R."Report_ID" = RT."Report_ID"
     JOIN "Ticket" T ON T."Ticket_ID" = RT."Ticket_ID"
