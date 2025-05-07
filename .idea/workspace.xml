@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="433a3ca9-b9c2-426b-9e8f-068d5da4a02a" name="Changes" comment="created the app for seed data">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_5_2025_2_37_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_5_2025_2_37_AM__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01_create_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/01_create_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/02_insert_sample_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/02_insert_sample_data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/03_queries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/03_queries.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/04_stored_procedures.sql" beforeDir="false" afterPath="$PROJECT_DIR$/04_stored_procedures.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/05_index.sql" beforeDir="false" afterPath="$PROJECT_DIR$/05_index.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

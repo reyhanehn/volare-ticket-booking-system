@@ -12,7 +12,7 @@ CREATE INDEX idx_station_location ON "Station"("Location_ID");
 --  Route Table
 CREATE INDEX idx_route_origin ON "Route"("Origin");
 CREATE INDEX idx_route_destination ON "Route"("Destination");
-CREATE INDEX idx_route_departure ON "Route"("Depature_Date");
+CREATE INDEX idx_route_departure ON "Route"("Departure_Date");
 CREATE INDEX idx_route_arrival ON "Route"("Arrival_Date");
 CREATE INDEX idx_route_origin_dest ON "Route"("Origin", "Destination");
 
