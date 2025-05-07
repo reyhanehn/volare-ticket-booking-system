@@ -1268,7 +1268,7 @@ BEGIN
     VALUES (report_id, reservation_rec."Reservation_ID");
   END LOOP;
 END $$;
-=======
+
 --insert into report(payment and ticket)
 WITH report_data AS (
   SELECT
