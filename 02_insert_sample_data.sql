@@ -753,7 +753,7 @@ BEGIN
     END LOOP;
 END $$;
 
-
+--insert into ticket stop
 
 WITH flight_tickets AS (
     SELECT tk."Ticket_ID"
@@ -802,7 +802,7 @@ WITH train_tickets AS (
 ),
 ticket_with_random_stops AS (
     SELECT ticket."Ticket_ID",
-           FLOOR(RANDOM() * 4) AS num_stops  -- 0 to 3 stops
+           FLOOR(RANDOM() * 4) AS num_stops  
     FROM train_tickets ticket
 ),
 stop_data AS (
@@ -873,7 +873,7 @@ JOIN "Valid_Stop_Type" vst
     AND vst."Stop_Type" = stop."Stop_Type"
 ORDER BY stop."Ticket_ID", stop.stop_order;
 
-
+--insert into user (banned customer)
 INSERT INTO "User" ("Phone_Number", "Email", "Role", "Status", "Password_Hash")
 SELECT
   '+989' || LPAD(FLOOR(RANDOM() * 1000000000)::TEXT, 9, '0') AS "Phone_Number",
@@ -1315,3 +1315,95 @@ SELECT r."Report_ID",
        (SELECT "Ticket_ID" FROM "Ticket" ORDER BY random() LIMIT 1)
 FROM "Report" r
 WHERE r."Type" = 'ticket' AND r."Report_ID" NOT IN (SELECT "Report_ID" FROM "Report_Ticket");
+
+
+
+
+
+------------------------------------------
+
+
+WITH bus_tickets AS (
+    SELECT tk."Ticket_ID"
+    FROM "Ticket" tk
+    JOIN "Bus_Ride" br ON tk."Ticket_ID" = br."Ticket_ID"
+),
+ticket_with_random_stops AS (
+    SELECT ticket."Ticket_ID",
+           FLOOR(RANDOM() * 4) + 1 AS num_stops
+    FROM bus_tickets ticket
+),
+random_stations AS (
+    SELECT
+        t."Ticket_ID",
+        s."Station_ID",
+        ROW_NUMBER() OVER (PARTITION BY t."Ticket_ID" ORDER BY RANDOM()) AS rn
+    FROM ticket_with_random_stops t
+    JOIN "Station" s ON TRUE
+),
+filtered_stops AS (
+    SELECT
+        rs."Ticket_ID",
+        rs."Station_ID",
+        rs.rn AS stop_order
+    FROM random_stations rs
+    JOIN ticket_with_random_stops twrs
+        ON rs."Ticket_ID" = twrs."Ticket_ID"
+    WHERE rs.rn <= twrs.num_stops
+),
+valid_stop_types AS (
+    SELECT "Valid_Stop_Type_ID"
+    FROM "Valid_Stop_Type"
+    WHERE "Transport_Mode" = 'Bus' AND "Stop_Type" = 'Rest'
+)
+INSERT INTO "Ticket_Stop" ("Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID")
+SELECT fs."Ticket_ID",
+       fs."Station_ID",
+       fs.stop_order,
+       vst."Valid_Stop_Type_ID"
+FROM filtered_stops fs
+JOIN valid_stop_types vst ON TRUE
+ORDER BY fs."Ticket_ID", fs.stop_order;
+
+
+WITH train_tickets AS (
+    SELECT tk."Ticket_ID"
+    FROM "Ticket" tk
+    JOIN "Train_Ride" tr ON tk."Ticket_ID" = tr."Ticket_ID"
+),
+ticket_with_random_stops AS (
+    SELECT ticket."Ticket_ID",
+           FLOOR(RANDOM() * 4) + 1 AS num_stops
+    FROM train_tickets ticket
+),
+random_stations AS (
+    SELECT
+        t."Ticket_ID",
+        s."Station_ID",
+        ROW_NUMBER() OVER (PARTITION BY t."Ticket_ID" ORDER BY RANDOM()) AS rn
+    FROM ticket_with_random_stops t
+    JOIN "Station" s ON TRUE
+),
+filtered_stops AS (
+    SELECT
+        rs."Ticket_ID",
+        rs."Station_ID",
+        rs.rn AS stop_order
+    FROM random_stations rs
+    JOIN ticket_with_random_stops twrs
+        ON rs."Ticket_ID" = twrs."Ticket_ID"
+    WHERE rs.rn <= twrs.num_stops
+),
+valid_stop_types AS (
+    SELECT "Valid_Stop_Type_ID"
+    FROM "Valid_Stop_Type"
+    WHERE "Transport_Mode" = 'Train' AND "Stop_Type" = 'Transit'
+)
+INSERT INTO "Ticket_Stop" ("Ticket_ID", "Station_ID", "Stop_Order", "Stop_ID")
+SELECT fs."Ticket_ID",
+       fs."Station_ID",
+       fs.stop_order,
+       vst."Valid_Stop_Type_ID"
+FROM filtered_stops fs
+JOIN valid_stop_types vst ON TRUE
+ORDER BY fs."Ticket_ID", fs.stop_order;
