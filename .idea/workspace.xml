@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="433a3ca9-b9c2-426b-9e8f-068d5da4a02a" name="Changes" comment="created the app for seed data">
+      <change afterPath="$PROJECT_DIR$/create_tables_second_try.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_5_2025_2_37_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_5_2025_2_37_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/volare-ticket-booking-system.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/04_stored_procedures.sql" beforeDir="false" afterPath="$PROJECT_DIR$/04_stored_procedures.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/05_index.sql" beforeDir="false" afterPath="$PROJECT_DIR$/05_index.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
