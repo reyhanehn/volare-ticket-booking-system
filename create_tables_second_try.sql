@@ -1,6 +1,6 @@
 --ENUMS
-CREATE TYPE user_role AS ENUM ('Customer', 'Admin', 'Company_Owner');
-CREATE TYPE user_status AS ENUM ('Active', 'Banned');
+CREATE TYPE account_role AS ENUM ('Customer', 'Admin', 'Company_Owner');
+CREATE TYPE account_status AS ENUM ('Active', 'Banned');
 CREATE TYPE payment_method AS ENUM ('Credit Card','PayPal','Bank Transfer','Cash', 'Wallet');
 CREATE TYPE payment_status AS ENUM ('Pending','Completed','Failed','Refunded');
 CREATE TYPE transaction_type AS ENUM ('Charge', 'Payment', 'Refund');
@@ -16,14 +16,13 @@ CREATE TYPE report_type AS ENUM ('Reservation', 'Payment', 'Ticket');
 CREATE TABLE Location (
     Location_ID SERIAL PRIMARY KEY,
     Country VARCHAR(50) NOT NULL CHECK (Country ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
-    State VARCHAR(50) NOT NULL CHECK (State ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
     City VARCHAR(50) NOT NULL CHECK (City ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
     UNIQUE(Country, City)
 );
 
--- User
-CREATE TABLE User (
-  User_ID BIGSERIAL PRIMARY KEY,
+-- Account
+CREATE TABLE Account (
+  Account_ID BIGSERIAL PRIMARY KEY,
   Phone_Number VARCHAR(15) UNIQUE CHECK (
       Phone_Number ~ '^\+989\d{2}\d{7}$' OR Phone_Number IS NULL
   ),
@@ -32,8 +31,8 @@ CREATE TABLE User (
   ),
   Name VARCHAR(50) NOT NULL CHECK (Name ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
   Lastname VARCHAR(50) NOT NULL CHECK (Lastname ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
-  Role user_role NOT NULL,
-  Status user_status NOT NULL DEFAULT 'Active',
+  Role account_role NOT NULL,
+  Status account_status NOT NULL DEFAULT 'Active',
   Password_Hash TEXT NOT NULL,
   City_ID BIGINT REFERENCES Location(Location_ID) ON DELETE SET NULL,
   Registration_Date DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -45,7 +44,7 @@ CREATE TABLE User (
 -- Company
 CREATE TABLE Company (
   Company_ID BIGSERIAL PRIMARY KEY,
-  Owner BIGINT REFERENCES User(User_ID) ON DELETE CASCADE,
+  Owner BIGINT REFERENCES Account(Account_ID) ON DELETE CASCADE,
   Name VARCHAR(50) NOT NULL UNIQUE CHECK (Name ~ '^[A-Za-z]+(\s[A-Za-z]+)*$'),
   Logo_URL TEXT,
   Website TEXT,
@@ -57,7 +56,7 @@ CREATE TABLE Vehicle (
   Vehicle_ID BIGSERIAL PRIMARY KEY,
   Company_ID BIGINT REFERENCES Company(Company_ID) ON DELETE CASCADE,
   Name VARCHAR(50),
-  Type vehicle_type NOT NULL,
+  Type transport_type NOT NULL,
   Class_Code SMALLINT NOT NULL CHECK (Class_Code BETWEEN 1 AND 5),
   Total_Seats INT NOT NULL CHECK (Total_Seats > 0),
   Layout VARCHAR(15) -- basically all the layouts like 1 + 2 for bus? or 15 + 5 for train and ...
@@ -66,7 +65,7 @@ CREATE TABLE Vehicle (
 CREATE TABLE Vehicle_Section (
   Section_ID BIGSERIAL PRIMARY KEY,
   Vehicle_ID BIGINT REFERENCES Vehicle(Vehicle_ID) ON DELETE CASCADE,
-  Section_Type section_type NOT NULL,
+  Name VARCHAR(20), -- it specifies which section like first class and stuff?
   Seats_Count INT NOT NULL CHECK (Seats_Count > 0)
 );
 
@@ -117,8 +116,8 @@ CREATE TABLE Trip (
 -- Ticket (this specifies the section of the vehicle)
 CREATE TABLE Ticket (
   Ticket_ID BIGSERIAL PRIMARY KEY,
-  Trip_ID BIGINT PRIMARY KEY REFERENCES Trip(Trip_ID) ON DELETE CASCADE,
-  Section_ID BIGINT NOT NULL REFERENCES Section(Section_ID) ON DELETE CASCADE,
+  Trip_ID BIGINT REFERENCES Trip(Trip_ID) ON DELETE CASCADE,
+  Section_ID BIGINT NOT NULL REFERENCES Vehicle_Section(Section_ID) ON DELETE CASCADE,
   Price DECIMAL(10,2) NOT NULL CHECK (Price > 0),
   Remaining_Seats SMALLINT DEFAULT 0,
   Seat_Start_Number SMALLINT DEFAULT 0,
@@ -147,14 +146,14 @@ CREATE TABLE Passenger (
   ),
   Birthdate DATE NOT NULL CHECK (Birthdate <= CURRENT_DATE),
   Picture_URL TEXT CHECK (Picture_URL ~* '^https?://.+\.(jpg|jpeg|png|gif)$'),
-  Related_User_ID BIGINT REFERENCES User(User_ID)
+  Related_Account_ID BIGINT REFERENCES Account(Account_ID)
 );
 
 -- Reservation
 CREATE TABLE Reservation (
   Reservation_ID BIGSERIAL PRIMARY KEY,
-  User_ID BIGINT NOT NULL REFERENCES User(User_ID) ON DELETE CASCADE,
-  --the user who reserved it
+  Account_ID BIGINT NOT NULL REFERENCES Account(Account_ID) ON DELETE CASCADE,
+  --the account who reserved it
   Passenger_ID BIGINT NOT NULL REFERENCES Passenger (Passenger_ID) ON DELETE CASCADE,
   -- the passenger whom the reservation is for
   Ticket_ID BIGINT NOT NULL REFERENCES Ticket(Ticket_ID) ON DELETE CASCADE,
@@ -163,27 +162,26 @@ CREATE TABLE Reservation (
   Reservation_Date DATE NOT NULL DEFAULT CURRENT_DATE,
   Reservation_Time TIME NOT NULL DEFAULT CURRENT_TIME,
   Expiration INTERVAL NOT NULL,
-  Cncelled_By BIGINT REFERENCES User(User_ID),
+  Cncelled_By BIGINT REFERENCES Account(Account_ID),
   UNIQUE(Ticket_ID, Seat_Number)
 );
 
 -- Payment
 CREATE TABLE Payment (
   Payment_ID BIGSERIAL PRIMARY KEY,
-  User_ID BIGINT NOT NULL REFERENCES User(User_ID) ON DELETE CASCADE,
+  Account_ID BIGINT NOT NULL REFERENCES Account(Account_ID) ON DELETE CASCADE,
   Reservation_ID BIGINT NOT NULL UNIQUE REFERENCES Reservation(Reservation_ID) ON DELETE CASCADE,
   Amount DECIMAL(10,2) NOT NULL CHECK (Amount > 0),
   Payment_Method payment_method NOT NULL,
   Status payment_status NOT NULL DEFAULT 'Pending',
   Payment_Time TIME NOT NULL DEFAULT CURRENT_TIME,
-  Payment_Date DATE NOT NULL DEFAULT CURRENT_DATE,
-  Refund_ID BIGINT NOT NULL UNIQUE REFERENCES Wallet_Transactions(Transaction_ID) ON DELETE CASCADE
+  Payment_Date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 -- Wallet
 CREATE TABLE Wallet (
   Wallet_ID BIGSERIAL PRIMARY KEY,
-  User_ID BIGINT NOT NULL UNIQUE REFERENCES User(User_ID) ON DELETE CASCADE,
+  Account_ID BIGINT NOT NULL UNIQUE REFERENCES Account(Account_ID) ON DELETE CASCADE,
   Balance DECIMAL(10,2) NOT NULL CHECK (Balance >= 0)
 );
 
@@ -201,15 +199,15 @@ CREATE TABLE Wallet_Transactions (
 -- Report
 CREATE TABLE Report (
   Report_ID BIGSERIAL PRIMARY KEY,
-  User_ID BIGINT NOT NULL REFERENCES User(User_ID) ON DELETE SET NULL,
-  Admin_ID BIGINT REFERENCES User(User_ID) ON DELETE SET NULL,
+  Account_ID BIGINT NOT NULL REFERENCES Account(Account_ID) ON DELETE SET NULL,
+  Admin_ID BIGINT REFERENCES Account(Account_ID) ON DELETE SET NULL,
   Status report_status NOT NULL DEFAULT 'Pending',
   Text TEXT NOT NULL,
   Answer TEXT,
   Type report_type NOT NULL,
   Related_Report_ID BIGINT REFERENCES Ticket(Ticket_ID),
-  CONSTRAINT chk_different_user_admin
-    CHECK (User_ID <> Admin_ID),
+  CONSTRAINT chk_different_account_admin
+    CHECK (Account_ID <> Admin_ID),
   CONSTRAINT chk_admin_required_if_checked
     CHECK (
             NOT (Status = 'Checked' AND Admin_ID IS NULL)
