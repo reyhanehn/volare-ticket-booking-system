@@ -5,3 +5,6 @@
 # Python virtual environment
 .venv/
 
+.idea/
+
+
