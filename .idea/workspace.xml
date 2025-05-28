@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f65613ab-2b10-4421-954d-2b1b3e2e1590" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/accounts/serializers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/accounts/views/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/bookings/serializers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/bookings/urls" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/bookings/views/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/companies/views/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/bookings/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/companies/views.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +55,7 @@
   "keyToString": {
     "Python.insert_data.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "server",
+    "git-widget-placeholder": "api",
     "node.js.selected.package.tslint": "(autodetect)",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
