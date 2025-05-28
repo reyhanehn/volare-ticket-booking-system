@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f65613ab-2b10-4421-954d-2b1b3e2e1590" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/accounts/Models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/Models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/accounts/Models/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/Models/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/accounts/Models/wallet.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/Models/wallet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/accounts/Models/wallet_transactions.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/Models/wallet_transactions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/location.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/passenger.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/passenger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/payment.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/payment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/reservation.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/reservation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/route.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/route.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/Models/ticket.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/Models/ticket.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/companies/Models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/companies/Models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/companies/Models/company.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/companies/Models/company.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/companies/Models/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/companies/Models/service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/companies/Models/vehicle.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/companies/Models/vehicle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/reports/Models/report.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/reports/Models/report.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +39,6 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2xgZSXAgqZYKOCHWsxPWkFhUnDL" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -64,9 +47,34 @@
   "keyToString": {
     "Python.insert_data.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging creating-apps"
+    "git-widget-placeholder": "server",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="DjangoTestsConfigurationType">
+      <module name="volare-ticket-booking-system" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="TARGET" value="" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -84,5 +92,8 @@
       <updated>1748361677921</updated>
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
