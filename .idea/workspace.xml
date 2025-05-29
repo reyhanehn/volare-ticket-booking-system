@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f65613ab-2b10-4421-954d-2b1b3e2e1590" name="Changes" comment="Merge branch 'server' of https://github.com/reyhanehn/volare-ticket-booking-system into server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;volare/accounts/views.py">
-      <change afterPath="$PROJECT_DIR$/volare/accounts/serializers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/volare/accounts/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/volare/accounts/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/accounts/Models/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/Models/account.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/volare/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/volare/volare/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,6 +42,9 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2xgZSXAgqZYKOCHWsxPWkFhUnDL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -52,7 +53,8 @@
   "keyToString": {
     "Python.insert_data.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging server"
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "server"
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -72,5 +74,9 @@
       <updated>1748361677921</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Merge branch 'server' of https://github.com/reyhanehn/volare-ticket-booking-system into server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;volare/accounts/views.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'server' of https://github.com/reyhanehn/volare-ticket-booking-system into server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;volare/accounts/views.py" />
   </component>
 </project>
