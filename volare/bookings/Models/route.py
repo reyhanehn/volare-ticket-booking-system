@@ -1,5 +1,5 @@
 from django.db import models
-from volare.bookings.Models.location import Location, Station
+from .location import Location, Station
 
 
 class Route(models.Model):

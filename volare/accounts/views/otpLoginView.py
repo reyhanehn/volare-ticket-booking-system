@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from ..serializers.otpLoginSerializer import RequestOTPSerializer
 from ..serializers.otpLoginSerializer import VerifyOTPSerializer
-from utils.redis_client import redis_client
+from ..redis_client import redis_client
 
 
 class RequestOTPView(APIView):
@@ -21,7 +21,7 @@ class RequestOTPView(APIView):
             redis_client.setex(f"otp:{user.id}", 300, otp)
             # Send OTP via SMS/email here
 
-            return Response({"message": "OTP sent"}, status=status.HTTP_200_OK)
+            return Response({"message": f"OTP sent {otp}"}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
