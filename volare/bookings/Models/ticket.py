@@ -1,7 +1,7 @@
 from django.db import models
 
-from .location import Station
-from .route import Route
+from volare.bookings.Models.location import Station
+from volare.bookings.Models.route import Route
 
 
 class StopType(models.TextChoices):
