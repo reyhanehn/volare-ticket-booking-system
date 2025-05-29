@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..Models.location import Location
+from ..models.location import Location
 import re
 
 class LocationSerializer(serializers.ModelSerializer):
