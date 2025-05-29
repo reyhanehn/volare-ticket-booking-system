@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'companies',
     'reports',
     'seed_data',
-    'utils',
 ]
 
 MIDDLEWARE = [
@@ -144,5 +143,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
-REDIS_PASSWORD = None  # or your password
+REDIS_PASSWORD = None
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'astheshriketoyoursharp@gmail.com'
+EMAIL_HOST_PASSWORD = 'ipyfpdyqwotwlfeq'  # remove spaces!
+
 

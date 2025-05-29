@@ -9,22 +9,42 @@ from ..serializers.otpLoginSerializer import VerifyOTPSerializer
 from ..redis_client import redis_client
 
 
+import random
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.mail import send_mail
+
+from ..serializers.otpLoginSerializer import RequestOTPSerializer
+from ..redis_client import redis_client
+
+
 class RequestOTPView(APIView):
     def post(self, request):
         serializer = RequestOTPSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.context['user']
-
             otp = f"{random.randint(100000, 999999)}"
 
-            # Store OTP in Redis with key pattern "otp:<user_id>", expires in 5 minutes (300 seconds)
+            # Store in Redis for 5 minutes
             redis_client.setex(f"otp:{user.id}", 300, otp)
-            # Send OTP via SMS/email here
 
-            return Response({"message": f"OTP sent {otp}"}, status=status.HTTP_200_OK)
+            # Send email if available
+            if user.email:
+                send_mail(
+                    subject="Your OTP Code",
+                    message=f"Your OTP code is: {otp}",
+                    from_email="your_email@gmail.com",  # same as EMAIL_HOST_USER
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                )
+
+                return Response({"message": "OTP sent to your email"}, status=status.HTTP_200_OK)
+
+            return Response({"error": "User does not have an email address"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class VerifyOTPView(APIView):
     def post(self, request):
