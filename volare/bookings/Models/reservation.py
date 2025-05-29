@@ -1,7 +1,7 @@
 from django.db import models
 
-from volare.bookings.Models.passenger import Passenger
-from volare.bookings.Models.ticket import Ticket
+from .passenger import Passenger
+from .ticket import Ticket
 
 
 class ReservationStatus(models.TextChoices):

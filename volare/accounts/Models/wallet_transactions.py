@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from volare.accounts.Models.wallet import Wallet
+from .wallet import Wallet
 
 
 class TransactionType(models.TextChoices):

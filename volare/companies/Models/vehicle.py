@@ -1,6 +1,6 @@
 from django.db import models
 
-from volare.companies.Models import Company
+from .company import Company
 
 
 class TransportType(models.TextChoices):
