@@ -9,7 +9,7 @@ class AccountSignupSerializer(serializers.ModelSerializer):
         fields = ['phone_number', 'email', 'name', 'lastname', 'password_hash', 'role']
         extra_kwargs = {
             'password_hash': {'write_only': True},
-            'role': {'required': False},  # Optional: default to CUSTOMER
+            'role': {'required': False},
         }
 
     def create(self, validated_data):
