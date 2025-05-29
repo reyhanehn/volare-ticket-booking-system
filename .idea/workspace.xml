@@ -5,9 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f65613ab-2b10-4421-954d-2b1b3e2e1590" name="Changes" comment="Merge branch 'server' of https://github.com/reyhanehn/volare-ticket-booking-system into server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;volare/accounts/views.py">
+      <change afterPath="$PROJECT_DIR$/volare/accounts/serializers/signupSerializer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/volare/accounts/views/signupView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/volare-ticket-booking-system.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/volare-ticket-booking-system.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/Models/account.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/Models/account.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/volare/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/volare/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,12 +39,12 @@
     &quot;assignee&quot;: &quot;HedieTahmouresi&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/reyhanehn/volare-ticket-booking-system.git&quot;,
-    &quot;accountId&quot;: &quot;01da73e1-1270-41b3-a598-a7a0d85287d9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/reyhanehn/volare-ticket-booking-system.git",
+    "accountId": "d7f776e5-521d-435d-858a-56fb3c1bdbc7"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -48,14 +57,16 @@
   "keyToString": {
     "Python.insert_data.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "server",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "git-widget-placeholder": "Merging server",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-337b0a7a993a-31b6be0877a2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.19416.19" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-PY-251.23774.444" />
+        <option value="bundled-python-sdk-890ed5b35930-d9c5bdb153f4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.23774.444" />
       </set>
     </attachedChunks>
   </component>
@@ -67,16 +78,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1748361677921</updated>
+      <workItem from="1748525729891" duration="297000" />
     </task>
-    <task id="LOCAL-00001" summary="Merge branch 'server' of https://github.com/reyhanehn/volare-ticket-booking-system into server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;volare/accounts/views.py">
-      <option name="closed" value="true" />
-      <created>1748501985558</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1748501985558</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

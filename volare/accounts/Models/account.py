@@ -26,6 +26,10 @@ class Account(models.Model):
     city_id = models.BigIntegerField(null=True, blank=True)  # ForeignKey to Location, but just id for now
     registration_date = models.DateField(default=timezone.now)
 
+    @property
+    def id(self):
+        return self.account_id
+
     class Meta:
         db_table = 'account'
 
