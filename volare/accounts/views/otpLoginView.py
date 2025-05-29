@@ -5,7 +5,8 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from ..serializers.otpLoginSerializer import RequestOTPSerializer
-from ...utils import redis_client
+from ..serializers.otpLoginSerializer import VerifyOTPSerializer
+from utils.redis_client import redis_client
 
 
 class RequestOTPView(APIView):
