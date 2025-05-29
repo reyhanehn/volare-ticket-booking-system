@@ -1,7 +1,6 @@
-
-# Ignore Python cache
+# Ignore compiled Python files
+*.pyc
 __pycache__/
-*.py[cod]
 
 # Default ignored files
 /shelf/
