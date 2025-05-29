@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from volare.accounts.Models.account import AccountRole  # Adjust import based on your structure
+from accounts.Models.account import AccountRole  # Adjust import based on your structure
 
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):

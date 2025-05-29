@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'companies',
     'reports',
     'seed_data',
-    'utils',
 ]
 
 MIDDLEWARE = [

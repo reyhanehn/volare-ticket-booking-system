@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
-from volare.bookings.serializers.locationSerializer import LocationSerializer
-from volare.accounts.permissions import IsAdmin
+from bookings.serializers.locationSerializer import LocationSerializer
+from accounts.permissions import IsAdmin
 
 class CreateLocationView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsAdmin]

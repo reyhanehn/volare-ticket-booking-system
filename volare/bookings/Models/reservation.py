@@ -2,6 +2,7 @@ from django.db import models
 
 from .passenger import Passenger
 from .ticket import Ticket
+from django.conf import settings
 
 
 class ReservationStatus(models.TextChoices):
