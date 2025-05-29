@@ -1,15 +1,18 @@
 from django.db import models
 from django.utils import timezone
 
+
 # Enums as Django choices
 class AccountRole(models.TextChoices):
     CUSTOMER = 'Customer'
     ADMIN = 'Admin'
     COMPANY_OWNER = 'Company_Owner'
 
+
 class AccountStatus(models.TextChoices):
     ACTIVE = 'Active'
     BANNED = 'Banned'
+
 
 class Account(models.Model):
     account_id = models.BigAutoField(primary_key=True)
@@ -22,6 +25,10 @@ class Account(models.Model):
     password_hash = models.TextField()
     city_id = models.BigIntegerField(null=True, blank=True)  # ForeignKey to Location, but just id for now
     registration_date = models.DateField(default=timezone.now)
+
+    @property
+    def id(self):
+        return self.account_id
 
     class Meta:
         db_table = 'account'
