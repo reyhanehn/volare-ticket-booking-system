@@ -25,7 +25,7 @@ class RequestOTPView(APIView):
             redis_client.setex(f"otp:{user.account_id}", 300, otp)
             # Send OTP via SMS/email here
 
-            return Response({"message": "OTP sent"}, status=status.HTTP_200_OK)
+            return Response({"message": "OTP sent", "otp": otp}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

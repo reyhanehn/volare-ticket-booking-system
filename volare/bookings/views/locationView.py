@@ -3,12 +3,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from rest_framework.permissions import IsAuthenticated
 
 from bookings.serializers.locationSerializer import LocationSerializer
 from accounts.permissions import IsAdmin
 
 class CreateLocationView(APIView):
-    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         serializer = LocationSerializer(data=request.data)
