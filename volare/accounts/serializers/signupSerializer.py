@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..Models.account import Account
+from ..models.account import Account
 from django.contrib.auth.hashers import make_password
 
 

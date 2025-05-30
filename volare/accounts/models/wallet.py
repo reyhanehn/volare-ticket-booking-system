@@ -1,5 +1,5 @@
 from django.db import models
-from volare.accounts.Models import Account
+from ..models.account import Account
 
 
 class Wallet(models.Model):

@@ -1,7 +1,7 @@
 from django.db import models
 
-from volare.bookings.Models.passenger import Passenger
-from volare.bookings.Models.ticket import Ticket
+from ..models.passenger import Passenger
+from ..models.ticket import Ticket
 
 
 class ReservationStatus(models.TextChoices):
@@ -20,7 +20,7 @@ class Reservation(models.Model):
     reservation_date = models.DateField(auto_now_add=True)
     reservation_time = models.TimeField(auto_now_add=True)
     expiration = models.DurationField()
-    cancelled_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='cancelled_reservations')
+    cancelled_by = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True, related_name='cancelled_reservations')
 
     class Meta:
         unique_together = ('ticket', 'seat_number')
