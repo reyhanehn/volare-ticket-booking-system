@@ -9,7 +9,6 @@ CREATE TYPE transport_type AS ENUM ('Train', 'Bus', 'Airplane');
 CREATE TYPE stop_type AS ENUM ('Transit', 'Meal', 'Refuel', 'Layover');
 CREATE TYPE reservation_status AS ENUM ('Pending', 'Confirmed', 'Cancelled');
 CREATE TYPE report_status AS ENUM ('Pending', 'Checked');
-CREATE TYPE bus_type AS ENUM ('VIP', 'Normal');
 CREATE TYPE report_type AS ENUM ('Reservation', 'Payment', 'Ticket');
 
 -- location
@@ -24,7 +23,7 @@ CREATE TABLE Location (
 CREATE TABLE Account (
   Account_ID BIGSERIAL PRIMARY KEY,
   Phone_Number VARCHAR(15) UNIQUE CHECK (
-      Phone_Number ~ '^\+989\d{2}\d{7}$' OR Phone_Number IS NULL
+      Phone_Number ~ '^((\+98)|(0))9\d{2}\d{7}$' OR Phone_Number IS NULL
   ),
   Email VARCHAR(100) UNIQUE CHECK (
       Email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' OR Email IS NULL
@@ -36,6 +35,7 @@ CREATE TABLE Account (
   Password_Hash TEXT NOT NULL,
   City_ID BIGINT REFERENCES Location(Location_ID) ON DELETE SET NULL,
   Registration_Date DATE NOT NULL DEFAULT CURRENT_DATE,
+  Birth_Date DATE,
   CONSTRAINT at_least_one_not_null CHECK (
       Email IS NOT NULL OR Phone_Number IS NOT NULL
   )
