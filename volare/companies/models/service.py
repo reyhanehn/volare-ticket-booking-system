@@ -1,5 +1,5 @@
 from django.db import models
-from .vehicle import Vehicle
+from ..models.vehicle import Vehicle
 
 
 class Service(models.Model):

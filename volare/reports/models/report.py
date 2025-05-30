@@ -40,7 +40,7 @@ class Report(models.Model):
         null=False
     )
     related_report = models.ForeignKey(
-        'booking.Ticket',
+        'bookings.Ticket',
         on_delete=models.SET_NULL,
         null=True,
         blank=True

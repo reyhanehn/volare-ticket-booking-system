@@ -1,5 +1,5 @@
 from django.db import models
-from .reservation import Reservation
+from ..models.reservation import Reservation
 
 
 class PaymentMethod(models.TextChoices):

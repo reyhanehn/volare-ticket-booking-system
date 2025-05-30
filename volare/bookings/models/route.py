@@ -1,5 +1,6 @@
 from django.db import models
-from .location import Location, Station
+from ..models.location import Location, Station
+from ..models.location import Location, Station
 
 
 class Route(models.Model):

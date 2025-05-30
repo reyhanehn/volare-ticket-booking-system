@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Volare',
+        'NAME': 'volare',
         'USER': 'postgres',
-        'PASSWORD': 'reyh00n83',
+        'PASSWORD': 'h.tah1584',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -91,6 +91,9 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -98,7 +101,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'account_id',
 }
 
 # Password validation
@@ -140,8 +143,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'accounts.Account'
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_PASSWORD = None  # or your password
+
