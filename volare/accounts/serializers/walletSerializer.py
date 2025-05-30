@@ -35,8 +35,8 @@ class WalletSerializer(serializers.Serializer):
             data = {
                 'wallet_id': wallet_id,
                 'balance': balance,
-                'charge_count': tx_counts.get('CHARGE', 0),
-                'payment_count': tx_counts.get('PAYMENT', 0),
-                'refund_count': tx_counts.get('REFUND', 0),
+                'charge_count': tx_counts.get('Charge', 0),
+                'payment_count': tx_counts.get('Payment', 0),
+                'refund_count': tx_counts.get('Refund', 0),
             }
             return cls(data)
