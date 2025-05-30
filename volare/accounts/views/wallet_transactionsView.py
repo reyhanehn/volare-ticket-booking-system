@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from ..serializers.wallet_transactionsSerializer import WalletChargeSerializer
+from ..serializers.wallet_transactionsSerializer import WalletTransactionListSerializer
 
 
 class WalletChargeView(APIView):
@@ -25,3 +26,19 @@ class WalletChargeView(APIView):
             }, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class WalletTransactionListView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        tx_type = request.data.get('type')
+        print(tx_type)
+
+        try:
+            serializer = WalletTransactionListSerializer.get_transactions(user, tx_type)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+

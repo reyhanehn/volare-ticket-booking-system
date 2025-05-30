@@ -40,3 +40,5 @@ class WalletSerializer(serializers.Serializer):
                 'refund_count': tx_counts.get('Refund', 0),
             }
             return cls(data)
+
+
