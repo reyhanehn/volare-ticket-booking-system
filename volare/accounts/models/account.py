@@ -25,6 +25,7 @@ class Account(models.Model):
     password_hash = models.TextField()
     city_id = models.BigIntegerField(null=True, blank=True)  # ForeignKey to Location, but just id for now
     registration_date = models.DateField(default=timezone.now)
+    birthdate = models.DateField(null=True, blank=True)
 
     @property
     def id(self):
