@@ -4,6 +4,7 @@ from .views.otpLoginView import VerifyOTPView
 from .views.otpLoginView import RequestOTPView
 from .views.profileView import ProfileView
 from .views.walletView import WalletView
+from .views.wallet_transactionsView import WalletChargeView
 
 urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
@@ -11,5 +12,5 @@ urlpatterns = [
     path('verifyOTP/', VerifyOTPView.as_view(), name='verifyOTP'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('wallet/', WalletView.as_view(), name='wallet'),
-
+    path('wallet/transactions/charge/', WalletChargeView.as_view(), name='charge_wallet'),
 ]
