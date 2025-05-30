@@ -1,5 +1,5 @@
 # accounts/views/profileView.py
-
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -14,8 +14,15 @@ class ProfileView(APIView):
         return Response(serializer.data)
 
     def put(self, request):
-        serializer = ProfileSerializer(request.user, data=request.data, partial=True)
+        serializer = ProfileSerializer(instance=request.user, data=request.data, partial=False)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request):
+        serializer = ProfileSerializer(instance=request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

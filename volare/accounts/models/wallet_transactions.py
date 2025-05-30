@@ -12,7 +12,7 @@ class TransactionType(models.TextChoices):
 class WalletTransaction(models.Model):
     transaction_id = models.BigAutoField(primary_key=True)
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions')
-    related_payment_id = models.BigIntegerField(null=True, blank=True, unique=True)
+    related_payment_id = models.ForeignKey('payments.Payment', null=True, blank=True, unique=True, on_delete=models.SET_NULL)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     type = models.CharField(max_length=10, choices=TransactionType.choices)
     transaction_date = models.DateField(default=timezone.now)

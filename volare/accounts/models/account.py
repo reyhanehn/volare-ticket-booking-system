@@ -23,7 +23,7 @@ class Account(models.Model):
     role = models.CharField(max_length=20, choices=AccountRole.choices)
     status = models.CharField(max_length=20, choices=AccountStatus.choices, default=AccountStatus.ACTIVE)
     password_hash = models.TextField()
-    city_id = models.BigIntegerField(null=True, blank=True)  # ForeignKey to Location, but just id for now
+    city = models.ForeignKey('bookings.Location', null=True, blank=True, on_delete=models.SET_NULL)
     registration_date = models.DateField(default=timezone.now)
     birthdate = models.DateField(null=True, blank=True)
 
