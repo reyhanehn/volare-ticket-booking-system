@@ -1,4 +1,6 @@
 import random
+
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,35 +9,25 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from ..serializers.otpLoginSerializer import RequestOTPSerializer
 from ..serializers.otpLoginSerializer import VerifyOTPSerializer
 from ..redis_client import redis_client
-
-
-import random
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
-
-from ..serializers.otpLoginSerializer import RequestOTPSerializer
-from ..redis_client import redis_client
 
 
 class RequestOTPView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = RequestOTPSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.context['user']
             otp = f"{random.randint(100000, 999999)}"
 
-            # Store in Redis for 5 minutes
-            redis_client.setex(f"otp:{user.id}", 300, otp)
+            redis_client.setex(f"otp:{user.account_id}", 300, otp)
 
-            # Send email if available
             if user.email:
                 send_mail(
                     subject="Your OTP Code",
                     message=f"Your OTP code is: {otp}",
-                    from_email="your_email@gmail.com",  # same as EMAIL_HOST_USER
+                    from_email="astheshriketoyoursharp@gmail.com",
                     recipient_list=[user.email],
                     fail_silently=False,
                 )
@@ -47,21 +39,22 @@ class RequestOTPView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyOTPView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = VerifyOTPSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data["user"]
             input_otp = serializer.validated_data["otp"]
 
-            expected_otp = redis_client.get(f"otp:{user.id}")
+            expected_otp = redis_client.get(f"otp:{user.account_id}")
             if expected_otp is None:
                 return Response({'error': 'OTP expired or not found'}, status=status.HTTP_400_BAD_REQUEST)
 
             if input_otp != expected_otp.decode():
                 return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # OTP is valid
-            redis_client.delete(f"otp:{user.id}")  # remove it after use
+            redis_client.delete(f"otp:{user.account_id}")
 
             refresh = RefreshToken.for_user(user)
 

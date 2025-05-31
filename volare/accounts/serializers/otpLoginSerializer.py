@@ -1,6 +1,6 @@
 from django.db.models import Q
 from rest_framework import serializers
-from ..Models.account import Account
+from ..models.account import Account
 
 
 class RequestOTPSerializer(serializers.Serializer):
@@ -32,6 +32,5 @@ class VerifyOTPSerializer(serializers.Serializer):
         except Account.DoesNotExist:
             raise serializers.ValidationError("No account found with that email or phone number.")
 
-        # Attach user to validated data so view can access it
         data['user'] = user
         return data

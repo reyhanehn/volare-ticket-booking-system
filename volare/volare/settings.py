@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'volare',
+        'NAME': 'Volare',
         'USER': 'postgres',
-        'PASSWORD': 'HaHa1312!',
+        'PASSWORD': 'reyh00n83',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -91,6 +91,9 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -98,6 +101,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'USER_ID_FIELD': 'account_id',
 }
 
 # Password validation
@@ -139,6 +143,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'accounts.Account'
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
@@ -151,6 +156,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'astheshriketoyoursharp@gmail.com'
-EMAIL_HOST_PASSWORD = 'ipyfpdyqwotwlfeq'  # remove spaces!
+EMAIL_HOST_PASSWORD = 'ipyfpdyqwotwlfeq'
 
 
