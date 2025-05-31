@@ -1,6 +1,6 @@
 from django.urls import path
 from .views.locationView import CreateLocationView, LocationListView
-from .views.stationView import StationView, StationListView
+from .views.stationView import CreateStationView, StationListView
 
 urlpatterns = [
     path('locations/create/', CreateLocationView.as_view(), name='create-location'),
