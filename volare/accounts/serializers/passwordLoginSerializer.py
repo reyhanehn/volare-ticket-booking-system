@@ -1,6 +1,6 @@
 from django.db.models import Q
 from rest_framework import serializers
-from ..Models.account import Account
+from ..models.account import Account
 
 class PasswordLoginSerializer(serializers.Serializer):
     identifier = serializers.CharField()  # replaces "value"
