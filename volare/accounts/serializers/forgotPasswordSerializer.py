@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.db.models import Q
-from ..Models.account import Account  # adjust import as needed
+from ..models.account import Account  # adjust import as needed
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
