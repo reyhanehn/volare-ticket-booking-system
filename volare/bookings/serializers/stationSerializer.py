@@ -1,4 +1,3 @@
-# stations/serializers.py
 from rest_framework import serializers
 from ..models import Station, Location
 
@@ -9,8 +8,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class StationSerializer(serializers.ModelSerializer):
-    location = LocationSerializer()
-
+    location = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
     class Meta:
         model = Station
         fields = ['station_id', 'name', 'type', 'location']
@@ -20,8 +18,3 @@ class StationSerializer(serializers.ModelSerializer):
         if not re.match(r'^[A-Za-z]+(\s[A-Za-z]+)*$', value):
             raise serializers.ValidationError("Station name must contain only letters and spaces.")
         return value
-
-    def create(self, validated_data):
-        location_data = validated_data.pop('location')
-        location, _ = Location.objects.get_or_create(**location_data)
-        return Station.objects.create(location=location, **validated_data)

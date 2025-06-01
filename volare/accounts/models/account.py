@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 class AccountRole(models.TextChoices):
     CUSTOMER = 'Customer'
     ADMIN = 'Admin'
-    COMPANY_OWNER = 'Company_Owner'
+    COMPANY_ADMIN = 'Company_Admin'
 
 
 class AccountStatus(models.TextChoices):
