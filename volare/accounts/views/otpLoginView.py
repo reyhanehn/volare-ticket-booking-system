@@ -1,16 +1,15 @@
 import random
-
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from ..serializers.otpLoginSerializer import RequestOTPSerializer
-from ..serializers.otpLoginSerializer import VerifyOTPSerializer
-from ..redis_client import redis_client
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+
+from ..serializers.otpLoginSerializer import RequestOTPSerializer, VerifyOTPSerializer
+from ..redis_client import redis_client
+
 
 class RequestOTPView(APIView):
     permission_classes = [AllowAny]
@@ -43,6 +42,7 @@ class RequestOTPView(APIView):
             return Response({"error": "User does not have an email address"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]

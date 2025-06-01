@@ -4,33 +4,33 @@ from ..models.account import Account
 
 
 class RequestOTPSerializer(serializers.Serializer):
-    phonenumber_or_email = serializers.CharField(required=True)
+    identifier = serializers.CharField(required=True)
 
-    def validate_phonenumber_or_email(self, value):
+    def validate_identifier(self, value):
         try:
             user = Account.objects.get(Q(email=value) | Q(phone_number=value))
         except Account.DoesNotExist:
-            raise serializers.ValidationError("User not found")
+            raise serializers.ValidationError("User not found.")
 
         self.context['user'] = user
         return value
 
 
 class VerifyOTPSerializer(serializers.Serializer):
-    value = serializers.CharField()
+    identifier = serializers.CharField()
     otp = serializers.CharField()
 
     def validate(self, data):
-        value = data.get('value')
+        identifier = data.get('identifier')
         otp = data.get('otp')
 
-        if not value or not otp:
-            raise serializers.ValidationError("Both value and OTP are required.")
+        if not identifier or not otp:
+            raise serializers.ValidationError("Both identifier and OTP are required.")
 
         try:
-            user = Account.objects.get(Q(email=value) | Q(phone_number=value))
+            user = Account.objects.get(Q(email=identifier) | Q(phone_number=identifier))
         except Account.DoesNotExist:
-            raise serializers.ValidationError("No account found with that email or phone number.")
+            raise serializers.ValidationError("No account found with that identifier.")
 
         data['user'] = user
         return data
