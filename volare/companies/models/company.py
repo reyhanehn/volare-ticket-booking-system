@@ -3,7 +3,7 @@ from django.db import models
 
 class Company(models.Model):
     company_id = models.BigAutoField(primary_key=True)
-    owner = models.ForeignKey(
+    owner = models.OneToOneField(
         'accounts.Account',  # or 'accounts.Account' if not using custom user model
         on_delete=models.CASCADE,
         related_name='owned_companies'

@@ -8,3 +8,7 @@ class IsAdmin(BasePermission):
 class IsAdminOrCustomer(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role in [AccountRole.ADMIN.value, AccountRole.CUSTOMER.value]
+
+class IsCompanyOwner(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == AccountRole.COMPANY_OWNER.value

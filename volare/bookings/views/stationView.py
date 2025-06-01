@@ -7,7 +7,7 @@ from rest_framework import status
 from bookings.serializers.stationSerializer import StationSerializer
 from accounts.permissions import IsAdmin
 
-from volare.bookings.models import Station
+from ..models import Station
 
 
 class CreateStationView(APIView):
