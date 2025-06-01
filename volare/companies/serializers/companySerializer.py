@@ -1,6 +1,9 @@
+# companies/serializers/companySerializer.py
+
 from rest_framework import serializers
 from accounts.serializers.signupSerializer import AccountSignupSerializer
 from ..models import Company
+from django.db import connection
 
 
 class CompanyCreateSerializer(serializers.ModelSerializer):
@@ -12,18 +15,35 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner_data = validated_data.pop('owner_data')
-
-        # Force the role to 'Company_Owner' regardless of what's passed
         owner_data['role'] = 'Company_Owner'
 
-        # Use existing signup logic to create the account and wallet
+        # Use AccountSignupSerializer which must use raw SQL internally
         owner_serializer = AccountSignupSerializer(data=owner_data)
         owner_serializer.is_valid(raise_exception=True)
         owner = owner_serializer.save()
 
-        # Now create the company with the new owner
-        company = Company.objects.create(owner=owner, **validated_data)
-        return company
+        # Raw SQL insert for Company
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO companies_company (owner_id, name, logo_url, website)
+                VALUES (%s, %s, %s, %s)
+                RETURNING company_id
+            """, [
+                owner.account_id,
+                validated_data.get('name'),
+                validated_data.get('logo_url'),
+                validated_data.get('website')
+            ])
+            company_id = cursor.fetchone()[0]
+
+        # Return a fake instance for serialization
+        return type("CompanyObj", (), {
+            "company_id": company_id,
+            "name": validated_data.get('name'),
+            "owner": type("OwnerObj", (), {"account_id": owner.account_id}),
+            "logo_url": validated_data.get('logo_url'),
+            "website": validated_data.get('website')
+        })
 
     def to_representation(self, instance):
         return {
