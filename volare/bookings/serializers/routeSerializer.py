@@ -42,7 +42,7 @@ class RouteCreateSerializer(serializers.Serializer):
     def create(self, validated_data):
         with connection.cursor() as cursor:
             cursor.execute("""
-                INSERT INTO bookings_route (origin, destination, origin_station, destination_station)
+                INSERT INTO bookings_route (origin_id, destination_id, origin_station_id, destination_station_id)
                 VALUES (%s, %s, %s, %s)
                 RETURNING route_id
             """, [
@@ -68,19 +68,19 @@ class RouteListSerializer(serializers.Serializer):
         params = []
 
         if filters.get("origin"):
-            where.append("r.origin = %s")
+            where.append("r.origin_id = %s")
             params.append(filters["origin"])
 
         if filters.get("destination"):
-            where.append("r.destination = %s")
+            where.append("r.destination_id = %s")
             params.append(filters["destination"])
 
         if filters.get("origin_station"):
-            where.append("r.origin_station = %s")
+            where.append("r.origin_station_iid = %s")
             params.append(filters["origin_station"])
 
         if filters.get("destination_station"):
-            where.append("r.destination_station = %s")
+            where.append("r.destination_station_id = %s")
             params.append(filters["destination_station"])
 
         where_clause = "WHERE " + " AND ".join(where) if where else ""
@@ -92,10 +92,10 @@ class RouteListSerializer(serializers.Serializer):
                    s1.name AS origin_station,
                    s2.name AS destination_station
             FROM bookings_route r
-            JOIN bookings_location l1 ON r.origin = l1.location_id
-            JOIN bookings_location l2 ON r.destination = l2.location_id
-            LEFT JOIN bookings_station s1 ON r.origin_station = s1.station_id
-            LEFT JOIN bookings_station s2 ON r.destination_station = s2.station_id
+            JOIN bookings_location l1 ON r.origin_id = l1.location_id
+            JOIN bookings_location l2 ON r.destination_id = l2.location_id
+            LEFT JOIN bookings_station s1 ON r.origin_station_id = s1.station_id
+            LEFT JOIN bookings_station s2 ON r.destination_station_id = s2.station_id
             {where_clause}
             ORDER BY r.route_id
         """

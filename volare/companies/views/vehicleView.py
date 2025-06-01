@@ -6,11 +6,11 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 from ..serializers.vehicleSerializer import VehicleSerializer
-from accounts.permissions import IsCompanyOwner
+from accounts.permissions import IsCompanyAdmin
 
 
 class CreateVehicleView(APIView):
-    permission_classes = [IsAuthenticated, IsCompanyOwner]
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
 
     def post(self, request):
         serializer = VehicleSerializer(data=request.data, context={'request': request})
