@@ -10,7 +10,7 @@ from ..serializers.otpLoginSerializer import RequestOTPSerializer
 from ..serializers.otpLoginSerializer import VerifyOTPSerializer
 from ..redis_client import redis_client
 from django.core.mail import send_mail
-
+from django.template.loader import render_to_string
 
 class RequestOTPView(APIView):
     permission_classes = [AllowAny]
@@ -24,12 +24,18 @@ class RequestOTPView(APIView):
             redis_client.setex(f"otp:{user.account_id}", 300, otp)
 
             if user.email:
+                html_message = render_to_string('emails/otp_email.html', {
+                    'name': user.name,
+                    'otp': otp,
+                })
+
                 send_mail(
                     subject="Your OTP Code",
                     message=f"Your OTP code is: {otp}",
                     from_email="astheshriketoyoursharp@gmail.com",
                     recipient_list=[user.email],
                     fail_silently=False,
+                    html_message=html_message
                 )
 
                 return Response({"message": "OTP sent to your email"}, status=status.HTTP_200_OK)
