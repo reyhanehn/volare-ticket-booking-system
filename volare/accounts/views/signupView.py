@@ -12,10 +12,8 @@ class SignupView(APIView):
     def post(self, request):
         serializer = AccountSignupSerializer(data=request.data)
         if serializer.is_valid():
-            # Save the account (handles password hashing in serializer)
             account = serializer.save()
 
-            # Generate JWT tokens for the new user
             refresh = RefreshToken.for_user(account)
 
             return Response({
