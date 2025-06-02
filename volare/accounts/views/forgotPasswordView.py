@@ -1,4 +1,6 @@
 import random
+
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,12 +14,14 @@ from ..serializers.forgotPasswordSerializer import (
 
 
 class RequestForgotPasswordView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = RequestForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.context["user"]
             otp = f"{random.randint(100000, 999999)}"
-            redis_client.setex(f"reset_otp:{user.id}", 300, otp)  # 5 mins
+            redis_client.setex(f"reset_otp:{user.account_id}", 300, otp)  # 5 mins
 
             if user.email:
                 send_mail(
@@ -35,6 +39,8 @@ class RequestForgotPasswordView(APIView):
 
 
 class VerifyForgotPasswordView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = VerifyForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -42,7 +48,7 @@ class VerifyForgotPasswordView(APIView):
             input_otp = serializer.validated_data["otp"]
             new_password = serializer.validated_data["new_password"]
 
-            expected_otp = redis_client.get(f"reset_otp:{user.id}")
+            expected_otp = redis_client.get(f"reset_otp:{user.account_id}")
             if expected_otp is None:
                 return Response({'error': 'OTP expired or not found'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -51,7 +57,7 @@ class VerifyForgotPasswordView(APIView):
 
             user.password_hash = make_password(new_password)
             user.save()
-            redis_client.delete(f"reset_otp:{user.id}")
+            redis_client.delete(f"reset_otp:{user.account_id}")
 
             return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
 

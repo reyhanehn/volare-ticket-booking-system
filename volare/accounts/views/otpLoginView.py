@@ -1,15 +1,14 @@
 import random
-
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from ..serializers.otpLoginSerializer import RequestOTPSerializer
-from ..serializers.otpLoginSerializer import VerifyOTPSerializer
-from ..redis_client import redis_client
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
+from ..serializers.otpLoginSerializer import RequestOTPSerializer, VerifyOTPSerializer
+from ..redis_client import redis_client
 
 
 class RequestOTPView(APIView):
@@ -24,12 +23,18 @@ class RequestOTPView(APIView):
             redis_client.setex(f"otp:{user.account_id}", 300, otp)
 
             if user.email:
+                html_message = render_to_string('emails/otp_email.html', {
+                    'name': user.name,
+                    'otp': otp,
+                })
+
                 send_mail(
                     subject="Your OTP Code",
                     message=f"Your OTP code is: {otp}",
                     from_email="astheshriketoyoursharp@gmail.com",
                     recipient_list=[user.email],
                     fail_silently=False,
+                    html_message=html_message
                 )
 
                 return Response({"message": "OTP sent to your email"}, status=status.HTTP_200_OK)
@@ -37,6 +42,7 @@ class RequestOTPView(APIView):
             return Response({"error": "User does not have an email address"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]

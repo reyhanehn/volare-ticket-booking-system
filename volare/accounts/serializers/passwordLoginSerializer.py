@@ -3,7 +3,7 @@ from rest_framework import serializers
 from ..models.account import Account
 
 class PasswordLoginSerializer(serializers.Serializer):
-    identifier = serializers.CharField()  # replaces "value"
+    identifier = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, data):

@@ -2,8 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from accounts.permissions import IsCompanyAdmin
 from ..serializers.vehicleSerializer import VehicleSerializer
+from accounts.permissions import IsCompanyAdmin
+
 
 
 class CreateVehicleView(APIView):

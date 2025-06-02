@@ -1,16 +1,24 @@
 # Ignore compiled Python files
 *.pyc
-__pycache__/
+**/__pycache__/
 
-# Default ignored files
-/shelf/
-/workspace.xml
-
-# Python virtual environment
+# Ignore virtual environment
 .venv/
 
+# PyCharm project files
 .idea/
-**/__pycache__/
-*.pyc
+shelf/
+workspace.xml
 
+# Ignore all migrations except __init__.py
+volare/accounts/migrations/*
+!volare/accounts/migrations/__init__.py
 
+volare/bookings/migrations/*
+!volare/bookings/migrations/__init__.py
+
+volare/companies/migrations/*
+!volare/companies/migrations/__init__.py
+
+volare/reports/migrations/*
+!volare/reports/migrations/__init__.py
