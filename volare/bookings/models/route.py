@@ -12,8 +12,3 @@ class Route(models.Model):
 
     def __str__(self):
         return f"Route from {self.origin} to {self.destination}"
-
-    def clean(self):
-        # Optional: Enforce origin != destination logic here if needed in app validation
-        if self.origin == self.destination:
-            raise ValidationError("Origin and Destination must be different.")

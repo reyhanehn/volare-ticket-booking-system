@@ -15,7 +15,7 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         owner_data = validated_data.pop('owner_data')
-        owner_data['role'] = 'Company_Owner'
+        owner_data['role'] = 'Company_Admin'
 
         # Use AccountSignupSerializer which must use raw SQL internally
         owner_serializer = AccountSignupSerializer(data=owner_data)
