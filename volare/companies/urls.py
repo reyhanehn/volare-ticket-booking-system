@@ -1,8 +1,10 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from .models import VehicleService
 from .views.serviceView import ServiceListView, CreateServiceView
 from .views.companyView import CreateCompanyView, GetMyCompanyView, GetAllCompaniesView
+from .views.vehicleServiceView import AssignServicesToVehicleView
 from .views.vehicleView import CreateVehicleView, GetAllVehiclesView
 
 urlpatterns = [
@@ -13,4 +15,5 @@ urlpatterns = [
     path('my_company/', GetMyCompanyView().as_view(), name='my-company'),
     path('admin/companies/list', GetAllCompaniesView.as_view(), name='list-companies'),
     path('admin/vehicles/list', GetAllVehiclesView.as_view(), name='list-vehicles'),
+    path('vehicleService/', AssignServicesToVehicleView.as_view(), name='vehicle-service'),
 ]
