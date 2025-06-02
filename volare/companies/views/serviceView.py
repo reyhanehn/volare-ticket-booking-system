@@ -7,7 +7,7 @@ from ..serializers.serviceSerializer import ServiceCreateSerializer, ServiceList
 
 
 class CreateServiceView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAnyAdmin]
 
     def post(self, request):
         serializer = ServiceCreateSerializer(data=request.data)

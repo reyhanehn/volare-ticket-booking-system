@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from django.db import connection
-
-
 class VehicleServiceAssignSerializer(serializers.Serializer):
     vehicle_id = serializers.IntegerField()
     service_names = serializers.ListField(
@@ -17,24 +15,21 @@ class VehicleServiceAssignSerializer(serializers.Serializer):
 
     def validate_service_names(self, value):
         if not value:
-            raise serializers.ValidationError("At least one service name must be provided.")
-
+            raise serializers.ValidationError("At least one service must be provided.")
         placeholders = ','.join(['%s'] * len(value))
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT name, service_id FROM companies_service WHERE LOWER(name) IN ({placeholders})",
-                [name.lower() for name in value]
+                f"SELECT service_id, name FROM companies_service WHERE LOWER(name) IN ({placeholders})",
+                [v.lower() for v in value]
             )
             rows = cursor.fetchall()
 
-        name_to_id = {row[0].lower(): row[1] for row in rows}
-        missing = [name for name in value if name.lower() not in name_to_id]
-
+        name_to_id = {name.lower(): sid for sid, name in rows}
+        missing = [n for n in value if n.lower() not in name_to_id]
         if missing:
             raise serializers.ValidationError(f"Invalid service names: {missing}")
 
-        # Store mapping for use in `create`
-        self.service_id_list = list(name_to_id.values())
+        self.service_ids = list(name_to_id.values())  # store for use in `create`
         return value
 
     def create(self, validated_data):
@@ -42,7 +37,7 @@ class VehicleServiceAssignSerializer(serializers.Serializer):
         inserted = []
 
         with connection.cursor() as cursor:
-            for service_id in self.service_id_list:
+            for service_id in self.service_ids:
                 try:
                     cursor.execute("""
                         INSERT INTO companies_vehicleservice (vehicle_id, service_id)
@@ -51,7 +46,7 @@ class VehicleServiceAssignSerializer(serializers.Serializer):
                     """, [vehicle_id, service_id])
                     inserted.append(service_id)
                 except Exception:
-                    continue  # Skip duplicates or DB errors
+                    continue
 
         return {
             "vehicle_id": vehicle_id,
