@@ -1,4 +1,3 @@
-# accounts/views/profileView.py
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,19 +9,26 @@ class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = ProfileSerializer(request.user)
-        return Response(serializer.data)
+        user = request.user
+        data = {
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "name": user.name,
+            "lastname": user.lastname,
+            "birth_date": user.birth_date,
+            "city": user.city_id if user.city else None,
+        }
+        return Response(data)
 
     def put(self, request):
-        serializer = ProfileSerializer(instance=request.user, data=request.data, partial=False)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self._update(request, partial=False)
 
     def patch(self, request):
-        serializer = ProfileSerializer(instance=request.user, data=request.data, partial=True)
+        return self._update(request, partial=True)
+
+    def _update(self, request, partial):
+        serializer = ProfileSerializer(instance=request.user, data=request.data, partial=partial, context={"request": request})
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            updated = serializer.save()
+            return Response(updated)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
