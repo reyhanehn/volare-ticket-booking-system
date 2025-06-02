@@ -5,10 +5,10 @@ from rest_framework import status
 from django.db import connection
 
 from bookings.serializers.stationSerializer import StationSerializer
-from accounts.permissions import IsAdmin
+from accounts.permissions import IsAnyAdmin
 
 class CreateStationView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAnyAdmin]
 
     def post(self, request):
         serializer = StationSerializer(data=request.data)
