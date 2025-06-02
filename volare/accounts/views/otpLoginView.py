@@ -1,4 +1,5 @@
 import random
+import json
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 from ..serializers.otpLoginSerializer import RequestOTPSerializer, VerifyOTPSerializer
-from ..redis_client import redis_client
+from redis_client import redis_client
 
 
 class RequestOTPView(APIView):
@@ -62,6 +63,8 @@ class VerifyOTPView(APIView):
 
             redis_client.delete(f"otp:{user.account_id}")
 
+            self.cache_user_data(user)
+
             refresh = RefreshToken.for_user(user)
 
             return Response({
@@ -71,3 +74,18 @@ class VerifyOTPView(APIView):
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def cache_user_data(user):
+        key = user.account_id
+        user_data = {
+            "account_id": user.account_id,
+            "name": user.name,
+            "lastname": user.lastname,
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "role": user.role,
+            "status": user.status,
+        }
+        redis_client.setex(key, 3600 * 6, json.dumps(user_data))  # expires in 6 hours
+
