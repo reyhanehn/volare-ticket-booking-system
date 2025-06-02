@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'companies',
     'reports',
     'seed_data',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -80,9 +81,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Volare',
+        'NAME': 'volare',
         'USER': 'postgres',
-        'PASSWORD': 'reyh00n83',
+        'PASSWORD': 'HaHa1312!',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -101,8 +102,14 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'USER_ID_FIELD': 'account_id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -158,4 +165,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'astheshriketoyoursharp@gmail.com'
 EMAIL_HOST_PASSWORD = 'ipyfpdyqwotwlfeq'
 
-
+TEMPLATES[0]['DIRS'] = [BASE_DIR / "templates"]

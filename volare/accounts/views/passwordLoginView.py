@@ -1,13 +1,16 @@
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 
-from ..serializers.passwordLoginSerializer import PasswordLoginSerializer  # correct serializer
+from ..serializers.passwordLoginSerializer import PasswordLoginSerializer
 
 
 class PasswordLoginView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = PasswordLoginSerializer(data=request.data)
         if serializer.is_valid():

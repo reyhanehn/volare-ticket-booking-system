@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from ..models.location import Location
+from ..models.passenger import Passenger
 import re
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Location
+        model = Passenger
         fields = ['country', 'city']
 
     def validate_country(self, value):
@@ -19,6 +19,6 @@ class LocationSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        if Location.objects.filter(country=data['country'], city=data['city']).exists():
+        if Passenger.objects.filter(country=data['country'], city=data['city']).exists():
             raise serializers.ValidationError("This location already exists.")
         return data
