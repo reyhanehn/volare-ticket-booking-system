@@ -29,6 +29,7 @@ class SignupView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @staticmethod
     def cache_user_data(user):
         key = user.account_id
         user_data = {
