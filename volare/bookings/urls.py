@@ -10,4 +10,5 @@ urlpatterns = [
     path('stations/list/', StationListView.as_view(), name='station-list'),
     path('routes/search/', RouteListView.as_view(), name='routes-list'),
     path('admin/routes/create/', RouteCreateView.as_view(), name='create-route'),
+    path('company/ticket/create/', RouteCreateView.as_view(), name='create-ticket'),
 ]
