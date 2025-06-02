@@ -33,7 +33,7 @@ class WalletTransactionListView(APIView):
 
     def get(self, request):
         user = request.user
-        tx_type = request.data.get('type')
+        tx_type = request.query_params.get('type')
         print(tx_type)
 
         try:
@@ -41,4 +41,3 @@ class WalletTransactionListView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
