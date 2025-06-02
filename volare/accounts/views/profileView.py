@@ -18,7 +18,7 @@ class ProfileView(APIView):
 
         serializer = ProfileSerializer(request.user)
         self.set_user_cache(request.user)  # store in Redis
-        print(1)
+        print("wasn't cached")
         return Response(serializer.data)
 
     def put(self, request):
