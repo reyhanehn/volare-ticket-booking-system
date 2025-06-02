@@ -8,6 +8,6 @@ urlpatterns = [
     path('locations/list/', LocationListView.as_view(), name='location-list'),
     path('admin/stations/create/', CreateStationView.as_view(), name='create-station'),
     path('stations/list/', StationListView.as_view(), name='station-list'),
-    path('routes/list/', RouteListView.as_view(), name='routes-list'),
+    path('routes/search/', RouteListView.as_view(), name='routes-list'),
     path('admin/routes/create/', RouteCreateView.as_view(), name='create-route'),
 ]

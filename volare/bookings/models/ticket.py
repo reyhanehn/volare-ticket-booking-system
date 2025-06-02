@@ -17,8 +17,6 @@ class Trip(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='trips')
     departure_datetime = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
-    remaining_sections = models.PositiveSmallIntegerField()
-    remaining_capacity = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return f"Trip {self.trip_id} on {self.departure_datetime}"
