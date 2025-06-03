@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
-from ..redis_client import redis_client
+from redis_client import redis_client
 from ..serializers.forgotPasswordSerializer import (
     RequestForgotPasswordSerializer,
     VerifyForgotPasswordSerializer

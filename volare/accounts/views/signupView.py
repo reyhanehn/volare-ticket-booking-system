@@ -1,9 +1,12 @@
+import json
+
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from ..serializers.signupSerializer import AccountSignupSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from redis_client import redis_client
 
 
 class SignupView(APIView):
@@ -12,10 +15,10 @@ class SignupView(APIView):
     def post(self, request):
         serializer = AccountSignupSerializer(data=request.data)
         if serializer.is_valid():
-            # Save the account (handles password hashing in serializer)
             account = serializer.save()
 
-            # Generate JWT tokens for the new user
+            self.cache_user_data(account)
+
             refresh = RefreshToken.for_user(account)
 
             return Response({
@@ -25,3 +28,17 @@ class SignupView(APIView):
             }, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def cache_user_data(user):
+        key = user.account_id
+        user_data = {
+            "account_id": user.account_id,
+            "name": user.name,
+            "lastname": user.lastname,
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "role": user.role,
+            "status": user.status,
+        }
+        redis_client.setex(key, 3600 * 6, json.dumps(user_data))  # expires in 6 hours
