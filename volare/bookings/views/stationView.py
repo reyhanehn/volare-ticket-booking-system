@@ -5,13 +5,13 @@ from rest_framework.response import Response
 from rest_framework import status
 #from .models import Station
 from bookings.serializers.stationSerializer import StationSerializer
-from accounts.permissions import IsAdmin
+from accounts.permissions import IsAnyAdmin
 
 from ..models import Station
 
 
 class CreateStationView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAnyAdmin]
 
     def post(self, request):
         serializer = StationSerializer(data=request.data)
