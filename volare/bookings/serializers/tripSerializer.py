@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from django.utils.dateparse import parse_datetime
 from django.db import connection
@@ -19,13 +20,13 @@ class TripCreateSerializer(serializers.Serializer):
         departure = data["departure_datetime"]
 
         # ✅ Departure must be at least a week ahead
-        if departure < datetime.now() + timedelta(days=7):
+        if departure < timezone.now() + timedelta(days=7):
             raise serializers.ValidationError("Departure must be at least one week from now.")
 
         with connection.cursor() as cursor:
             # ✅ Vehicle must exist and belong to a company the user owns
             cursor.execute("""
-                SELECT c.owner
+                SELECT c.owner_id
                 FROM companies_vehicle v
                 JOIN companies_company c ON v.company_id = c.company_id
                 WHERE v.vehicle_id = %s
@@ -44,7 +45,7 @@ class TripCreateSerializer(serializers.Serializer):
             # ✅ Section count must match tickets
             cursor.execute("""
                 SELECT section_id, seats_count
-                FROM companies_vehicle_section
+                FROM companies_vehiclesection
                 WHERE vehicle_id = %s
             """, [vehicle_id])
             vehicle_sections = cursor.fetchall()
@@ -83,7 +84,7 @@ class TripCreateSerializer(serializers.Serializer):
                 # Get seats count for section
                 cursor.execute("""
                     SELECT seats_count
-                    FROM companies_vehicle_section
+                    FROM companies_vehiclesection
                     WHERE section_id = %s
                 """, [section_id])
                 seats = cursor.fetchone()[0]
