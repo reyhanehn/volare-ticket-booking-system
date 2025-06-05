@@ -1,4 +1,3 @@
-
 from django.db import connection
 from rest_framework import serializers
 from ..models.account import Account
@@ -26,6 +25,7 @@ class RequestOTPSerializer(serializers.Serializer):
 
         self.context['user'] = user
         return value
+
 
 class VerifyOTPSerializer(serializers.Serializer):
     identifier = serializers.CharField()
