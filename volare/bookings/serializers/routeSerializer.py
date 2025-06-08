@@ -21,21 +21,36 @@ class RouteCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Origin and destination stations must be different.")
 
         with connection.cursor() as cursor:
-            if origin_station_id:
-                cursor.execute("SELECT location_id FROM bookings_station WHERE station_id = %s", [origin_station_id])
-                row = cursor.fetchone()
-                if not row:
-                    raise serializers.ValidationError("Origin station not found.")
-                if row[0] != origin_id:
-                    raise serializers.ValidationError("Origin station must belong to the origin location.")
+            if not origin_station_id:
+                raise serializers.ValidationError("Origin station is a required field.")
 
-            if destination_station_id:
-                cursor.execute("SELECT location_id FROM bookings_station WHERE station_id = %s", [destination_station_id])
-                row = cursor.fetchone()
-                if not row:
-                    raise serializers.ValidationError("Destination station not found.")
-                if row[0] != destination_id:
-                    raise serializers.ValidationError("Destination station must belong to the destination location.")
+            cursor.execute(
+                "SELECT type, location_id FROM bookings_station WHERE station_id = %s",
+                [origin_station_id]
+            )
+            row = cursor.fetchone()
+            if not row:
+                raise serializers.ValidationError("Origin station not found.")
+            org_type, org_id = row
+            if org_id != origin_id:
+                raise serializers.ValidationError("Origin station must belong to the origin location.")
+
+            if not destination_station_id:
+                raise serializers.ValidationError("Destination station is a required field.")
+
+            cursor.execute(
+                "SELECT type, location_id FROM bookings_station WHERE station_id = %s",
+                [destination_station_id]
+            )
+            row = cursor.fetchone()
+            if not row:
+                raise serializers.ValidationError("Destination station not found.")
+            dest_type, dest_id = row
+            if dest_id != destination_id:
+                raise serializers.ValidationError("Destination station must belong to the destination location.")
+
+            if dest_type != org_type:
+                raise serializers.ValidationError("Origin station and Destination station are different types.")
 
         return data
 

@@ -3,6 +3,7 @@ from .views.locationView import CreateLocationView, LocationListView
 from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
+from .views.tripStopView import TripStopCreateView
 
 urlpatterns = [
     path('admin/locations/create/', CreateLocationView.as_view(), name='create-location'),
@@ -12,4 +13,5 @@ urlpatterns = [
     path('routes/search/', RouteListView.as_view(), name='routes-list'),
     path('admin/routes/create/', RouteCreateView.as_view(), name='create-route'),
     path('company/ticket/create/', TripCreateView.as_view(), name='create-ticket'),
+    path("trips/<int:trip_id>/stops/", TripStopCreateView.as_view(), name="trip-add-stops"),
 ]

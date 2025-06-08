@@ -12,6 +12,11 @@ class TripCreateSerializer(serializers.Serializer):
     duration = serializers.DurationField()
     ticket_info = serializers.ListField(child=serializers.DictField())
 
+    from datetime import timedelta
+    from django.utils import timezone
+    from rest_framework import serializers
+    from django.db import connection
+
     def validate(self, data):
         vehicle_id = data["vehicle_id"]
         route_id = data["route_id"]
@@ -19,14 +24,13 @@ class TripCreateSerializer(serializers.Serializer):
         ticket_info = data["ticket_info"]
         departure = data["departure_datetime"]
 
-        # ✅ Departure must be at least a week ahead
         if departure < timezone.now() + timedelta(days=7):
             raise serializers.ValidationError("Departure must be at least one week from now.")
 
         with connection.cursor() as cursor:
-            # ✅ Vehicle must exist and belong to a company the user owns
+            # Check vehicle ownership and type
             cursor.execute("""
-                SELECT c.owner_id
+                SELECT c.owner_id, v.type
                 FROM companies_vehicle v
                 JOIN companies_company c ON v.company_id = c.company_id
                 WHERE v.vehicle_id = %s
@@ -34,15 +38,16 @@ class TripCreateSerializer(serializers.Serializer):
             row = cursor.fetchone()
             if not row:
                 raise serializers.ValidationError("Vehicle does not exist.")
-            if row[0] != user_account_id:
+            owner_id, transport_type = row
+            if owner_id != user_account_id:
                 raise serializers.ValidationError("You do not own this vehicle.")
 
-            # ✅ Route must exist
+            # Validate route existence
             cursor.execute("SELECT 1 FROM bookings_route WHERE route_id = %s", [route_id])
             if not cursor.fetchone():
                 raise serializers.ValidationError("Route does not exist.")
 
-            # ✅ Section count must match tickets
+            # Validate vehicle sections
             cursor.execute("""
                 SELECT section_id, seats_count
                 FROM companies_vehiclesection
@@ -57,6 +62,28 @@ class TripCreateSerializer(serializers.Serializer):
             if section_ids_in_vehicle != section_ids_in_request:
                 raise serializers.ValidationError("Section IDs in tickets must match the vehicle’s sections exactly.")
 
+            # Validate station type compatibility
+            expected_station_type = {
+                "Train": "Train_Station",
+                "Bus": "Bus_Station",
+                "Airplane": "Airport"
+            }.get(transport_type)
+
+            cursor.execute("""
+                SELECT s.type
+                FROM bookings_station s
+                JOIN bookings_route r ON r.origin_station_id = s.station_id
+                WHERE r.route_id = %s
+            """, [route_id])
+            row = cursor.fetchone()
+            if not row:
+                raise serializers.ValidationError("Not a valid route.")
+            station_type = row[0]
+            if station_type != expected_station_type:
+                raise serializers.ValidationError({
+                    "origin_station": f"{transport_type} must use {expected_station_type}, but got {station_type}."
+                })
+
         return data
 
     def create(self, validated_data):
@@ -67,7 +94,6 @@ class TripCreateSerializer(serializers.Serializer):
         ticket_info = validated_data["ticket_info"]
 
         with connection.cursor() as cursor:
-            # 🚀 Create Trip
             cursor.execute("""
                 INSERT INTO bookings_trip (vehicle_id, route_id, departure_datetime, duration)
                 VALUES (%s, %s, %s, %s)
@@ -81,7 +107,6 @@ class TripCreateSerializer(serializers.Serializer):
                 section_id = ticket["section_id"]
                 price = ticket["price"]
 
-                # Get seats count for section
                 cursor.execute("""
                     SELECT seats_count
                     FROM companies_vehiclesection
