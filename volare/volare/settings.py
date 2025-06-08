@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'reports',
     'seed_data',
     'rest_framework_simplejwt.token_blacklist',
+    'celery',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -166,3 +168,9 @@ EMAIL_HOST_USER = 'astheshriketoyoursharp@gmail.com'
 EMAIL_HOST_PASSWORD = 'ipyfpdyqwotwlfeq'
 
 TEMPLATES[0]['DIRS'] = [BASE_DIR / "templates"]
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # or whatever port/db you're using
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
