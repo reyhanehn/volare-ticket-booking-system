@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.db import connection
 from datetime import date, time
+from datetime import datetime, date
 import re
 
 
@@ -66,7 +67,7 @@ class ReservationSerializer(serializers.Serializer):
             cursor.execute("""
                            INSERT INTO bookings_reservation
                            (account_id, passenger_id, ticket_id, seat_number, status,
-                            reservation_date, reservation_time, expiration, cancelled_by)
+                            reservation_date, reservation_time, expiration, cancelled_by_id)
                            VALUES (%s, %s, %s, %s, 'Pending', CURRENT_DATE, CURRENT_TIME, %s,
                                    NULL) RETURNING reservation_id
                            """, [
@@ -83,5 +84,5 @@ class ReservationSerializer(serializers.Serializer):
             **validated_data,
             "status": "Pending",
             "reservation_date": str(date.today()),
-            "reservation_time": str(time.today().strftime('%H:%M:%S'))
+            "reservation_time": datetime.now().strftime('%H:%M:%S')
         }

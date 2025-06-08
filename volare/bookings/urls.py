@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.locationView import CreateLocationView, LocationListView
 from .views.passengerView import CreatePassengerView, PassengerListView
-from .views.reservationView import CreateReservationView
+from .views.reservationView import CreateReservationView, ReservationListView
 from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
@@ -17,4 +17,5 @@ urlpatterns = [
     path('customer/passenger/create/', CreatePassengerView.as_view(), name='create-passenger'),
     path('customer/passenger/list/', PassengerListView.as_view(), name='passenger-list'),
     path('reservation/create/', CreateReservationView.as_view(), name='create-reservation'),
+    path('customer/reservation/list/', ReservationListView.as_view(), name='reservation-list'),
 ]
