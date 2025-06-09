@@ -5,19 +5,24 @@ from ..models.report import ReportType
 
 
 class CostumerReportSerializer(serializers.Serializer):
-    type = serializers.CharField(max_length=15, choices=ReportType.choices, null=False)
+    type = serializers.CharField(max_length=15, required=False)
     related_report = serializers.IntegerField()
     text = serializers.CharField()
 
     def validate(self, data):
         report_type = data["type"]
+        valid_report_types = [ReportType.TICKET.value, ReportType.PAYMENT.value, ReportType.RESERVATION.value]
         related_report = data["related_report"]
+
+        if not report_type in valid_report_types:
+            raise serializers.ValidationError("Invalid report type")
 
         query_map = {
             ReportType.TICKET: "SELECT 1 FROM bookings_ticket WHERE ticket_id = %s",
             ReportType.PAYMENT: "SELECT 1 FROM bookings_payment WHERE payment_id = %s",
             ReportType.RESERVATION: "SELECT 1 FROM bookings_reservation WHERE reservation_id = %s",
         }
+
 
         query = query_map.get(report_type)
         if not query:
@@ -35,7 +40,7 @@ class CostumerReportSerializer(serializers.Serializer):
         with connection.cursor() as cursor:
             cursor.execute("""
                            INSERT INTO reports_report
-                           (account_id, status, text, type, related_report)
+                           (account_id, status, text, type, related_report_id)
                            VALUES (%s, 'Pending', %s, %s, %s)
                            RETURNING report_id
                            """, [
