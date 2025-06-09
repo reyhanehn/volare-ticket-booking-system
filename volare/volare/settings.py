@@ -83,9 +83,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'volare',
+        'NAME': 'Volare',
         'USER': 'postgres',
-        'PASSWORD': 'h.tah1584',
+        'PASSWORD': 'reyh00n83',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -102,8 +102,8 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days = 1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days = 7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'USER_ID_FIELD': 'account_id',

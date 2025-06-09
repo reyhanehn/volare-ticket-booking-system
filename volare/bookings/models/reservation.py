@@ -12,7 +12,7 @@ class ReservationStatus(models.TextChoices):
     CANCELLED = 'Cancelled'
 
 def default_expiration_time():
-    return timezone.now() + timedelta(minutes=1)
+    return timezone.now() + timedelta(minutes=10)
 
 class Reservation(models.Model):
     reservation_id = models.BigAutoField(primary_key=True)

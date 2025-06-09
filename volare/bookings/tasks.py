@@ -6,8 +6,6 @@ def cancel_expired_reservations():
     from .models import Reservation, ReservationStatus
 
     now = timezone.now()
-
-    # Filter reservations that are pending and expired (expiration_time <= now)
     expired = Reservation.objects.filter(
         status=ReservationStatus.PENDING,
         expiration_time__lte=now

@@ -10,7 +10,8 @@ class CreateReservationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = ReservationSerializer(data=request.data)
+        serializer = ReservationSerializer(data=request.data, context={'account_id': request.user.account_id
+})
         if serializer.is_valid():
             reservation = serializer.save()
             return Response({
@@ -19,7 +20,6 @@ class CreateReservationView(APIView):
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# User: View Own Reservations
 class ReservationListView(APIView):
     permission_classes = [IsAuthenticated]
 
