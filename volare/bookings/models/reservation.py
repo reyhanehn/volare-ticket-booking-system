@@ -1,14 +1,18 @@
 from django.db import models
-
+from django.utils import timezone
+from datetime import timedelta
 from ..models.passenger import Passenger
 from ..models.ticket import Ticket
 
+EXPIRATION_DURATION_MINUTES = 1  # You can also move this to settings.py
 
 class ReservationStatus(models.TextChoices):
     PENDING = 'Pending'
     CONFIRMED = 'Confirmed'
     CANCELLED = 'Cancelled'
 
+def default_expiration_time():
+    return timezone.now() + timedelta(minutes=1)
 
 class Reservation(models.Model):
     reservation_id = models.BigAutoField(primary_key=True)
@@ -19,7 +23,7 @@ class Reservation(models.Model):
     status = models.CharField(max_length=10, choices=ReservationStatus.choices, default=ReservationStatus.PENDING)
     reservation_date = models.DateField(auto_now_add=True)
     reservation_time = models.TimeField(auto_now_add=True)
-    expiration = models.DurationField()
+    expiration_time = models.DateTimeField(default=default_expiration_time)
     cancelled_by = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True, related_name='cancelled_reservations')
 
     class Meta:

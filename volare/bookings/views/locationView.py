@@ -7,6 +7,7 @@ from django.db import connection
 from ..serializers.locationSerializer import LocationSerializer
 from accounts.permissions import IsAdmin
 
+
 class CreateLocationView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
 
@@ -19,6 +20,7 @@ class CreateLocationView(APIView):
                 'data': location
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LocationListView(APIView):
     permission_classes = [IsAuthenticated]
