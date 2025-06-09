@@ -12,10 +12,6 @@ class TripCreateSerializer(serializers.Serializer):
     duration = serializers.DurationField()
     ticket_info = serializers.ListField(child=serializers.DictField())
 
-    from datetime import timedelta
-    from django.utils import timezone
-    from rest_framework import serializers
-    from django.db import connection
 
     def validate(self, data):
         vehicle_id = data["vehicle_id"]
