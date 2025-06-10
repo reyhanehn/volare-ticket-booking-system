@@ -4,7 +4,7 @@ from .views.adminReservationCancellation import AdminCancelReservationView
 from .views.locationView import CreateLocationView, LocationListView
 from .views.passengerView import CreatePassengerView, PassengerListView
 from .views.reservationCancellationView import ReservationCancelInfoView, ReservationCancelConfirmView
-from .views.reservationView import CreateReservationView, ReservationListView
+from .views.reservationView import CreateReservationView, ReservationListView, AdminReservationFilterView
 from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
@@ -34,4 +34,5 @@ urlpatterns = [
     path('reservation/cancellation/info/', ReservationCancelInfoView.as_view(), name='reservation-cancellation-info'),
     path('reservation/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
     path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),
+    path('admin/reservation/list/', AdminReservationFilterView.as_view(), name='admin-reservation-list'),
 ]
