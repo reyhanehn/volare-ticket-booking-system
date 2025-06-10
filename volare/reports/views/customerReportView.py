@@ -3,14 +3,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..serializers.customerReportSerializer import ListMyReportsSerializer, CostumerReportSerializer
+from ..serializers.customerReportSerializer import ListMyReportsSerializer, CustomerReportSerializer
 
 
 class CreateReportView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = CostumerReportSerializer(data=request.data, context={"request": request})
+        serializer = CustomerReportSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             report = serializer.save()
             return Response({

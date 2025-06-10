@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.customerReportView import CreateReportView, ListMyReportsView, SearchReportsView, ViewReportView, AnswerReportView
+from .views.customerReportView import CreateReportView, ListMyReportsView
 from .views.AdminReportView import SearchReportsView, ViewReportView, AnswerReportView
 
 
