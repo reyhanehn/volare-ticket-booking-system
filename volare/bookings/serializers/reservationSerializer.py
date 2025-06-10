@@ -4,7 +4,7 @@ from django.utils import timezone
 from datetime import timedelta
 from ..serializers.ticketSerializer import TicketDetailSerializer
 
-EXPIRATION_DURATION_MINUTES = 1
+EXPIRATION_DURATION_MINUTES = 3
 
 class ReservationSerializer(serializers.Serializer):
     passenger_id = serializers.IntegerField()

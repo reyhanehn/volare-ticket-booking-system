@@ -12,6 +12,7 @@ from .views.tripStopView import TripStopView
 from .views.ticketView import TicketSearchView, TicketCacheDetailView
 from .views.paymentView import ReservationPaymentView, PaymentStatusView
 from .views.paymentHistoryView import PaymentHistoryView
+from .views.adminReservationView import AdminEditReservationView, AdminConfirmReservationView
 
 urlpatterns = [
     path('admin/locations/create/', CreateLocationView.as_view(), name='create-location'),
@@ -44,5 +45,6 @@ urlpatterns = [
     path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),
     path('admin/reservation/list/', AdminReservationFilterView.as_view(), name='admin-reservation-list'),
     path('admin/reservation/<int:reservation_id>/', AdminReservationView.as_view() , name='admin-view-reservation'),
-    # path('admin/reservation/<int:reservation_id>/edit/',  , name='admin-edit-reservation'),  # not done
+    path('admin/reservation/<int:reservation_id>/edit/', AdminEditReservationView.as_view() , name='admin-edit-reservation'),
+    path('admin/reservation/<int:reservation_id>/confirm/', AdminConfirmReservationView.as_view(),name='admin-confirm-reservation'),
 ]
