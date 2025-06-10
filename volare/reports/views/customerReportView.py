@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..serializers.costumerReportSerializer import ListMyReportsSerializer, CostumerReportSerializer
+from ..serializers.customerReportSerializer import ListMyReportsSerializer, CostumerReportSerializer
 
 
 class CreateReportView(APIView):
@@ -24,6 +24,10 @@ class ListMyReportsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        data = ListMyReportsSerializer.get_reports(request.user.account_id)
-        return Response(data)
+        serializer = ListMyReportsSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.get_reports(request.user.account_id)
+            return Response(data)
+        return Response(serializer.errors, status=400)
+
 
