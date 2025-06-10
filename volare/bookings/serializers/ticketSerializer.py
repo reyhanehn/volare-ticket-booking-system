@@ -3,7 +3,6 @@ from django.db import connection
 from cache_utils import get_ticket_cache, set_ticket_cache
 
 
-
 class TicketSearchSerializer(serializers.Serializer):
     origin_id = serializers.IntegerField(required=False)
     destination_id = serializers.IntegerField(required=False)
@@ -98,7 +97,8 @@ class TicketSearchSerializer(serializers.Serializer):
                             r.route_id, o.city AS origin, d.city AS destination,
                             s1.name AS origin_station, s2.name AS destination_station,
                             trip.trip_id, trip.departure_datetime, trip.duration,
-                            c.name AS company_name
+                            c.name AS company_name,
+                            vs.vehicle_id
                         FROM bookings_ticket t
                         JOIN bookings_trip trip ON t.trip_id = trip.trip_id
                         JOIN companies_vehiclesection vs ON t.section_id = vs.section_id
@@ -130,6 +130,19 @@ class TicketSearchSerializer(serializers.Serializer):
                         } for s in stops
                     ]
 
+                    cursor.execute("""
+                        SELECT s.name
+                        FROM companies_service s
+                        JOIN companies_vehicleservice vs ON vs.service_id = s.service_id
+                        WHERE vs.vehicle_id = %s
+                    """, [ticket_detail_row[19]])
+                    services = cursor.fetchall()
+                    service_list = [
+                        {
+                            "name": s[0]
+                        } for s in services
+                    ]
+
                     full_ticket_detail = {
                         "ticket_id": ticket_detail_row[0],
                         "price": ticket_detail_row[1],
@@ -154,7 +167,8 @@ class TicketSearchSerializer(serializers.Serializer):
                             "duration": ticket_detail_row[17],
                             "company": ticket_detail_row[18],
                         },
-                        "stops": stop_list
+                        "stops": stop_list,
+                        "services": service_list
                     }
 
                     set_ticket_cache(ticket_id, full_ticket_detail)
@@ -211,6 +225,19 @@ class TicketDetailSerializer(serializers.Serializer):
                 } for s in stops
             ]
 
+            cursor.execute("""
+                                   SELECT s.name
+                                   FROM companies_service s
+                                   JOIN companies_vehicleservice vs ON vs.service_id = s.service_id
+                                   WHERE vs.vehicle_id = %s
+                               """, [ticket_detail_row[20]])
+            services = cursor.fetchall()
+            service_list = [
+                {
+                    "name": s[0]
+                } for s in services
+            ]
+
             full_ticket_detail = {
                 "ticket_id": ticket_detail_row[0],
                 "price": ticket_detail_row[1],
@@ -237,7 +264,8 @@ class TicketDetailSerializer(serializers.Serializer):
                     "duration": ticket_detail_row[17],
                     "company": ticket_detail_row[18],
                 },
-                "stops": stop_list
+                "stops": stop_list,
+                "services": service_list
             }
 
             return full_ticket_detail

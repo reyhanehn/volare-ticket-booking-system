@@ -1,12 +1,17 @@
 from django.urls import path
+
+from .views.adminReservationCancellation import AdminCancelReservationView
 from .views.locationView import CreateLocationView, LocationListView
 from .views.passengerView import CreatePassengerView, PassengerListView
-from .views.reservationView import CreateReservationView, ReservationListView
+from .views.reservationCancellationView import ReservationCancelInfoView, ReservationCancelConfirmView
+from .views.reservationView import CreateReservationView, ReservationListView, AdminReservationFilterView
 from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
-from .views.tripStopView import TripStopCreateView
+from .views.tripStopView import TripStopView
 from .views.ticketView import TicketSearchView, TicketCacheDetailView
+from .views.paymentView import ReservationPaymentView, PaymentStatusView
+from .views.paymentHistoryView import PaymentHistoryView
 
 urlpatterns = [
     path('admin/locations/create/', CreateLocationView.as_view(), name='create-location'),
@@ -16,11 +21,27 @@ urlpatterns = [
     path('routes/search/', RouteListView.as_view(), name='routes-list'),
     path('admin/routes/create/', RouteCreateView.as_view(), name='create-route'),
     path('company/ticket/create/', TripCreateView.as_view(), name='create-ticket'),
-    path("trips/<int:trip_id>/stops/", TripStopCreateView.as_view(), name="trip-add-stops"),
-    path('tickets/search/', TicketSearchView.as_view(), name='routes-list'),
-    path('tickets/search/<int:ticket_id>/', TicketCacheDetailView.as_view(), name='routes-list'),
+    # path('trips/list/',   , name='trips-list'),  # not done
+    # path('trips/<int:trip_id>/',   , name='trip-details'),  # not done
+    path("trips/<int:trip_id>/stops/", TripStopView.as_view(), name="trip-stops"),
+    # path('trips/<int:trip_id>/tickets/',  , name='view-trips-tickets'),  # not done
+    # path('trips/<int:trip_id>/edit/',  , name='edit-trip'),  # not done
+    # path('trips/<int:trip_id>/cancel/',  , name='cancel-trip'),  # not done
+    path('tickets/search/', TicketSearchView.as_view(), name='tickets-list'),
+    path('tickets/search/<int:ticket_id>/', TicketCacheDetailView.as_view(), name='ticket-details'),
+    # path('admin/tickets/<int:ticket_id>/edit/',  , name='edit-ticket'),  # not done
+    # path('admin/tickets/<int:ticket_id>/cancel/',  , name='edit-ticket'),  # not done
     path('customer/passenger/create/', CreatePassengerView.as_view(), name='create-passenger'),
     path('customer/passenger/list/', PassengerListView.as_view(), name='passenger-list'),
     path('reservation/create/', CreateReservationView.as_view(), name='create-reservation'),
     path('customer/reservation/list/', ReservationListView.as_view(), name='reservation-list'),
+    path('customer/reservation/<int:reservation_id>/pay/', ReservationPaymentView.as_view(), name='reservation-payment'),
+    path('reservation/<int:reservation_id>/payment_status/', PaymentStatusView.as_view(), name='payment-status'),
+    path('payment/history/', PaymentHistoryView.as_view(), name='payment-history'),
+    path('reservation/cancellation/info/', ReservationCancelInfoView.as_view(), name='reservation-cancellation-info'),
+    path('reservation/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
+    path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),
+    path('admin/reservation/list/', AdminReservationFilterView.as_view(), name='admin-reservation-list'),
+    # path('admin/reservation/<int:reservation_id>/',  , name='admin-view-reservation'),  # not done
+    # path('admin/reservation/<int:reservation_id>/edit/',  , name='admin-edit-reservation'),  # not done
 ]

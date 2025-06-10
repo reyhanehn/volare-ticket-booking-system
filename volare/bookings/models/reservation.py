@@ -1,10 +1,11 @@
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from ..models.passenger import Passenger
 from ..models.ticket import Ticket
 
-EXPIRATION_DURATION_MINUTES = 1  # You can also move this to settings.py
+EXPIRATION_DURATION_MINUTES = 1
 
 class ReservationStatus(models.TextChoices):
     PENDING = 'Pending'
@@ -12,7 +13,7 @@ class ReservationStatus(models.TextChoices):
     CANCELLED = 'Cancelled'
 
 def default_expiration_time():
-    return timezone.now() + timedelta(minutes=1)
+    return timezone.now() + timedelta(minutes=10)
 
 class Reservation(models.Model):
     reservation_id = models.BigAutoField(primary_key=True)
@@ -27,7 +28,13 @@ class Reservation(models.Model):
     cancelled_by = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True, related_name='cancelled_reservations')
 
     class Meta:
-        unique_together = ('ticket', 'seat_number')
+        constraints = [
+            models.UniqueConstraint(
+                fields=["ticket", "seat_number"],
+                condition=~Q(status=ReservationStatus.CANCELLED),
+                name="unique_active_seat"
+            )
+        ]
 
     def __str__(self):
         return f"Reservation {self.reservation_id} - Seat {self.seat_number}"

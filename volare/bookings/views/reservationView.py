@@ -5,12 +5,15 @@ from rest_framework import status
 from django.utils.dateparse import parse_date
 from ..models import Reservation, ReservationStatus
 from ..serializers.reservationSerializer import ReservationSerializer
+from accounts.permissions import IsAdmin
+
 
 class CreateReservationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = ReservationSerializer(data=request.data)
+        serializer = ReservationSerializer(data=request.data, context={'account_id': request.user.account_id
+})
         if serializer.is_valid():
             reservation = serializer.save()
             return Response({
@@ -19,7 +22,6 @@ class CreateReservationView(APIView):
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# User: View Own Reservations
 class ReservationListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -43,7 +45,7 @@ class ReservationListView(APIView):
 
 # Admin: Filter All Reservations
 class AdminReservationFilterView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def get(self, request):
         status_param = request.GET.get('status')
@@ -66,6 +68,8 @@ class AdminReservationFilterView(APIView):
                 "reservation_time": str(res.reservation_time),
                 "passenger_id": res.passenger.passenger_id,
                 "ticket_id": res.ticket.ticket_id,
-                "account_id": res.account.id
+                "account_id": res.account.account_id
             })
         return Response({"reservations": data}, status=status.HTTP_200_OK)
+
+
