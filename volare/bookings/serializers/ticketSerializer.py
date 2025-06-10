@@ -189,7 +189,8 @@ class TicketDetailSerializer(serializers.Serializer):
                     r.route_id, o.city AS origin, d.city AS destination,
                     s1.name AS origin_station, s2.name AS destination_station,
                     trip.trip_id, trip.departure_datetime, trip.duration,
-                    c.name AS company_name
+                    c.name AS company_name,
+                    vs.vehicle_id
                 FROM bookings_ticket t
                 JOIN bookings_trip trip ON t.trip_id = trip.trip_id
                 JOIN companies_vehiclesection vs ON t.section_id = vs.section_id
@@ -226,11 +227,11 @@ class TicketDetailSerializer(serializers.Serializer):
             ]
 
             cursor.execute("""
-                                   SELECT s.name
-                                   FROM companies_service s
-                                   JOIN companies_vehicleservice vs ON vs.service_id = s.service_id
-                                   WHERE vs.vehicle_id = %s
-                               """, [ticket_detail_row[20]])
+               SELECT s.name
+               FROM companies_service s
+               JOIN companies_vehicleservice vs ON vs.service_id = s.service_id
+               WHERE vs.vehicle_id = %s
+            """, [ticket_detail_row[19]])
             services = cursor.fetchall()
             service_list = [
                 {
