@@ -69,3 +69,5 @@ class AdminReservationFilterView(APIView):
                 "account_id": res.account.id
             })
         return Response({"reservations": data}, status=status.HTTP_200_OK)
+
+
