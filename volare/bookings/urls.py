@@ -11,6 +11,7 @@ from .views.tripView import TripCreateView
 from .views.tripStopView import TripStopCreateView
 from .views.ticketView import TicketSearchView, TicketCacheDetailView
 from .views.paymentView import ReservationPaymentView, PaymentStatusView
+from .views.paymentHistoryView import PaymentHistoryView
 
 urlpatterns = [
     path('admin/locations/create/', CreateLocationView.as_view(), name='create-location'),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('customer/reservation/list/', ReservationListView.as_view(), name='reservation-list'),
     path('customer/reservation/<int:reservation_id>/pay/', ReservationPaymentView.as_view(), name='reservation-payment'),
     path('customer/payment/<int:reservation_id>/status/', PaymentStatusView.as_view(), name='payment-status'),
+    path('customer/payment/history/', PaymentHistoryView.as_view(), name='payment-history'),
     path('reservation/cancellation/info/', ReservationCancelInfoView.as_view(), name='reservation-cancellation-info'),
     path('reservation/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
     path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),

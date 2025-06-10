@@ -4,6 +4,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 EXPIRATION_DURATION_MINUTES = 1
+
 class ReservationSerializer(serializers.Serializer):
     passenger_id = serializers.IntegerField()
     ticket_id = serializers.IntegerField()
@@ -22,7 +23,7 @@ class ReservationSerializer(serializers.Serializer):
             """, [passenger_id])
             result = cursor.fetchone()
             if not result or result[0] != account_id:
-                raise serializers.ValidationError("Passenger does not belong to the logged-in account.")
+                raise serializers.ValidationError("Passenger does not belong to the given account.")
 
             # Check seat range
             cursor.execute("""
