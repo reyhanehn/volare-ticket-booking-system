@@ -8,5 +8,5 @@ urlpatterns = [
     path('my/reports/', ListMyReportsView.as_view(), name='my reports'),
     path('search/reports/', SearchReportsView.as_view(), name='search reports'),
     path('search/reports/<int:report_id>/', ViewReportView.as_view(), name='view report'),
-    path('answer/report/<int:report_id>', AnswerReportView.as_view(), name='answer report'),
+    path('answer/report/<int:report_id>/', AnswerReportView.as_view(), name='answer report'),
 ]

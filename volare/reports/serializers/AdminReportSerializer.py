@@ -23,7 +23,6 @@ class AnswerReportSerializer(serializers.Serializer):
         return self.validated_data
 
 
-
 class SearchReportsSerializer(serializers.Serializer):
     account_id = serializers.IntegerField(required=False)
     admin_id = serializers.IntegerField(required=False)
@@ -37,7 +36,7 @@ class SearchReportsSerializer(serializers.Serializer):
         params = []
 
         sql = """
-                SELECT report_id, admin_id, status, text, answer, type, related_report_id
+                SELECT report_id, account_id, admin_id, status, text, answer, type, related_report_id
                 FROM reports_report
                 WHERE 1=1
             """
@@ -69,12 +68,13 @@ class SearchReportsSerializer(serializers.Serializer):
         result = [
             {
                 "report_id": row[0],
-                "admin": row[1],
-                "status": row[2],
-                "text": row[3],
-                "answer": row[4],
-                "type": row[5],
-                "related_report_id": row[6],
+                "account": row[1],
+                "admin": row[2],
+                "status": row[3],
+                "text": row[4],
+                "answer": row[5],
+                "type": row[6],
+                "related_report_id": row[7],
             }
             for row in rows
         ]
@@ -88,7 +88,7 @@ class ViewReportSerializer(serializers.Serializer):
         report_id = self.validated_data["report_id"]
 
         sql = """
-                SELECT report_id, admin_id, status, text, answer, type, related_report_id
+                SELECT report_id, account_id, admin_id, status, text, answer, type, related_report_id
                 FROM reports_report
                 WHERE report_id = %s
             """
@@ -102,12 +102,13 @@ class ViewReportSerializer(serializers.Serializer):
 
         return {
             "report_id": row[0],
-            "admin": row[1],
-            "status": row[2],
-            "text": row[3],
-            "answer": row[4],
-            "type": row[5],
-            "related_report_id": row[6],
+            "account": row[1],
+            "admin": row[2],
+            "status": row[3],
+            "text": row[4],
+            "answer": row[5],
+            "type": row[6],
+            "related_report_id": row[7],
         }
 
 

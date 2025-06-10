@@ -27,14 +27,14 @@ class CustomerReportSerializer(serializers.Serializer):
             ReportType.PAYMENT.value: """
                 SELECT t.ticket_id
                 FROM bookings_payment p
-                JOIN bookings_ticket r ON p.reservation_id = r.reservation_id
-                JOIN bookings_ticket t ON t.reservation_id = r.reservation_id
+                JOIN bookings_reservation r ON p.reservation_id = r.reservation_id
+                JOIN bookings_ticket t ON t.ticket_id = r.ticket_id
                 WHERE p.payment_id = %s
             """,
             ReportType.RESERVATION.value: """
                 SELECT t.ticket_id
                 FROM bookings_reservation r
-                JOIN bookings_ticket t ON t.reservation_id = r.reservation_id
+                JOIN bookings_ticket t ON t.ticket_id = r.ticket_id
                 WHERE r.reservation_id = %s
             """,
         }
