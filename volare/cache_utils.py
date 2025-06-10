@@ -33,3 +33,26 @@ def set_ticket_cache(ticket_id, data, timeout_seconds=60 * 60):
 def delete_ticket_cache(ticket_id):
     key = f"ticket_detail:{ticket_id}"
     redis_client.delete(key)
+
+
+def get_user_cache(account_id):
+        key = account_id
+        value = redis_client.get(key)
+        return json.loads(value) if value else None
+
+def set_user_cache(user):
+        key = user.account_id
+        data = {
+            "account_id": user.account_id,
+            "name": user.name,
+            "lastname": user.lastname,
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "role": user.role,
+            "status": user.status,
+        }
+        redis_client.setex(key, 60 * 60 * 6, json.dumps(data))  # 6 hours
+
+def delete_user_cache(account_id):
+        key = account_id
+        redis_client.delete(key)

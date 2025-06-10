@@ -92,3 +92,26 @@ class TripStopCreateSerializer(serializers.Serializer):
             "trip_id": trip_id,
             "added_stops": len(stops)
         }
+
+    def get_stops(self):
+        trip_id = self.context["trip_id"]
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT stop_order, stop_type, station_id, duration
+                FROM bookings_tripstop
+                WHERE trip_id = %s
+                ORDER BY stop_order
+            """, [trip_id])
+            stops = cursor.fetchall()
+
+        results = [
+            {
+                "stop_order": row[0],
+                "stop_type": row[1],
+                "station_id": row[2],
+                "duration": str(row[3]) if row[3] is not None else None
+            }
+            for row in stops
+        ]
+
+        return results

@@ -6,7 +6,7 @@ from ..serializers.tripStopSerializer import TripStopCreateSerializer
 from accounts.permissions import IsCompanyAdmin
 
 
-class TripStopCreateView(APIView):
+class TripStopView(APIView):
     permission_classes = [IsAuthenticated, IsCompanyAdmin]
 
     def post(self, request, trip_id):
@@ -18,3 +18,11 @@ class TripStopCreateView(APIView):
                 "details": result
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, trip_id):
+        serializer = TripStopCreateSerializer(data=request.data, context={"trip_id": trip_id})
+        results = serializer.get_stops()
+        return Response({
+            "trip_id": trip_id,
+            "stops": results
+        }, status=status.HTTP_200_OK)
