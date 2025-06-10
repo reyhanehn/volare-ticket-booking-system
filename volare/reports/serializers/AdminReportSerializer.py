@@ -8,7 +8,7 @@ class AnswerReportSerializer(serializers.Serializer):
     report_id = serializers.IntegerField()
     answer = serializers.CharField()
 
-    def update(self, validated_data):
+    def save(self):
         admin_id = self.context['request'].user.account_id
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -17,14 +17,11 @@ class AnswerReportSerializer(serializers.Serializer):
                 WHERE report_id = %s
             """, [
                 admin_id,
-                validated_data['answer'],
-                validated_data['report_id']
+                self.validated_data['answer'],
+                self.validated_data['report_id']
             ])
+        return self.validated_data
 
-        return
-
-    def save(self):
-        return self.update(self.validated_data)
 
 
 class SearchReportsSerializer(serializers.Serializer):
@@ -98,18 +95,19 @@ class ViewReportSerializer(serializers.Serializer):
 
         with connection.cursor() as cursor:
             cursor.execute(sql, [report_id])
-            rows = cursor.fetchall()
+            row = cursor.fetchone()
 
-        result = [
-            {
-                "report_id": row[0],
-                "admin": row[1],
-                "status": row[2],
-                "text": row[3],
-                "answer": row[4],
-                "type": row[5],
-                "related_report_id": row[6],
-            }
-            for row in rows
-        ]
-        return result
+        if row is None:
+            raise serializers.ValidationError("Report not found")
+
+        return {
+            "report_id": row[0],
+            "admin": row[1],
+            "status": row[2],
+            "text": row[3],
+            "answer": row[4],
+            "type": row[5],
+            "related_report_id": row[6],
+        }
+
+

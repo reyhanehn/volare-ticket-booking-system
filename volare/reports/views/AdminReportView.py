@@ -11,10 +11,12 @@ class AnswerReportView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def patch(self, request, report_id):
-        serializer = AnswerReportSerializer(data=request.data + {"report_id": report_id}, partial=True, context={"request": request})
+        data = request.data.copy()
+        data['report_id'] = report_id
+        serializer = AnswerReportSerializer(data=data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.validated_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
