@@ -4,7 +4,7 @@ from .views.adminReservationCancellation import AdminCancelReservationView
 from .views.locationView import CreateLocationView, LocationListView
 from .views.passengerView import CreatePassengerView, PassengerListView
 from .views.reservationCancellationView import ReservationCancelInfoView, ReservationCancelConfirmView
-from .views.reservationView import CreateReservationView, ReservationListView, AdminReservationFilterView
+from .views.reservationView import CreateReservationView, ReservationListView, AdminReservationFilterView, CustomerReservationView, AdminReservationView
 from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
@@ -35,6 +35,7 @@ urlpatterns = [
     path('customer/passenger/list/', PassengerListView.as_view(), name='passenger-list'),
     path('reservation/create/', CreateReservationView.as_view(), name='create-reservation'),
     path('customer/reservation/list/', ReservationListView.as_view(), name='reservation-list'),
+    path('customer/reservation/<int:reservation_id>/', CustomerReservationView.as_view(), name='reservation-view'),
     path('customer/reservation/<int:reservation_id>/pay/', ReservationPaymentView.as_view(), name='reservation-payment'),
     path('reservation/<int:reservation_id>/payment_status/', PaymentStatusView.as_view(), name='payment-status'),
     path('payment/history/', PaymentHistoryView.as_view(), name='payment-history'),
@@ -42,6 +43,6 @@ urlpatterns = [
     path('reservation/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
     path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),
     path('admin/reservation/list/', AdminReservationFilterView.as_view(), name='admin-reservation-list'),
-    # path('admin/reservation/<int:reservation_id>/',  , name='admin-view-reservation'),  # not done
+    path('admin/reservation/<int:reservation_id>/', AdminReservationView.as_view() , name='admin-view-reservation'),
     # path('admin/reservation/<int:reservation_id>/edit/',  , name='admin-edit-reservation'),  # not done
 ]

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils.dateparse import parse_date
 from ..models import Reservation, ReservationStatus
-from ..serializers.reservationSerializer import ReservationSerializer
+from ..serializers.reservationSerializer import ReservationSerializer, CustomerReservationSerializer, AdminReservationSerializer
 from accounts.permissions import IsAdmin
 
 
@@ -71,5 +71,41 @@ class AdminReservationFilterView(APIView):
                 "account_id": res.account.account_id
             })
         return Response({"reservations": data}, status=status.HTTP_200_OK)
+
+
+class CustomerReservationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, reservation_id):
+        serializer = CustomerReservationSerializer(
+            data={
+                "reservation_id": reservation_id,
+                "account_id": request.user.account_id
+            })
+        serializer.is_valid(raise_exception=True)
+
+        reservation_data = serializer.data
+        if not reservation_data:
+            return Response({"detail": "Reservation not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(reservation_data, status=status.HTTP_200_OK)
+
+class AdminReservationView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request, reservation_id):
+        serializer = AdminReservationSerializer(
+            data={
+                "reservation_id": reservation_id
+            })
+        serializer.is_valid(raise_exception=True)
+
+        reservation_data = serializer.data
+        if not reservation_data:
+            return Response({"detail": "Reservation not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(reservation_data, status=status.HTTP_200_OK)
+
+
 
 
