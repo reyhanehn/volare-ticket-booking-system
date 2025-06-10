@@ -1,4 +1,6 @@
 from django.urls import path
+
+from .views.adminReservationCancellation import AdminCancelReservationView
 from .views.locationView import CreateLocationView, LocationListView
 from .views.passengerView import CreatePassengerView, PassengerListView
 from .views.reservationCancellationView import ReservationCancelInfoView, ReservationCancelConfirmView
@@ -29,4 +31,5 @@ urlpatterns = [
     path('customer/payment/<int:reservation_id>/status/', PaymentStatusView.as_view(), name='payment-status'),
     path('reservation/cancellation/info/', ReservationCancelInfoView.as_view(), name='reservation-cancellation-info'),
     path('reservation/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
+    path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),
 ]
