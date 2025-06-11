@@ -2,9 +2,10 @@ from rest_framework import serializers
 from django.db import connection
 from django.utils import timezone
 from datetime import timedelta
-from ..serializers.ticketSerializer import TicketDetailSerializer
+from ..serializers.ticketSerializer import build_ticket_detail
 
 EXPIRATION_DURATION_MINUTES = 3
+
 
 class ReservationSerializer(serializers.Serializer):
     passenger_id = serializers.IntegerField()
@@ -101,10 +102,7 @@ class CustomerReservationSerializer(serializers.Serializer):
             raise serializers.ValidationError("Reservation doesn't exist")
         if account_id != reservation[0]:
             raise serializers.ValidationError("this reservation belongs to another user")
-
-        serializer = TicketDetailSerializer(data={"ticket_id": reservation[2]})
-        serializer.is_valid(raise_exception=True)
-        ticket_info = serializer.data
+        ticket_info = build_ticket_detail(connection.cursor(), reservation[2])
         if not ticket_info:
             raise serializers.ValidationError("that ticket doesn't exist")
 
@@ -145,9 +143,7 @@ class AdminReservationSerializer(serializers.Serializer):
         if not reservation:
             raise serializers.ValidationError("Reservation doesn't exist")
 
-        serializer = TicketDetailSerializer(data={"ticket_id": reservation[2]})
-        serializer.is_valid(raise_exception=True)
-        ticket_info = serializer.data
+        ticket_info = build_ticket_detail(connection.cursor(), reservation[2])
         if not ticket_info:
             raise serializers.ValidationError("that ticket doesn't exist")
 

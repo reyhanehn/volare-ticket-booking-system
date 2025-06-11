@@ -9,7 +9,7 @@ from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
 from .views.tripStopView import TripStopView
-from .views.ticketView import TicketSearchView, TicketCacheDetailView
+from .views.ticketView import TicketSearchView, TicketCacheDetailView, AdminTicketListView, CompanyTicketListView
 from .views.paymentView import ReservationPaymentView, PaymentStatusView
 from .views.paymentHistoryView import PaymentHistoryView
 from .views.adminReservationView import AdminEditReservationView, AdminConfirmReservationView
@@ -28,7 +28,9 @@ urlpatterns = [
     # path('trips/<int:trip_id>/tickets/',  , name='view-trips-tickets'),  # not done
     # path('trips/<int:trip_id>/edit/',  , name='edit-trip'),  # not done
     # path('trips/<int:trip_id>/cancel/',  , name='cancel-trip'),  # not done
-    path('tickets/search/', TicketSearchView.as_view(), name='tickets-list'),
+    path('customer/tickets/search/', TicketSearchView.as_view(), name='customer-tickets-list'),
+    path('admin/tickets/search/', AdminTicketListView.as_view(), name='admin-tickets-list'),
+    path('company/tickets/search/', CompanyTicketListView.as_view(), name='company-tickets-list'),
     path('tickets/search/<int:ticket_id>/', TicketCacheDetailView.as_view(), name='ticket-details'),
     # path('admin/tickets/<int:ticket_id>/edit/',  , name='edit-ticket'),  # not done
     # path('admin/tickets/<int:ticket_id>/cancel/',  , name='edit-ticket'),  # not done

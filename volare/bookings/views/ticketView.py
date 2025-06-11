@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from ..serializers.ticketSerializer import TicketSearchSerializer, TicketDetailSerializer
+from ..serializers.ticketSerializer import TicketSearchSerializer, TicketDetailSerializer, AdminTicketListSerializer, CompanyTicketListSerializer
+from accounts.permissions import IsAdmin, IsCompanyAdmin
 
 
 class TicketCacheDetailView(APIView):
@@ -28,3 +29,27 @@ class TicketSearchView(APIView):
             results = serializer.search()
             return Response(results)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AdminTicketListView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request):
+        serializer = AdminTicketListSerializer(data=request.query_params)
+        if serializer.is_valid():
+            result = serializer.search()
+            return Response(result)
+        return Response(serializer.errors, status=400)
+
+
+class CompanyTicketListView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+
+    def get(self, request):
+        serializer = CompanyTicketListSerializer(
+            data=request.query_params,
+            context={"company_id": request.user.company.company_id}
+        )
+        if serializer.is_valid():
+            result = serializer.search()
+            return Response(result)
+        return Response(serializer.errors, status=400)
