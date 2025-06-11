@@ -15,8 +15,6 @@ class CreateReservationView(APIView):
     def post(self, request):
         serializer = ReservationSerializer(data=request.data, context={'account_id': request.user.account_id})
         if serializer.is_valid():
-            # The serializer.save() already uses raw SQL as you showed before,
-            # so just call it directly here
             reservation = serializer.save()
             return Response({
                 "message": "Reservation created successfully",
@@ -24,22 +22,44 @@ class CreateReservationView(APIView):
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class ReservationListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         account_id = request.user.account_id
+        status_param = request.GET.get('status')
+        date_before = request.GET.get('date_before')
+        date_after = request.GET.get('date_after')
+
+        sql = """
+            SELECT 
+                r.reservation_id, r.seat_number, r.status, r.reservation_date, r.reservation_time,
+                p.passenger_id, t.ticket_id
+            FROM bookings_reservation r
+            JOIN bookings_passenger p ON r.passenger_id = p.passenger_id
+            JOIN bookings_ticket t ON r.ticket_id = t.ticket_id
+            WHERE r.account_id = %s
+        """
+        params = [account_id]
+
+        if status_param:
+            sql += " AND r.status = %s"
+            params.append(status_param)
+
+        if date_before:
+            parsed = parse_date(date_before)
+            if parsed:
+                sql += " AND r.reservation_date < %s"
+                params.append(parsed)
+
+        if date_after:
+            parsed = parse_date(date_after)
+            if parsed:
+                sql += " AND r.reservation_date > %s"
+                params.append(parsed)
+
         with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT 
-                    r.reservation_id, r.seat_number, r.status, r.reservation_date, r.reservation_time,
-                    p.passenger_id, t.ticket_id
-                FROM bookings_reservation r
-                JOIN bookings_passenger p ON r.passenger_id = p.passenger_id
-                JOIN bookings_ticket t ON r.ticket_id = t.ticket_id
-                WHERE r.account_id = %s
-            """, [account_id])
+            cursor.execute(sql, params)
             rows = cursor.fetchall()
 
         data = []
@@ -57,13 +77,13 @@ class ReservationListView(APIView):
 
         return Response({"reservations": data}, status=status.HTTP_200_OK)
 
-
 class AdminReservationFilterView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def get(self, request):
         status_param = request.GET.get('status')
-        date_param = request.GET.get('date')
+        date_before = request.GET.get('date_before')
+        date_after = request.GET.get('date_after')
 
         sql = """
             SELECT 
@@ -76,14 +96,22 @@ class AdminReservationFilterView(APIView):
             WHERE 1=1
         """
         params = []
+
         if status_param:
             sql += " AND r.status = %s"
             params.append(status_param)
-        if date_param:
-            parsed_date = parse_date(date_param)
-            if parsed_date:
-                sql += " AND r.reservation_date = %s"
-                params.append(parsed_date)
+
+        if date_before:
+            parsed = parse_date(date_before)
+            if parsed:
+                sql += " AND r.reservation_date < %s"
+                params.append(parsed)
+
+        if date_after:
+            parsed = parse_date(date_after)
+            if parsed:
+                sql += " AND r.reservation_date > %s"
+                params.append(parsed)
 
         with connection.cursor() as cursor:
             cursor.execute(sql, params)
@@ -104,8 +132,6 @@ class AdminReservationFilterView(APIView):
             })
 
         return Response({"reservations": data}, status=status.HTTP_200_OK)
-
-
 class CustomerReservationView(APIView):
     permission_classes = [IsAuthenticated]
 
