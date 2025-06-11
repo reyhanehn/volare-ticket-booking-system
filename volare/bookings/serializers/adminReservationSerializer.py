@@ -89,3 +89,90 @@ class EditReservationSerializer(serializers.Serializer):
 
         return {"reservation_id": reservation_id, "new_seat": new_seat,
                 "new_passenger": new_passenger, "message": "Reservation updated."}
+
+
+class AdminConfirmReservationSerializer(serializers.Serializer):
+    def validate(self, data):
+        reservation_id = self.context["reservation_id"]
+
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT r.status, r.account_id, r.seat_number, r.ticket_id, 
+                       p.name AS passenger_name, p.lastname AS passenger_lastname,
+                       u.name AS user_name, u.lastname AS user_lastname, u.email
+                FROM bookings_reservation r 
+                JOIN bookings_passenger p ON r.passenger_id = p.passenger_id 
+                JOIN account u ON u.account_id = r.account_id
+                WHERE r.reservation_id = %s
+            """, [reservation_id])
+            reservation = cursor.fetchone()
+
+            if not reservation:
+                raise serializers.ValidationError("Reservation not found.")
+
+            status, account_id, seat_number, ticket_id, passenger_name, passenger_lastname, user_name, user_lastname, email = reservation
+
+            if status == "Cancelled":
+                raise serializers.ValidationError("Cannot confirm a cancelled reservation.")
+            if status == "Confirmed":
+                raise serializers.ValidationError("Reservation is already confirmed.")
+
+            cursor.execute("""
+                SELECT 
+                vs.name AS section, v.type, o.city AS origin, d.city AS destination,
+                trip.departure_datetime, t.price
+                FROM bookings_ticket t
+                JOIN bookings_trip trip ON t.trip_id = trip.trip_id
+                JOIN companies_vehiclesection vs ON t.section_id = vs.section_id
+                JOIN companies_vehicle v ON trip.vehicle_id = v.vehicle_id
+                JOIN bookings_route r ON trip.route_id = r.route_id
+                JOIN bookings_location o ON r.origin_id = o.location_id
+                JOIN bookings_location d ON r.destination_id = d.location_id
+                WHERE t.ticket_id = %s
+            """, [ticket_id])
+            ticket = cursor.fetchone()
+
+            if not ticket:
+                raise serializers.ValidationError("Ticket not found.")
+
+        self.context.update({
+            "reservation_id": reservation_id,
+            "seat_number": seat_number,
+            "ticket_id": ticket_id,
+            "passenger_name": f"{passenger_name} {passenger_lastname}",
+            "user_name": f"{user_name} {user_lastname}",
+            "email": email,
+            "section_name": ticket[0],
+            "transport_type": ticket[1],
+            "origin": ticket[2],
+            "destination": ticket[3],
+            "departure_datetime": str(ticket[4]),
+            "amount": ticket[5],
+            "currency": "IRR"
+        })
+
+        return data
+
+    def save(self):
+        reservation_id = self.context["reservation_id"]
+
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                UPDATE bookings_reservation SET status = 'Confirmed' WHERE reservation_id = %s
+            """, [reservation_id])
+
+        return {
+            "reservation_id": reservation_id,
+            "name": self.context["user_name"],
+            "email": self.context["email"],
+            "passenger_name": self.context["passenger_name"],
+            "origin": self.context["origin"],
+            "destination": self.context["destination"],
+            "departure_datetime": self.context["departure_datetime"],
+            "seat_number": self.context["seat_number"],
+            "section_name": self.context["section_name"],
+            "transport_type": self.context["transport_type"],
+            "amount": self.context["amount"],
+            "currency": self.context["currency"]
+        }
+

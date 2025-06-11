@@ -4,7 +4,12 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from accounts.permissions import IsAdmin
 from django.db import connection
-from ..serializers.reservationEditSerializer import EditReservationSerializer
+from ..serializers.adminReservationSerializer import EditReservationSerializer, AdminConfirmReservationSerializer
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
+import datetime
 
 
 class AdminEditReservationView(APIView):
@@ -22,23 +27,23 @@ class AdminConfirmReservationView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request, reservation_id):
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT status FROM bookings_reservation WHERE reservation_id = %s
-            """, [reservation_id])
-            row = cursor.fetchone()
-            if not row:
-                return Response({"error": "Reservation not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = AdminConfirmReservationSerializer(data={}, context={"reservation_id": reservation_id})
+        if serializer.is_valid():
+            result = serializer.save()
 
-            current_status = row[0]
-            if current_status == "Confirmed":
-                return Response({"message": "Reservation is already confirmed."}, status=status.HTTP_200_OK)
+            subject = "Your Reservation is Confirmed"
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to = [result.pop("email")]
 
-            if current_status == "Cancelled":
-                return Response({"error": "Cannot confirm a cancelled reservation."}, status=status.HTTP_400_BAD_REQUEST)
+            html_content = render_to_string("emails/reservation_confirmation.html", {
+                **result,
+                "current_year": datetime.datetime.now().year
+            })
+            text_content = strip_tags(html_content)
 
-            cursor.execute("""
-                UPDATE bookings_reservation SET status = 'Confirmed' WHERE reservation_id = %s
-            """, [reservation_id])
+            msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
 
-        return Response({"message": "Reservation confirmed successfully.", "reservation_id": reservation_id}, status=status.HTTP_200_OK)
+            return Response({"message": "Reservation confirmed and email sent.", **result}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

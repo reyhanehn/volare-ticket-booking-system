@@ -83,11 +83,54 @@ class ReservationPaymentSerializer(serializers.Serializer):
                     UPDATE bookings_reservation SET status = 'Confirmed' WHERE reservation_id = %s
                 """, [reservation_id])
 
+                cursor.execute("""
+                    SELECT r.status, r.seat_number, r.reservation_date, r.ticket_id,  
+                           p.name AS passenger_name, p.lastname AS passenger_lastname,
+                           u.name AS user_name, u.lastname AS user_lastname
+                    FROM bookings_reservation r 
+                    JOIN bookings_passenger p ON r.passenger_id = p.passenger_id 
+                    JOIN account u ON u.account_id = r.account_id
+                    WHERE reservation_id = %s
+                """, [reservation_id])
+                reservation = cursor.fetchone()
+
+                if not reservation:
+                    raise serializers.ValidationError("Reservation does not exist")
+
+                cursor.execute("""
+                    SELECT 
+                    vs.name AS section, v.type, o.city AS origin, d.city AS destination,
+                    trip.departure_datetime
+                    FROM bookings_ticket t
+                    JOIN bookings_trip trip ON t.trip_id = trip.trip_id
+                    JOIN companies_vehiclesection vs ON t.section_id = vs.section_id
+                    JOIN companies_vehicle v ON trip.vehicle_id = v.vehicle_id
+                    JOIN bookings_route r ON trip.route_id = r.route_id
+                    JOIN bookings_location o ON r.origin_id = o.location_id
+                    JOIN bookings_location d ON r.destination_id = d.location_id
+                    WHERE t.ticket_id = %s
+                """, [reservation[3]])
+                ticket = cursor.fetchone()
+                if not ticket:
+                    raise serializers.ValidationError("Ticket does not exist")
+
+        status, seat_number, _, ticket_id, passenger_name, passenger_lastname, user_name, user_lastname = reservation
+        passenger_full_name = f"{passenger_name} {passenger_lastname}"
+        user_full_name = f"{user_name} {user_lastname}"
+        section, transport_type, origin, destination, departure = ticket
+
         return {
-            "message": "Payment successful.",
+            "name": user_full_name,
             "reservation_id": reservation_id,
+            "passenger_name": passenger_full_name,
+            "origin": origin,
+            "destination": destination,
+            "departure_datetime": str(departure),
+            "seat_number": seat_number,
+            "section_name": section,
+            "transport_type": transport_type,
             "amount": price,
-            "method": method
+            "currency": "IRR"
         }
 
 
