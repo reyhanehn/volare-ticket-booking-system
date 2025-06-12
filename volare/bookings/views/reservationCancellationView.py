@@ -63,13 +63,12 @@ class ReservationCancelInfoView(APIView):
 class ReservationCancelConfirmView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request):
+    def post(self, request):
         reservation_id = request.data.get("reservation_id")
-        new_status = request.data.get("status")
         account_id = request.user.account_id
 
-        if new_status != "Cancelled":
-            return Response({"error": "Only status='Cancelled' is allowed."}, status=status.HTTP_400_BAD_REQUEST)
+        if not reservation_id:
+            return Response({"error": "Reservation ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         with connection.cursor() as cursor:
             cursor.execute("""
