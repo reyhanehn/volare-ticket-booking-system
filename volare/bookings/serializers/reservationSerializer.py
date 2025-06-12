@@ -19,7 +19,6 @@ class ReservationSerializer(serializers.Serializer):
         seat_number = data['seat_number']
 
         with connection.cursor() as cursor:
-            # Check passenger belongs to account
             cursor.execute("""
                 SELECT related_account_id FROM bookings_passenger WHERE passenger_id = %s
             """, [passenger_id])
@@ -27,7 +26,6 @@ class ReservationSerializer(serializers.Serializer):
             if not result or result[0] != account_id:
                 raise serializers.ValidationError("Passenger does not belong to the given account.")
 
-            # Check seat range
             cursor.execute("""
                 SELECT seat_start_number, seat_end_number FROM bookings_ticket WHERE ticket_id = %s
             """, [ticket_id])
