@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from ..serializers.ticketSerializer import TicketSearchSerializer, TicketDetailSerializer, AdminTicketListSerializer, CompanyTicketListSerializer
 from accounts.permissions import IsAdmin, IsCompanyAdmin
+from django.db import connection
+from rest_framework import serializers
 
 
 class TicketCacheDetailView(APIView):
@@ -45,9 +47,18 @@ class CompanyTicketListView(APIView):
     permission_classes = [IsAuthenticated, IsCompanyAdmin]
 
     def get(self, request):
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT company_id FROM companies_company WHERE owner_id = %s
+            """,[request.user.account_id])
+            company_id = cursor.fetchone()
+
+        if not company_id:
+            raise serializers.ValidationError("Company does not exist")
+
         serializer = CompanyTicketListSerializer(
             data=request.query_params,
-            context={"company_id": request.user.company.company_id}
+            context={"company_id": company_id}
         )
         if serializer.is_valid():
             result = serializer.search()

@@ -42,16 +42,18 @@ def get_user_cache(account_id):
 
 def set_user_cache(user):
         key = user.account_id
-        data = {
-            "account_id": user.account_id,
+        user_data = {
             "name": user.name,
             "lastname": user.lastname,
             "email": user.email,
             "phone_number": user.phone_number,
             "role": user.role,
             "status": user.status,
+            "registration_date": str(user.registration_date),
+            "birthdate": str(user.birth_date),
+            "city": user.city_id
         }
-        redis_client.setex(key, 60 * 60 * 6, json.dumps(data))  # 6 hours
+        redis_client.setex(key, 60 * 60 * 6, json.dumps(user_data))  # 6 hours
 
 def delete_user_cache(account_id):
         key = account_id

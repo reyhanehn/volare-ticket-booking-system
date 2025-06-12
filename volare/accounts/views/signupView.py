@@ -33,12 +33,14 @@ class SignupView(APIView):
     def cache_user_data(user):
         key = user.account_id
         user_data = {
-            "account_id": user.account_id,
             "name": user.name,
             "lastname": user.lastname,
             "email": user.email,
             "phone_number": user.phone_number,
             "role": user.role,
             "status": user.status,
+            "registration_date": str(user.registration_date),
+            "birthdate": str(user.birth_date),
+            "city": user.city_id
         }
         redis_client.setex(key, 3600 * 6, json.dumps(user_data))  # expires in 6 hours

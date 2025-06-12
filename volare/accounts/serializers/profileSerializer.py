@@ -19,7 +19,7 @@ class ProfileSerializer(serializers.Serializer):
         read_only_fields = ('role', 'status', 'registration_date', 'last_login','is_superuser', 'is_staff', 'groups', 'user_permissions')
 
     def validate(self, data):
-        user = self.context["request"].user
+        user = self.instance
         account_id = user.account_id
 
         email = data.get("email", user.email)
@@ -78,7 +78,6 @@ class ProfileSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         account_id = instance.account_id
 
-        # Generate SQL set clauses and values dynamically
         columns = []
         values = []
 
@@ -96,19 +95,37 @@ class ProfileSerializer(serializers.Serializer):
                 columns.append(f"{column} = %s")
                 values.append(validated_data[field])
 
-        if not columns:
-            return instance  # No changes
-
-        set_clause = ", ".join(columns)
+        if columns:
+            set_clause = ", ".join(columns)
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"UPDATE account SET {set_clause} WHERE account_id = %s",
+                    values + [account_id]
+                )
 
         with connection.cursor() as cursor:
-            cursor.execute(
-                f"UPDATE account SET {set_clause} WHERE account_id = %s",
-                values + [account_id]
-            )
+            cursor.execute("""
+                SELECT a.account_id, a.name, a.lastname, a.email, a.phone_number,
+                       a.role, a.status, a.registration_date, a.birth_date,
+                       l.city
+                FROM account a
+                LEFT JOIN bookings_location l ON a.city_id = l.location_id
+                WHERE a.account_id = %s
+            """, [account_id])
+            row = cursor.fetchone()
 
-        # return updated raw dict just for the view to respond
+        if not row:
+            raise serializers.ValidationError("Failed to retrieve updated profile.")
+
         return {
-            "account_id": account_id,
-            **validated_data
+            "account_id": row[0],
+            "name": row[1],
+            "lastname": row[2],
+            "email": row[3],
+            "phone_number": row[4],
+            "role": row[5],
+            "status": row[6],
+            "registration_date": row[7],
+            "birth_date": row[8],
+            "city": row[9]
         }

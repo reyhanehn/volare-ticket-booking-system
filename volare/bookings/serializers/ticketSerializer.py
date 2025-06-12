@@ -139,7 +139,7 @@ def search(filters):
         sql += " AND t.price <= %s"
         params.append(filters['max_price'])
     if 'search' in filters:
-        sql += " AND t.remaining_seats > 0 AND t.departure_datetime > NOW()"
+        sql += " AND t.remaining_seats > 0 AND trip.departure_datetime > NOW()"
 
     order = filters.get("order", "DESC")
     sql += f" ORDER BY trip.departure_datetime {order}"
@@ -165,7 +165,7 @@ def search(filters):
         results.append(ticket_summary)
 
         if not get_ticket_cache(ticket_id):
-            detail = build_ticket_detail(cursor, ticket_id)
+            detail = build_ticket_detail(connection.cursor(), ticket_id)
             set_ticket_cache(ticket_id, detail)
 
     return results
