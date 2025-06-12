@@ -22,8 +22,6 @@ class WalletSerializer(serializers.Serializer):
             if not row:
                 raise Exception("Wallet not found.")
             wallet_id, balance = row
-
-            # Get transaction counts
             cursor.execute("""
                 SELECT type, COUNT(*) 
                 FROM wallet_transactions 
@@ -31,7 +29,6 @@ class WalletSerializer(serializers.Serializer):
                 GROUP BY type
             """, [wallet_id])
             tx_counts = dict(cursor.fetchall())
-            # Normalize all 3 types
             data = {
                 'wallet_id': wallet_id,
                 'balance': balance,

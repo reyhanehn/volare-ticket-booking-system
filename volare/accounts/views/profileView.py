@@ -1,4 +1,4 @@
-# accounts/views/profileView.py
+
 import json
 
 from rest_framework import status
@@ -15,10 +15,10 @@ class ProfileView(APIView):
     def get(self, request):
         cached_data = get_user_cache(request.user.account_id)
         if cached_data:
-            return Response(cached_data)  # serve from Redis
+            return Response(cached_data)
 
         serializer = ProfileSerializer(request.user)
-        set_user_cache(request.user)  # store in Redis
+        set_user_cache(request.user)
         print("wasn't cached")
         return Response(serializer.data)
 
@@ -26,7 +26,7 @@ class ProfileView(APIView):
         serializer = ProfileSerializer(instance=request.user, data=request.data, partial=False)
         if serializer.is_valid():
             result = serializer.save()
-            set_user_cache(request.user)  # update Redis
+            set_user_cache(request.user)
             return Response(result)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -34,7 +34,7 @@ class ProfileView(APIView):
         serializer = ProfileSerializer(instance=request.user, data=request.data, partial=True)
         if serializer.is_valid():
             result = serializer.save()
-            set_user_cache(request.user)  # update Redis
+            set_user_cache(request.user)
             return Response(result)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

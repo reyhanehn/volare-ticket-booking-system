@@ -16,13 +16,9 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         owner_data = validated_data.pop('owner_data')
         owner_data['role'] = 'Company_Admin'
-
-        # Use AccountSignupSerializer which must use raw SQL internally
         owner_serializer = AccountSignupSerializer(data=owner_data)
         owner_serializer.is_valid(raise_exception=True)
         owner = owner_serializer.save()
-
-        # Raw SQL insert for Company
         with connection.cursor() as cursor:
             cursor.execute("""
                 INSERT INTO companies_company (owner_id, name, logo_url, website)
@@ -36,7 +32,6 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
             ])
             company_id = cursor.fetchone()[0]
 
-        # Return a fake instance for serialization
         return type("CompanyObj", (), {
             "company_id": company_id,
             "name": validated_data.get('name'),

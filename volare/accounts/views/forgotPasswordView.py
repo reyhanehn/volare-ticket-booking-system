@@ -21,7 +21,7 @@ class RequestForgotPasswordView(APIView):
         if serializer.is_valid():
             user = serializer.context["user"]
             otp = f"{random.randint(100000, 999999)}"
-            redis_client.setex(f"reset_otp:{user.account_id}", 300, otp)  # 5 mins
+            redis_client.setex(f"reset_otp:{user.account_id}", 300, otp)
 
             if user.email:
                 send_mail(

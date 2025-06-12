@@ -20,7 +20,6 @@ class AdminCancelReservationView(APIView):
         admin = request.user
 
         with connection.cursor() as cursor:
-            # Step 1: Fetch reservation and user info
             cursor.execute("""
                 SELECT r.reservation_id, r.account_id, r.status, t.price, a.name, a.email
                 FROM bookings_reservation r
@@ -39,10 +38,9 @@ class AdminCancelReservationView(APIView):
             if status_val == "cancelled":
                 return Response({"error": "Reservation already cancelled."}, status=status.HTTP_400_BAD_REQUEST)
 
-            refund_amount = 0  # default
+            refund_amount = 0
 
             if status_val == "confirmed":
-                # Step 2: Must find a payment for confirmed reservation
                 cursor.execute("SELECT payment_id FROM bookings_payment WHERE reservation_id = %s", [reservation_id])
                 payment_row = cursor.fetchone()
 
@@ -51,8 +49,6 @@ class AdminCancelReservationView(APIView):
                                     status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
                 payment_id = payment_row[0]
-
-                # Step 3: Refund to wallet
                 cursor.execute("SELECT wallet_id, balance FROM wallet WHERE account_id = %s", [user_id])
                 wallet = cursor.fetchone()
 
@@ -64,7 +60,6 @@ class AdminCancelReservationView(APIView):
                                    [user_id, price])
                     wallet_id = cursor.fetchone()[0]
 
-                # Step 4: Log wallet transaction
                 now = datetime.now()
                 cursor.execute("""
                     INSERT INTO wallet_transactions 
@@ -73,15 +68,12 @@ class AdminCancelReservationView(APIView):
                 """, [wallet_id, price, 'Refund', now.date(), now.time(), payment_id])
 
                 refund_amount = price
-
-            # Step 5: Mark reservation as cancelled
             cursor.execute("""
                 UPDATE bookings_reservation
                 SET status = %s, cancelled_by_id = %s
                 WHERE reservation_id = %s
             """, ['Cancelled', admin.account_id, reservation_id])
 
-        # Step 6: Send email
         html_message = render_to_string('emails/admin_cancel_notice.html', {
             'name': user_name,
             'reservation_id': reservation_id,

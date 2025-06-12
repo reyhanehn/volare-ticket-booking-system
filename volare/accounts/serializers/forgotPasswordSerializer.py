@@ -24,7 +24,7 @@ class RequestForgotPasswordSerializer(serializers.Serializer):
         columns = [col[0] for col in cursor.description]
         data = dict(zip(columns, row))
         user = Account(**data)
-        user._state.adding = False  # mark as fetched from DB
+        user._state.adding = False
 
         self.context['user'] = user
         return value

@@ -6,7 +6,7 @@ class StationSerializer(serializers.Serializer):
     station_id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     type = serializers.CharField()
-    location = serializers.IntegerField()  # This refers to `location_id`
+    location = serializers.IntegerField()
 
     def validate_name(self, value):
         if not re.match(r'^[A-Za-z]+(\s[A-Za-z]+)*$', value):

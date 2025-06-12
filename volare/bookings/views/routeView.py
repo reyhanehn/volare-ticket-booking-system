@@ -30,8 +30,6 @@ class RouteListView(APIView):
             "origin_station": request.query_params.get("origin_station"),
             "destination_station": request.query_params.get("destination_station"),
         }
-
-        # convert string IDs to integers if provided
         filters = {k: int(v) for k, v in filters.items() if v is not None}
 
         routes = RouteListSerializer.fetch_filtered(filters)
