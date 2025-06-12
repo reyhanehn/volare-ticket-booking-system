@@ -63,15 +63,15 @@ class ReservationCancelInfoView(APIView):
 class ReservationCancelConfirmView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def patch(self, request):
+    def post(self, request):
         reservation_id = request.data.get("reservation_id")
-        new_status = request.data.get("status")
         account_id = request.user.account_id
 
-        if new_status != "Cancelled":
-            return Response({"error": "Only status='Cancelled' is allowed."}, status=status.HTTP_400_BAD_REQUEST)
+        if not reservation_id:
+            return Response({"error": "Reservation ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         with connection.cursor() as cursor:
+            # Get reservation + ticket info
             cursor.execute("""
                 SELECT r.ticket_id, t.price, r.status
                 FROM bookings_reservation r
@@ -88,6 +88,7 @@ class ReservationCancelConfirmView(APIView):
             if current_status == "Cancelled":
                 return Response({"error": "Reservation is already cancelled."}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Update reservation status to Cancelled
             cursor.execute("""
                 UPDATE bookings_reservation
                 SET status = 'Cancelled',
@@ -96,11 +97,13 @@ class ReservationCancelConfirmView(APIView):
                 WHERE reservation_id = %s AND account_id = %s
             """, [reservation_id, account_id])
 
+            # Handle no refund for Pending
             if current_status == "Pending":
                 return Response({
                     "message": "Pending reservation cancelled. No refund issued."
                 }, status=status.HTTP_200_OK)
 
+            # Get wallet
             cursor.execute("SELECT wallet_id FROM wallet WHERE account_id = %s", [account_id])
             wallet_row = cursor.fetchone()
             if not wallet_row:
@@ -108,6 +111,7 @@ class ReservationCancelConfirmView(APIView):
 
             wallet_id = wallet_row[0]
 
+            # Get payment info
             cursor.execute("""
                 SELECT payment_id, amount, status FROM bookings_payment
                 WHERE reservation_id = %s AND account_id = %s
@@ -122,20 +126,24 @@ class ReservationCancelConfirmView(APIView):
             if payment_status != "Completed":
                 return Response({"error": "Only completed payments can be refunded."}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Calculate refund
             penalty_percentage = 10
             penalty_amount = round(amount_paid * penalty_percentage / 100, 2)
             refund_amount = round(amount_paid - penalty_amount, 2)
 
+            # Refund to wallet
             cursor.execute("""
                 UPDATE wallet SET balance = balance + %s WHERE wallet_id = %s
             """, [refund_amount, wallet_id])
 
+            # Log wallet transaction
             cursor.execute("""
                 INSERT INTO wallet_transactions
                 (wallet_id, amount, type, transaction_date, transaction_time, related_payment_id_id)
                 VALUES (%s, %s, 'Refund', CURRENT_DATE, CURRENT_TIME, %s)
             """, [wallet_id, refund_amount, payment_id])
 
+            # Update payment status
             cursor.execute("""
                 UPDATE bookings_payment SET status = 'Refunded' WHERE payment_id = %s
             """, [payment_id])
