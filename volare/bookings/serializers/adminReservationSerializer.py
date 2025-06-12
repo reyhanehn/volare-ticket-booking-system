@@ -112,8 +112,6 @@ class AdminConfirmReservationSerializer(serializers.Serializer):
 
             status, account_id, seat_number, ticket_id, passenger_name, passenger_lastname, user_name, user_lastname, email = reservation
 
-            if status == "Cancelled":
-                raise serializers.ValidationError("Cannot confirm a cancelled reservation.")
             if status == "Confirmed":
                 raise serializers.ValidationError("Reservation is already confirmed.")
 
