@@ -10,6 +10,7 @@ class PaymentHistorySerializer(serializers.Serializer):
     end_date = serializers.DateField(required=False)
     start_time = serializers.TimeField(required=False)
     end_time = serializers.TimeField(required=False)
+    account_id = serializers.IntegerField(required=False)
 
     def get_history(self):
         user_id = self.context["user_id"]
