@@ -5,7 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- icon -->
   <link rel="icon" type="image/png" sizes="32x32" href="./images/logo/volare-logo-gold_transparent.png">
+
+  <!-- style libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+
+  <!-- script libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
 
   <!-- 1. Reset styles -->
   <link rel="stylesheet" href="css/reset.css">
@@ -20,7 +29,13 @@
   <!-- 6. fonts -->
   <link rel="stylesheet" href="css/fonts.css">
 
+
+  <!-- scripts -->
   <script src="js/BookingOptions.js" defer></script>
+  <script src="js/tomselect-init.js" defer></script>
+  <script src="js/flatpickr-init.js" defer></script>
+  <script src="js/swap.js" defer></script>
+  <script src="js/passengers.js" defer></script>
 
   <title>Volare</title>
 
@@ -181,26 +196,56 @@
           <div class="option-name">Train Ride</div>
         </div>
       </div>
+      <div class="line"></div>
       <div class="search-form">
-
-      </div>
-      <!-- <div class="controls-cluster">
-          <div class="date-pills">
-            <button type="button" class="date-pill active" aria-pressed="true">Today</button>
-            <button type="button" class="date-pill" aria-pressed="false">Tomorrow</button>
+        <div class="form-cities">
+          <div class="form-item form-city">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16.114-0.011c-6.559 0-12.114 5.587-12.114 12.204 0 6.93 6.439 14.017 10.77 18.998 0.017 0.020 0.717 0.797 1.579 0.797h0.076c0.863 0 1.558-0.777 1.575-0.797 4.064-4.672 10-12.377 10-18.998 0-6.618-4.333-12.204-11.886-12.204zM16.515 29.849c-0.035 0.035-0.086 0.074-0.131 0.107-0.046-0.032-0.096-0.072-0.133-0.107l-0.523-0.602c-4.106-4.71-9.729-11.161-9.729-17.055 0-5.532 4.632-10.205 10.114-10.205 6.829 0 9.886 5.125 9.886 10.205 0 4.474-3.192 10.416-9.485 17.657zM16.035 6.044c-3.313 0-6 2.686-6 6s2.687 6 6 6 6-2.687 6-6-2.686-6-6-6zM16.035 16.044c-2.206 0-4.046-1.838-4.046-4.044s1.794-4 4-4c2.207 0 4 1.794 4 4 0.001 2.206-1.747 4.044-3.954 4.044z">
+              </path>
+            </svg>
+            <!-- input -->
+            <input id="city-from" class="city-input" type="text" placeholder="From" autocomplete="off" />
           </div>
-          <div class="toggle-section">
-            <div class="toggle-content">
-              <span class="toggle-label">Booking for women</span>
-              <a href="#" class="toggle-link">Know more</a>
-            </div>
-            <button type="button" class="toggle-switch" role="switch" aria-checked="false"
-              aria-label="Booking for women">
-              <div class="toggle-knob"></div>
-            </button>
-          </div> -->
+
+          <button class="form-item swap-cities" id="swapBtn" type="button" aria-label="swap">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="z8m1-icon" role="presentation">
+              <path
+                d="M56.238 154.801c-25.271-30.326-30.335-33.201-25-39.603l25-30l11.523 9.603L53.013 112.5H120v15H53.013l14.749 17.699l-11.524 9.602zm86.524-40l-11.523-9.603L145.987 87.5H80v-15h65.987l-14.749-17.699l11.523-9.603l25 30c5.335 6.403.272 9.278-24.999 39.603z">
+              </path>
+            </svg>
+          </button>
+
+          <div class="form-item form-city">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16.114-0.011c-6.559 0-12.114 5.587-12.114 12.204 0 6.93 6.439 14.017 10.77 18.998 0.017 0.020 0.717 0.797 1.579 0.797h0.076c0.863 0 1.558-0.777 1.575-0.797 4.064-4.672 10-12.377 10-18.998 0-6.618-4.333-12.204-11.886-12.204zM16.515 29.849c-0.035 0.035-0.086 0.074-0.131 0.107-0.046-0.032-0.096-0.072-0.133-0.107l-0.523-0.602c-4.106-4.71-9.729-11.161-9.729-17.055 0-5.532 4.632-10.205 10.114-10.205 6.829 0 9.886 5.125 9.886 10.205 0 4.474-3.192 10.416-9.485 17.657zM16.035 6.044c-3.313 0-6 2.686-6 6s2.687 6 6 6 6-2.687 6-6-2.686-6-6-6zM16.035 16.044c-2.206 0-4.046-1.838-4.046-4.044s1.794-4 4-4c2.207 0 4 1.794 4 4 0.001 2.206-1.747 4.044-3.954 4.044z">
+              </path>
+            </svg>
+            <!-- input -->
+            <input id="city-to" class="city-input" type="text" placeholder="To" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="form-times">
+          <div class="form-item form-time">
+            <input id="depart-date" type="text" placeholder="Departure" />
+          </div>
+          <div class="form-item form-time">
+            <input id="return-date" type="text" placeholder="Return" />
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="form-item passengers-number">
+          <input id="passengers" type="number" min="1" value="1" />
+        </div>
       </div>
-      </form>
+
       <button type="button" class="search-button">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
