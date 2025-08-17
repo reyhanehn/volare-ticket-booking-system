@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch
+from search.es_client import get_es  # Use your Django settings
 
-es = Elasticsearch("http://localhost:9200")
-
+es: Elasticsearch = get_es()
 TICKET_INDEX = "tickets_index"
 
 TICKET_MAPPING = {
@@ -30,14 +30,19 @@ TICKET_MAPPING = {
                     "trip_id": {"type": "keyword"},
                     "departure_datetime": {"type": "date"},
                     "company_id": {"type": "keyword"},
+                    "company_name": {"type": "keyword"},  # Added
                 }
             },
         }
     }
 }
 
-
 def create_ticket_index():
-    if es.indices.exists(index=TICKET_INDEX):
-        es.indices.delete(index=TICKET_INDEX)
-    es.indices.create(index=TICKET_INDEX, body=TICKET_MAPPING)
+    try:
+        if es.indices.exists(index=TICKET_INDEX):
+            print(f"Index '{TICKET_INDEX}' exists, deleting...")
+            es.indices.delete(index=TICKET_INDEX)
+        es.indices.create(index=TICKET_INDEX, body=TICKET_MAPPING)
+        print(f"Index '{TICKET_INDEX}' created.")
+    except Exception as e:
+        print(f"Error creating index '{TICKET_INDEX}': {e}")

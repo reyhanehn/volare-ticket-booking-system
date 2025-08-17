@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.db import connection
 from cache_utils import get_ticket_cache, set_ticket_cache
+from search.es_search import search_tickets_es
 
 
 def build_ticket_detail(cursor, ticket_id):
@@ -85,91 +86,31 @@ def build_ticket_detail(cursor, ticket_id):
 
 
 def search(filters):
-    sql = '''
-        SELECT t.ticket_id, t.price, t.remaining_seats,
-               v.type AS transport_type, vs.name AS section,
-               o.city AS origin, d.city AS destination,
-               trip.departure_datetime, c.name AS company_name
-        FROM bookings_ticket t
-        JOIN bookings_trip trip ON t.trip_id = trip.trip_id
-        JOIN companies_vehicle v ON trip.vehicle_id = v.vehicle_id
-        JOIN companies_vehiclesection vs ON t.section_id = vs.section_id
-        JOIN bookings_route r ON trip.route_id = r.route_id
-        JOIN bookings_location o ON r.origin_id = o.location_id
-        JOIN bookings_location d ON r.destination_id = d.location_id
-        JOIN companies_company c ON v.company_id = c.company_id
-        WHERE 1 = 1
-    '''
-    params = []
-
-    if 'origin_id' in filters:
-        sql += " AND r.origin_id = %s"
-        params.append(filters['origin_id'])
-    if 'destination_id' in filters:
-        sql += " AND r.destination_id = %s"
-        params.append(filters['destination_id'])
-    if 'departure_date_exact' in filters:
-        sql += " AND DATE(trip.departure_datetime) = %s"
-        params.append(filters['departure_date_exact'])
-    if 'departure_date_start' in filters:
-        sql += " AND DATE(trip.departure_datetime) >= %s"
-        params.append(filters['departure_date_start'])
-    if 'departure_date_end' in filters:
-        sql += " AND DATE(trip.departure_datetime) < %s"
-        params.append(filters['departure_date_end'])
-    if 'departure_time_start' in filters:
-        sql += " AND TIME(trip.departure_datetime) >= %s"
-        params.append(filters['departure_time_start'])
-    if 'departure_time_end' in filters:
-        sql += " AND TIME(trip.departure_datetime) >= %s"
-        params.append(filters['departure_time_end'])
-    if 'transport_type' in filters:
-        sql += " AND v.type = %s"
-        params.append(filters['transport_type'])
-    if 'class_code' in filters:
-        sql += " AND v.class_code = %s"
-        params.append(filters['class_code'])
-    if 'company_id' in filters:
-        sql += " AND v.company_id = %s"
-        params.append(filters['company_id'])
-    if 'min_price' in filters:
-        sql += " AND t.price >= %s"
-        params.append(filters['min_price'])
-    if 'max_price' in filters:
-        sql += " AND t.price <= %s"
-        params.append(filters['max_price'])
-    if 'search' in filters:
-        sql += " AND t.remaining_seats > 0 AND trip.departure_datetime > NOW()"
-
-    order = filters.get("order", "DESC")
-    sql += f" ORDER BY trip.departure_datetime {order}"
-
-    with connection.cursor() as cursor:
-        cursor.execute(sql, params)
-        rows = cursor.fetchall()
+    # Run ES search
+    es_results = search_tickets_es(filters)
 
     results = []
-    for row in rows:
-        ticket_id = row[0]
+    for ticket in es_results:
+        ticket_id = ticket.get("ticket_id")
         ticket_summary = {
             "ticket_id": ticket_id,
-            "price": row[1],
-            "remaining_seats": row[2],
-            "transport_type": row[3],
-            "section": row[4],
-            "origin": row[5],
-            "destination": row[6],
-            "departure_datetime": row[7],
-            "company": row[8]
+            "price": ticket.get("price"),
+            "remaining_seats": ticket.get("remaining_seats"),
+            "transport_type": ticket.get("transport_type"),
+            "section": ticket.get("section"),
+            "origin": ticket.get("origin"),
+            "destination": ticket.get("destination"),
+            "departure_datetime": ticket.get("departure_datetime"),
+            "company": ticket.get("company"),
         }
         results.append(ticket_summary)
 
+        # Cache detailed info if not cached
         if not get_ticket_cache(ticket_id):
             detail = build_ticket_detail(connection.cursor(), ticket_id)
             set_ticket_cache(ticket_id, detail)
 
     return results
-
 
 class BaseTicketFilterSerializer(serializers.Serializer):
     origin_id = serializers.IntegerField(required=False)

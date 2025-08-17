@@ -7,5 +7,5 @@ def get_es() -> Elasticsearch:
         hosts=cfg["hosts"],
         basic_auth=(cfg["username"], cfg["password"]) if cfg["username"] else None,
         verify_certs=cfg.get("verify_certs", True),
-        request_timeout=10,
+        request_timeout=60,
     )

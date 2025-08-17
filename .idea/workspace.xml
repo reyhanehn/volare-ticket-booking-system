@@ -6,11 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="b1a9ce51-1b31-4424-9239-b85b70d15045" name="Changes" comment=" merging sql_serer again">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/bookings/serializers/ticketSerializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/serializers/ticketSerializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/bookings/views/ticketView.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/views/ticketView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/search/es_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/search/es_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/search/indexes.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/search/indexes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/volare/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -20,22 +32,22 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "reyhanehn"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;reyhanehn&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/reyhanehn/volare-ticket-booking-system.git",
-    "accountId": "d7f776e5-521d-435d-858a-56fb3c1bdbc7"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/reyhanehn/volare-ticket-booking-system.git&quot;,
+    &quot;accountId&quot;: &quot;d7f776e5-521d-435d-858a-56fb3c1bdbc7&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="31NTya3vBRXxlF5nMcpF7gzELAL" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -44,14 +56,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "frontend"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;frontend&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/reyhaneh/PycharmProjects/volare-ticket-booking-system/volare/search&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\volare\search" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\database" />
     </key>
