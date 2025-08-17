@@ -1,4 +1,3 @@
-# volare-ticket-booking-system
 # Volare: The Ultimate Ticket Booking System
 
 Welcome to Volare, a comprehensive ticket booking platform designed to make travel seamless and enjoyable. Whether it's a **ticket, billet, boletos, or biglietto**, our platform has you covered. Built with a robust and modular backend, this system handles the entire lifecycle of a travel booking, from user authentication to trip completion.
