@@ -9,8 +9,7 @@ class Command(BaseCommand):
     help = "Index all tickets in Elasticsearch"
 
     def handle(self, *args, **kwargs):
-        # Connect to Elasticsearch
-        es = Elasticsearch(hosts=["http://localhost:9200"])  # Adjust host if needed
+        es = Elasticsearch(hosts=["http://localhost:9200"])
 
         # Delete index if it exists
         if es.indices.exists(index=TICKET_INDEX):
