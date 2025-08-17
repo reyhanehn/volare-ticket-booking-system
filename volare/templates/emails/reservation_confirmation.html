@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reservation Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .details {
+      line-height: 1.6;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #005bbb;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 0.9em;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>🎟️ Reservation Confirmed</h2>
+    </div>
+    <p>Dear <span class="highlight">{{ name }}</span>,</p>
+    <p>Your reservation has been <strong>successfully confirmed</strong>. Here are your trip details:</p>
+
+    <div class="details">
+      <p><strong>Reservation ID:</strong> {{ reservation_id }}</p>
+      <p><strong>Passenger:</strong> {{ passenger_name }}</p>
+      <p><strong>Route:</strong> {{ origin }} → {{ destination }}</p>
+      <p><strong>Departure:</strong> {{ departure_datetime }}</p>
+      <p><strong>Seat Number:</strong> {{ seat_number }}</p>
+      <p><strong>Ticket Class:</strong> {{ section_name }} ({{ transport_type }})</p>
+      <p><strong>Price Paid:</strong> {{ amount }} {{ currency }}</p>
+    </div>
+
+    <p>Thank you for booking with <span class="highlight">Volare</span>. We wish you a pleasant journey! 🧳</p>
+
+    <div class="footer">
+      <p>&copy; {{ current_year }} Volare. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

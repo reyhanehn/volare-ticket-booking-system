@@ -1,0 +1,11 @@
+# Ignore everything in the root directory
+*
+
+# But NOT these (the ! means "don't ignore")
+!.gitignore
+!*.py
+!*.sql
+!manage.py
+!requirements.txt
+!.env
+!.venv/
