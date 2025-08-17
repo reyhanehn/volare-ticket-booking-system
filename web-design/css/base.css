@@ -16,6 +16,15 @@
   --color-promo-pink: #FCE7F3;
   --color-promo-pink-hover: #F9D5E7;
   --color-white: #FFFFFF;
+  --color-bus: #D01A1E;
+  --color-peach: #ffdada;
+  --color-light-blue: #A9B5DF;
+  --color-medium-blue: #7886C7;
+  --color-dark-blue: #2D336B;
+  --color-option-button: rgb(205 212 237);
+  --color-option-button-hover: #A9B5DF;
+  --color-option-button-shadow: rgb(130, 138, 164);
+  
 
   /* Radius */
   --radius-sm: 0.375rem;   /* 6px */
