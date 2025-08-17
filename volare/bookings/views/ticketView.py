@@ -28,7 +28,7 @@ class TicketSearchView(APIView):
     def get(self, request):
         serializer = TicketSearchSerializer(data=request.query_params)
         if serializer.is_valid():
-            results = serializer.search()
+            results = serializer.search()  # safe now
             return Response(results)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

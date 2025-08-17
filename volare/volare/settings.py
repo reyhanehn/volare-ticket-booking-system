@@ -174,3 +174,14 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+ELASTICSEARCH = {
+    "hosts": ["http://127.0.0.1:9200"],
+    "username": None,        # No username needed
+    "password": None,        # No password needed
+    "verify_certs": False,   # OK for local dev
+}
+
+ES_INDEXES = {
+    "ticket": "tickets_v1",
+}
