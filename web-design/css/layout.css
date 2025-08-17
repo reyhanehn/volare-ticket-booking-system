@@ -158,18 +158,21 @@ header {
 
 /* ========== SEARCH CARD ========== */
 .search-card {
+    
+    align-items: center;
     max-width: 75rem;
     /* 1200px */
     margin: -2rem auto 0;
     background: var(--color-card-bg);
     border-radius: var(--radius-xxl);
     box-shadow: var(--shadow-md);
-    padding: var(--space-2);
+    padding: 1rem 2rem;
     position: relative;
     z-index: 10;
 }
 
 .booking-options {
+    margin: 0 auto;
     min-width: 14rem;
     max-width: 22rem;
     width: 40%;
@@ -177,7 +180,7 @@ header {
     grid-template-columns: repeat(4, 25%);
     gap: 2rem;
     align-items: baseline;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .option-group {
@@ -222,9 +225,134 @@ header {
     text-overflow: ellipsis;
 }
 
+.search-card .line {
+    height: 1px;
+    width: 70%;
+    background-color: rgb(211, 211, 211);;
+    margin: 1rem auto;
+}
+
 
 /*============ search form ===========*/
+.search-form {
+    height: 4rem;
+    display: flex;
+    margin: 1rem 0;
+    align-items: center;
+    border-radius: 0.5rem;
+    box-shadow: 0 3px 6px 0 rgba(25, 32, 36, 0.16), 0 -1px 4px 0 rgba(25, 32, 36, 0.04);
+}
+
+.search-form .line {
+    width: 0.5px;
+    height: 60%;
+    background-color: rgb(211, 211, 211);
+    margin: 0 auto;  
+    z-index: 10;
+}
+
+.form-item:hover {
+    background-color: var(--color-light-blue);
+}
+
+.form-item {
+    background-color: white;
+    cursor: pointer;
+}
+
+.form-cities {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    gap: 0.6rem;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-city {
+    width: calc(50% - 0.3rem);
+    height: 100%;
+    display: flex;
+    gap: 0.2rem;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: start;
+}
+
+.form-city svg{
+    margin-left: 0.7rem;
+    width: 1rem;
+    height: 1rem;
+}
+
+.form-cities .swap-cities{
+    border-radius: .5rem;
+    position: absolute;
+    top: calc(50% - 1rem);
+    left: calc(50% - 1.3rem);
+    width: 2rem;
+    height: 2rem;
+    padding: 0.2rem;
+}
+.form-cities .swap-cities:hover{
+    background-color: var(--color-light-blue);
+}
+
+/* فقط برای ورودی شهرها */
+.city-input{
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  padding: 0 .5rem 0 .25rem; /* با SVG فاصله داشته باشه */
+  display: grid;
+  align-items: center;
+}
+
+/* حذف حاشیه‌های پیشفرض TomSelect روی input-های معمولی */
+.ts-control{
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.city-input,
+.ts-control {
+  font-size: 1.25rem; /* هر سایزی خواستی */
+}
+
+.ts-dropdown{
+}
 
 
+.form-times {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    gap: 0.3rem;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-time {
+    width: calc(50% - 0.15rem);
+    height: 100%;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: start;
+}
+
+.passengers-number {
+    width: 15%;
+    height: 100%;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
 
 /* ========== footer ========== */
