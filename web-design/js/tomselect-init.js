@@ -1,42 +1,39 @@
-// js/tomselect-init.js
-window.addEventListener('DOMContentLoaded', () => {
-  async function fetchLocations() {
+window.addEventListener('DOMContentLoaded', async () => {
+
+  async function loadCities() {
     try {
       const response = await fetch("http://127.0.0.1:8000/bookings/locations/list/");
-      if (!response.ok) {
-        throw new Error(`Error fetching locations: ${response.status}`);
-      }
+      if (!response.ok) throw new Error("Failed to fetch locations");
+
       const data = await response.json();
 
-      // adjust this depending on your API response shape
-      // e.g. [{id:1, city:"Tehran", country:"Iran"}, ...]
+      // تبدیل به فرمت TomSelect
       return data.locations.map(loc => ({
-        value: loc.city,             // what will be submitted
-        text: `${loc.city}, ${loc.country}` // what user sees
+        value: `${loc.city}, ${loc.country}`,
+        text: `${loc.city}, ${loc.country}`
       }));
+
     } catch (err) {
-      console.error("❌ Failed to load locations:", err);
+      console.error("Error loading locations:", err);
       return [];
     }
   }
 
-  async function initCityInput(selector) {
+  function initCityInput(selector, options){
     const el = document.querySelector(selector);
     if (!el) return null;
 
-    const options = await fetchLocations();
-
     const ts = new TomSelect(el, {
-      options,
-      items: [],              // start empty
-      create: false,          // don’t allow custom values
+      options: options,
+      items: [],
+      create: false,
       maxItems: 1,
       openOnFocus: true,
       searchField: ['text', 'value'],
       allowEmptyOption: true,
-      onInitialize() {
+      onInitialize(){
         const wrapper = this.wrapper;
-        if (wrapper) {
+        if (wrapper){
           wrapper.style.height = '100%';
           wrapper.style.alignItems = 'center';
         }
@@ -46,16 +43,14 @@ window.addEventListener('DOMContentLoaded', () => {
     return ts;
   }
 
-  // init TomSelect after fetching data
-  Promise.all([
-    initCityInput('#city-from'),
-    initCityInput('#city-to')
-  ]).then(([fromTS, toTS]) => {
-    window.cityFromTS = fromTS;
-    window.cityToTS = toTS;
-  });
+  // لود شهرها از سرور
+  const CITY_OPTIONS = await loadCities();
 
-  // Make the whole input box clickable
+  // ایجاد TomSelect برای دو ورودی
+  window.cityFromTS = initCityInput('#city-from', CITY_OPTIONS);
+  window.cityToTS   = initCityInput('#city-to', CITY_OPTIONS);
+
+  // کلیک روی کل باکس فرم‌شهر => فوکِس روی input و باز شدن لیست
   document.querySelectorAll('.form-cities .form-city').forEach(box => {
     box.addEventListener('click', (e) => {
       const input = box.querySelector('.city-input');
