@@ -1,0 +1,63 @@
+@media screen and (max-width: 1200px) {
+  .container {
+    width: calc(100% - 30px);
+    max-width: 100%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+
+  .container {
+    max-width: 30rem;
+  }
+
+  .signin-content {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .signin-form {
+    margin: 5rem 0;
+    padding: 0 2.5rem;
+  }
+
+  
+  .signin-form,
+  .signin-image {
+    width: auto;
+  }
+
+  .signin-image {
+    display: none;
+  }
+
+  .social-login {
+    justify-content: center;
+  }
+
+  .form-button {
+    text-align: center;
+  }
+
+  .form-title {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .social-login {
+    flex-direction: column;
+  }
+
+  .social-label {
+    margin-right: 0px;
+    margin-bottom: 10px;
+  }
+}
+

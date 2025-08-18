@@ -1,0 +1,48 @@
+@media screen and (max-width: 1200px) {
+  .container {
+    width: calc(100% - 30px);
+    max-width: 100%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+
+  .container {
+    max-width: 30rem;
+  }
+
+  .signup-content {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .signup-form {
+    margin: 5rem 0;
+    padding: 0 2.5rem;
+  }
+
+  
+  .signup-form,
+  .signup-image {
+    width: auto;
+  }
+
+  .signup-image {
+    display: none;
+  }
+
+  .form-button {
+    text-align: center;
+  }
+
+  .form-title {
+    text-align: center;
+  }
+}
+
