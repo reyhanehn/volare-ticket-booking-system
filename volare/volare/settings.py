@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from kombu import Queue
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,9 +84,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Volare',
+        'NAME': 'volare',
         'USER': 'postgres',
-        'PASSWORD': 'reyh00n83',
+        'PASSWORD': 'h.tah1584',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -176,12 +177,22 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 ELASTICSEARCH = {
-    "hosts": ["http://127.0.0.1:9200"],
-    "username": None,        # No username needed
-    "password": None,        # No password needed
-    "verify_certs": False,   # OK for local dev
+    "hosts": ["https://localhost:9200"],
+    "username": "elastic",
+    "password": "qH3yjkb-1CXu+EiIPF2S",
+    "verify_certs": False,
 }
 
 ES_INDEXES = {
     "ticket": "tickets_v1",
 }
+
+CELERY_TASK_QUEUES = (
+    Queue('default', routing_key='default'),
+    Queue('tickets', routing_key='tickets'),
+    Queue('reservations', routing_key='reservations'),
+)
+
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_EXCHANGE = 'default'
+CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
