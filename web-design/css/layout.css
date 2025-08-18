@@ -158,7 +158,7 @@ header {
 
 /* ========== SEARCH CARD ========== */
 .search-card {
-    
+
     align-items: center;
     max-width: 75rem;
     /* 1200px */
@@ -228,7 +228,8 @@ header {
 .search-card .line {
     height: 1px;
     width: 70%;
-    background-color: rgb(211, 211, 211);;
+    background-color: rgb(211, 211, 211);
+    ;
     margin: 1rem auto;
 }
 
@@ -236,38 +237,44 @@ header {
 /*============ search filtirs ===========*/
 
 .search-filters {
-  display: flex;
-  gap: 1rem; 
-  align-items: center;
-  justify-content: left;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: left;
 }
 
 .searchfilter {
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 2rem;
-  background-color: #fff;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 2rem;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .searchfilter:hover {
-  border-color: #888;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-color: #888;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .filter-select {
-  font-size: var(--font-size-base);
-  color: #333;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: var(--font-size-base);
+    color: #333;
 }
 
+
+
 .filter-icon {
-  flex-shrink: 0;
-  margin-left: 0.5rem;
-  color: #666;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    color: #666;
 }
 
 
@@ -285,7 +292,7 @@ header {
     width: 0.5px;
     height: 60%;
     background-color: rgb(211, 211, 211);
-    margin: 0 auto;  
+    margin: 0 auto;
     z-index: 10;
 }
 
@@ -324,13 +331,13 @@ header {
     justify-content: start;
 }
 
-.form-city svg{
+.form-city svg {
     margin-left: 0.7rem;
     width: 1rem;
     height: 1rem;
 }
 
-.form-cities .swap-cities{
+.form-cities .swap-cities {
     border-radius: .5rem;
     position: absolute;
     top: calc(50% - 1rem);
@@ -339,36 +346,38 @@ header {
     height: 2rem;
     padding: 0.2rem;
 }
-.form-cities .swap-cities:hover{
+
+.form-cities .swap-cities:hover {
     background-color: var(--color-light-blue);
 }
 
-.city-input{
-  width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font: inherit;
-  padding: 0 .5rem 0 .25rem; 
-  display: grid;
-  align-items: center;
+.city-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    padding: 0 .5rem 0 .25rem;
+    display: grid;
+    align-items: center;
 }
 
-.ts-control{
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
+.ts-control {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0.25rem;
 }
 
 .city-input,
-.ts-control, 
+.ts-control,
 .ts-control input {
-  font-size: 1rem; 
+    min-width: 5rem;
+    font-size: var(--font-size-base);
 }
 
-.ts-dropdown{
-}
+.ts-dropdown {}
 
 
 .form-times {
@@ -397,19 +406,19 @@ header {
 }
 
 .date-input {
-  width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font: inherit;
-  padding: 0 0 0 1rem;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    padding: 0 0 0 1rem;
 }
 
 .flatpickr-calendar {
-  border: none !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-  border-radius: 8px;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 .form-passengers {
@@ -428,7 +437,7 @@ header {
     border: none;
     outline: none;
     background: transparent;
-    font-size: 1rem; 
+    font-size: 1rem;
     text-align: center;
 }
 

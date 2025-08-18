@@ -11,10 +11,14 @@
   <!-- style libraries -->
   <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
   <!-- script libraries -->
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+    defer></script>
 
   <!-- 1. Reset styles -->
   <link rel="stylesheet" href="css/reset.css">
@@ -28,6 +32,8 @@
   <link rel="stylesheet" href="css/responsive.css">
   <!-- 6. fonts -->
   <link rel="stylesheet" href="css/fonts.css">
+  <!-- 7. footer -->
+  <link rel="stylesheet" href="css/footer.css">
 
 
   <!-- scripts -->
@@ -133,7 +139,7 @@
     <section class="search-card">
       <div class="booking-options">
         <div class="option-group">
-          <button id="international-flight-option" class="booking-option">
+          <button id="international-flight-option" class="booking-option active">
             <svg fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492.308 492.308" xml:space="preserve">
               <g>
@@ -199,7 +205,11 @@
       <div class="line"></div>
       <div class="search-filters">
         <div class="searchfilter">
-          <select id="trip-type" placeholder="Trip Type"></select>
+          <select id="trip-type" class="ts-hidden">
+            <option value="">Trip type</option>
+            <option value="oneway">One way</option>
+            <option value="round">Round trip</option>
+          </select>
           <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             viewBox="0 0 16 16">
             <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
@@ -207,7 +217,11 @@
           </svg>
         </div>
         <div class="searchfilter">
-          <select id="charter" placeholder="Charter"></select>
+          <select id="private" class="ts-hidden">
+            <option value="">Private?</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
           <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             viewBox="0 0 16 16">
             <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
@@ -215,7 +229,11 @@
           </svg>
         </div>
         <div class="searchfilter">
-          <select class="filter-select" id="car-transport" placeholder="Car Transport"></select>
+          <select id="car-transport" class="ts-hidden">
+            <option value="">Car transport?</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
           <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             viewBox="0 0 16 16">
             <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
@@ -311,6 +329,56 @@
         Search buses
       </button>
     </section>
+
+
+      <footer class="footer">
+        <div class="container">
+
+          <!-- Top Row: Services, About, Volare -->
+          <div class="footer-top">
+            <div class="item">
+              <h3>Our Services</h3>
+              <ul>
+                <li><a href="#">Airplane Tickets</a></li>
+                <li><a href="#">Bus Tickets</a></li>
+                <li><a href="#">Train Tickets</a></li>
+              </ul>
+            </div>
+
+            <div class="item">
+              <h3>About</h3>
+              <ul>
+                <li><a href="#">Our Company</a></li>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </div>
+
+            <div class="item text">
+              <h3>Volare</h3>
+              <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+                reliable.</p>
+            </div>
+          </div>
+
+          <!-- Middle Row: Social Icons -->
+          <div class="footer-middle">
+            <div class="item social">
+              <a href="#"><i class="icon ion-social-facebook"></i></a>
+              <a href="#"><i class="icon ion-social-twitter"></i></a>
+              <a href="#"><i class="icon ion-social-snapchat"></i></a>
+              <a href="#"><i class="icon ion-social-instagram"></i></a>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Copyright -->
+          <div class="footer-bottom">
+            <p class="copyright">Volare © 2025</p>
+          </div>
+
+        </div>
+      </footer>
+
   </main>
 </body>
 

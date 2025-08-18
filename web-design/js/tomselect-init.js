@@ -7,7 +7,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
       const data = await response.json();
 
-      // تبدیل به فرمت TomSelect
       return data.locations.map(loc => ({
         value: `${loc.city}, ${loc.country}`,
         text: `${loc.city}, ${loc.country}`
@@ -43,14 +42,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     return ts;
   }
 
-  // لود شهرها از سرور
   const CITY_OPTIONS = await loadCities();
 
-  // ایجاد TomSelect برای دو ورودی
   window.cityFromTS = initCityInput('#city-from', CITY_OPTIONS);
   window.cityToTS   = initCityInput('#city-to', CITY_OPTIONS);
 
-  // کلیک روی کل باکس فرم‌شهر => فوکِس روی input و باز شدن لیست
   document.querySelectorAll('.form-cities .form-city').forEach(box => {
     box.addEventListener('click', (e) => {
       const input = box.querySelector('.city-input');
@@ -59,6 +55,37 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (input.tomselect) {
         input.tomselect.open();
       }
+    });
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // init TomSelect on hidden <select>
+  const selects = {
+    trip: new TomSelect("#trip-type", { create: false, maxItems: 1 }),
+    private: new TomSelect("#private", { create: false, maxItems: 1 }),
+    car: new TomSelect("#car-transport", { create: false, maxItems: 1 }),
+  };
+
+  // bind clicks on buttons
+  document.querySelectorAll(".searchfilter").forEach(box => {
+    box.addEventListener("click", () => {
+      const select = box.querySelector("select");
+      if (!select || !select.tomselect) return;
+
+      // open TomSelect dropdown programmatically
+      select.tomselect.open();
+
+      // mark as active
+      document.querySelectorAll(".searchfilter").forEach(b => b.classList.remove("active"));
+      box.classList.add("active");
+
+      // when option selected, update label
+      select.tomselect.on("change", (val) => {
+        const label = box.querySelector(".searchfilter-label");
+        label.textContent = val ? select.tomselect.getItem(val).textContent : label.dataset.default;
+      });
     });
   });
 });
