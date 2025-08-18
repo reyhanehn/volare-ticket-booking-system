@@ -13,7 +13,7 @@ TICKET_MAPPING = {
             "section": {"type": "keyword"},
             "vehicle": {
                 "properties": {
-                    "type": {"type": "keyword"},
+                    "type": {"type": "keyword", "normalizer": "lowercase"},
                     "class_code": {"type": "keyword"},
                 }
             },
