@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logo/volare-logo-gold_transparent.png">
+
+  <!-- style libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+  <!-- script libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+    defer></script>
+
+  <!-- 1. Reset styles -->
+  <link rel="stylesheet" href="css/reset.css">
+  <!-- 2. Base styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <!-- 3. Layout -->
+  <link rel="stylesheet" href="css/layout.css">
+  <!-- 4. Components -->
+  <link rel="stylesheet" href="css/components.css">
+  <!-- 5. Responsive -->
+  <link rel="stylesheet" href="css/responsive.css">
+  <!-- 6. fonts -->
+  <link rel="stylesheet" href="css/fonts.css">
+  <!-- 7. footer -->
+  <link rel="stylesheet" href="css/footer.css">
+
+
+  <!-- scripts -->
+  <script src="js/BookingOptions.js" defer></script>
+  <script src="js/tomselect-init.js" defer></script>
+  <script src="js/flatpickr-init.js" defer></script>
+  <script src="js/swap.js" defer></script>
+  <script src="js/passengers.js" defer></script>
+  <script src="js/search.js" defer></script>
+
+  <title>Volare</title>
+
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <div class="brand">
+            <div class="brand-icon">
+              <img src="images/logo/volare-logo-gold_transparent.png" alt="volare icon">
+            </div>
+            <div class="brand-text">
+              VOLARE
+            </div>
+          </div>
+        </div>
+        <div class="nav-right">
+          <a href="#" class="nav-action">
+            <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="12" cy="16" r="1" fill="#1C274C" />
+              <path
+                d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Contact
+          </a>
+          <a href="#" class="nav-action">
+            <svg class="nav-action-icon" viewBox="0 0 460.054 460.054" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g>
+                <path class="dot dot1"
+                  d="M40.003,69.679C17.914,69.679,0,87.592,0,109.697c0,22.089,17.914,39.987,40.003,39.987c22.089,0,40.003-17.898,40.003-39.987C80.006,87.592,62.092,69.679,40.003,69.679z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="dot dot2"
+                  d="M40.003,190.032C17.914,190.032,0,207.93,0,230.035c0,22.089,17.914,40.002,40.003,40.002c22.089,0,40.003-17.913,40.003-40.002C80.006,207.93,62.092,190.032,40.003,190.032z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="dot dot3"
+                  d="M40.003,310.37C17.914,310.37,0,328.283,0,350.372c0,22.089,17.914,40.003,40.003,40.003c22.089,0,40.003-17.914,40.003-40.003C80.006,328.283,62.092,310.37,40.003,310.37z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="line line1"
+                  d="M429.973,79.601H145.419c-16.611,0-30.081,13.47-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554c16.61,0,30.081-13.469,30.081-30.081C460.054,93.071,446.583,79.601,429.973,79.601z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="line line2"
+                  d="M429.973,199.939H145.419c-16.611,0-30.081,13.469-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554c16.61,0,30.081-13.469,30.081-30.081C460.054,213.408,446.583,199.939,429.973,199.939z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="line line3"
+                  d="M429.973,320.291H145.419c-16.611,0-30.081,13.469-30.081,30.081c0,16.611,13.469,30.08,30.081,30.08h284.554c16.61,0,30.081-13.469,30.081-30.08C460.054,333.759,446.583,320.291,429.973,320.291z"
+                  stroke="currentColor" stroke-width="2" />
+              </g>
+            </svg>
+            My Bookings
+          </a>
+          <a href="#" class="nav-action">
+            <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="5" stroke="currentColor" stroke-width="2" />
+              <path d="M20 21C20 16.5817 16.4183 13 12 13C7.58172 13 4 16.5817 4 21" stroke="currentColor"
+                stroke-width="2" />
+            </svg>
+            Account
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-img">
+        <img src="images/home-bg.png" alt="hero image">
+      </div>
+      <div class="hero-text">
+        <h2>Let's fly way up to the clouds <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Away from the maddening crowds</h2>
+      </div>
+      <!-- <div class="hero-illustration">
+        <svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="40" width="120" height="60" rx="8" fill="#D84E55" />
+          <rect x="50" y="50" width="20" height="40" rx="4" fill="#FFFFFF" />
+          <rect x="80" y="50" width="20" height="40" rx="4" fill="#FFFFFF" />
+          <rect x="110" y="50" width="20" height="40" rx="4" fill="#FFFFFF" />
+          <rect x="140" y="50" width="20" height="40" rx="4" fill="#FFFFFF" />
+          <circle cx="60" cy="100" r="8" fill="#374151" />
+          <circle cx="140" cy="100" r="8" fill="#374151" />
+          <rect x="45" y="35" width="110" height="8" rx="4" fill="#9CA3AF" />
+        </svg>
+        <div class="road"></div>
+      </div> -->
+    </section>
+
+    <section class="search-card">
+
+      <form id="search-form">
+
+        <div class="booking-options">
+          <div class="option-group">
+            <button type="button" id="international-flight-option" class="booking-option">
+              <svg fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492.308 492.308" xml:space="preserve">
+                <g>
+                  <g>
+                    <path stroke="#000000" stroke-width="10"
+                      d="M411.149,179.692c-27.594,0.053-55.824,0.449-84.941,1.181L199.558,0h-87.322l85.736,186c-27.406,1.466-55.813,3.203-85.326,5.202L59.755,98.183H4.462l35.15,100.257c-16.6,6.889-28.621,25.557-28.621,47.695c0,22.186,12.072,40.877,28.626,47.714L4.462,394.125h55.293l52.917-93.064c29.541,2.007,57.941,3.749,85.308,5.222l-85.744,186.025h87.322l126.635-180.856c29.209,0.742,57.477,1.142,85.057,1.193c41.519-0.337,76.596-30.731,76.596-66.361v-0.149C487.846,210.385,452.76,179.957,411.149,179.692z M142.995,19.692h46.313l113.321,161.846c-26.933,0.835-54.677,1.953-83.475,3.375L142.995,19.692z M32.231,117.875h16.072l42.553,74.838c-10.386,0.736-20.897,1.499-31.575,2.3L32.231,117.875z M48.303,374.433H32.231l27.069-77.194c10.685,0.803,21.2,1.569,31.585,2.307L48.303,374.433z M189.308,472.615h-46.313l76.167-165.239c28.837,1.434,56.576,2.562,83.462,3.403L189.308,472.615z M468.154,246.284c0,24.611-26.668,46.418-56.966,46.668c-103.707-0.192-216.976-5.212-356.462-15.798l-1.293-0.029c-12.332,0-22.75-14.192-22.75-30.99c0-16.803,10.418-30.995,22.75-30.995l1.293-0.029c138.784-10.524,252.053-15.524,356.38-15.726c30.923,0.197,57.048,21.606,57.048,46.75V246.284z" />
+                  </g>
+                </g>
+              </svg>
+            </button>
+            <div class="option-name">International Flight</div>
+          </div>
+          <div class="option-group">
+            <button type="button" id="domestic-flight-option" class="booking-option">
+              <svg fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492.308 492.308" xml:space="preserve">
+                <g>
+                  <g>
+                    <path stroke="#000000" stroke-width="10"
+                      d="M411.149,179.692c-27.594,0.053-55.824,0.449-84.941,1.181L199.558,0h-87.322l85.736,186c-27.406,1.466-55.813,3.203-85.326,5.202L59.755,98.183H4.462l35.15,100.257c-16.6,6.889-28.621,25.557-28.621,47.695c0,22.186,12.072,40.877,28.626,47.714L4.462,394.125h55.293l52.917-93.064c29.541,2.007,57.941,3.749,85.308,5.222l-85.744,186.025h87.322l126.635-180.856c29.209,0.742,57.477,1.142,85.057,1.193c41.519-0.337,76.596-30.731,76.596-66.361v-0.149C487.846,210.385,452.76,179.957,411.149,179.692z M142.995,19.692h46.313l113.321,161.846c-26.933,0.835-54.677,1.953-83.475,3.375L142.995,19.692z M32.231,117.875h16.072l42.553,74.838c-10.386,0.736-20.897,1.499-31.575,2.3L32.231,117.875z M48.303,374.433H32.231l27.069-77.194c10.685,0.803,21.2,1.569,31.585,2.307L48.303,374.433z M189.308,472.615h-46.313l76.167-165.239c28.837,1.434,56.576,2.562,83.462,3.403L189.308,472.615z M468.154,246.284c0,24.611-26.668,46.418-56.966,46.668c-103.707-0.192-216.976-5.212-356.462-15.798l-1.293-0.029c-12.332,0-22.75-14.192-22.75-30.99c0-16.803,10.418-30.995,22.75-30.995l1.293-0.029c138.784-10.524,252.053-15.524,356.38-15.726c30.923,0.197,57.048,21.606,57.048,46.75V246.284z" />
+                  </g>
+                </g>
+              </svg>
+            </button>
+            <div class="option-name">Domestic Flight</div>
+          </div>
+          <div class="option-group">
+            <button type="button" id="bus-option" class="booking-option">
+              <svg fill="#000000" viewBox="0 -1.2 122.9 122.9" xmlns="http://www.w3.org/2000/svg"
+                style="enable-background:new 0 0 122.9 120.5">
+                <style type="text/css">
+                  .st0 {
+                    fill-rule: evenodd;
+                    clip-rule: evenodd;
+                  }
+                </style>
+                <g>
+                  <path class="st0"
+                    d="M110.8,103.6h-7.6V114c0,3.6-2.9,6.5-6.5,6.5h-9c-3.6,0-6.5-2.9-6.5-6.5v-10.3H41.5V114c0,3.6-2.9,6.5-6.5,6.5h-9c-3.6,0-6.5-2.9-6.5-6.5v-10.3H12v-82c0-7.6,4.4-13.1,13.3-16.5c17.6-6.9,54.6-6.9,72.3,0c8.9,3.4,13.3,8.9,13.3,16.5V103.6L110.8,103.6L110.8,103.6z M118.6,40.4h-3.8V62h3.8c2.4,0,4.3-1.9,4.3-4.3V44.7C122.9,42.3,121,40.4,118.6,40.4L118.6,40.4zM4.3,40.4h3.8V62H4.3C1.9,62,0,60.1,0,57.7V44.7C0,42.3,1.9,40.4,4.3,40.4L4.3,40.4z M46.4,8.6h30.1c0.9,0,1.6,0.7,1.6,1.6v5.2c0,0.9-0.7,1.6-1.6,1.6H46.4c-0.9,0-1.6-0.7-1.6-1.6v-5.2C44.8,9.3,45.5,8.6,46.4,8.6L46.4,8.6z M22.9,23.2h76.7c1,0,1.9,0.9,1.9,1.9v42.8c0,1-0.9,1.9-1.9,1.9H22.9c-1,0-1.9-0.9-1.9-1.9V25.1C21,24.1,21.8,23.2,22.9,23.2L22.9,23.2L22.9,23.2L22.9,23.2z M98.6,84.9c0-1.9-0.7-3.6-2-4.9c-1.3-1.3-3-2-4.9-2c-1.9,0-3.5,0.7-4.9,2c-1.4,1.3-2,3-2,4.9c0,1.9,0.7,3.5,2,4.8c1.4,1.3,3,2,4.9,2c1.9,0,3.6-0.7,4.9-2C98,88.4,98.6,86.8,98.6,84.9z M38.1,84.9c0-1.9-0.7-3.6-2-4.9c-1.3-1.3-3-2-4.9-2c-1.9,0-3.6,0.7-4.9,2c-1.3,1.3-2,3-2,4.9c0,1.9,0.6,3.5,2,4.8c1.3,1.3,3,2,4.9,2c2,0,3.6-0.7,4.9-2C37.4,88.4,38.1,86.8,38.1,84.9z" />
+                </g>
+              </svg>
+            </button>
+            <div class="option-name">Bus Ride</div>
+          </div>
+          <div class="option-group">
+            <button type="button" id="train-option" class="booking-option">
+              <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 512 512" xml:space="preserve">
+                <style type="text/css">
+                  .st0 {
+                    fill: #000000;
+                  }
+                </style>
+                <g>
+                  <path class="st0"
+                    d="M437.575,351.629V89.868C437.575,40.233,397.351,0,347.707,0H164.293c-49.625,0-89.868,40.233-89.868,89.868v261.761c0,37.628,27.383,68.98,63.269,75.221L81.334,512h50.11l23.132-34.961h202.867L380.574,512h50.101l-56.35-85.15C410.201,420.601,437.575,389.257,437.575,351.629z M178.182,40.348h155.636v25.94H178.182V40.348z M131.355,124.186c0-11.284,9.137-20.438,20.421-20.438h208.456c11.276,0,20.429,9.154,20.429,20.438v86.206c0,11.284-9.154,20.429-20.429,20.429H151.777c-11.284,0-20.421-9.145-20.421-20.429V124.186z M150.808,374.004c-13.158,0-23.826-10.668-23.826-23.818c0-13.167,10.668-23.836,23.826-23.836c13.159,0,23.827,10.668,23.827,23.836C174.635,363.336,163.967,374.004,150.808,374.004z M169.618,454.312l17.41-26.318h137.953l17.41,26.318H169.618z M361.201,374.004c-13.158,0-23.826-10.668-23.826-23.818c0-13.167,10.668-23.836,23.826-23.836c13.159,0,23.827,10.668,23.827,23.836C385.028,363.336,374.36,374.004,361.201,374.004z" />
+                </g>
+              </svg>
+            </button>
+            <div class="option-name">Train Ride</div>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="search-filters">
+          <div class="searchfilter">
+            <select id="trip-type" placeholder="Trip Type"></select>
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              viewBox="0 0 16 16">
+              <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="searchfilter">
+            <select id="charter" placeholder="Charter"></select>
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              viewBox="0 0 16 16">
+              <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="searchfilter">
+            <select class="filter-select" id="car-transport" placeholder="Car Transport"></select>
+            <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              viewBox="0 0 16 16">
+              <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="search-form">
+          <div class="form-cities">
+            <div class="form-item form-city">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M16.114-0.011c-6.559 0-12.114 5.587-12.114 12.204 0 6.93 6.439 14.017 10.77 18.998 0.017 0.020 0.717 0.797 1.579 0.797h0.076c0.863 0 1.558-0.777 1.575-0.797 4.064-4.672 10-12.377 10-18.998 0-6.618-4.333-12.204-11.886-12.204zM16.515 29.849c-0.035 0.035-0.086 0.074-0.131 0.107-0.046-0.032-0.096-0.072-0.133-0.107l-0.523-0.602c-4.106-4.71-9.729-11.161-9.729-17.055 0-5.532 4.632-10.205 10.114-10.205 6.829 0 9.886 5.125 9.886 10.205 0 4.474-3.192 10.416-9.485 17.657zM16.035 6.044c-3.313 0-6 2.686-6 6s2.687 6 6 6 6-2.687 6-6-2.686-6-6-6zM16.035 16.044c-2.206 0-4.046-1.838-4.046-4.044s1.794-4 4-4c2.207 0 4 1.794 4 4 0.001 2.206-1.747 4.044-3.954 4.044z">
+                </path>
+              </svg>
+              <input id="city-from" class="city-input" type="text" placeholder="From" autocomplete="off" />
+            </div>
+
+            <button class="form-item swap-cities" id="swapBtn" type="button" aria-label="swap">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="z8m1-icon" role="presentation">
+                <path
+                  d="M56.238 154.801c-25.271-30.326-30.335-33.201-25-39.603l25-30l11.523 9.603L53.013 112.5H120v15H53.013l14.749 17.699l-11.524 9.602zm86.524-40l-11.523-9.603L145.987 87.5H80v-15h65.987l-14.749-17.699l11.523-9.603l25 30c5.335 6.403.272 9.278-24.999 39.603z">
+                </path>
+              </svg>
+            </button>
+
+            <div class="form-item form-city">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M16.114-0.011c-6.559 0-12.114 5.587-12.114 12.204 0 6.93 6.439 14.017 10.77 18.998 0.017 0.020 0.717 0.797 1.579 0.797h0.076c0.863 0 1.558-0.777 1.575-0.797 4.064-4.672 10-12.377 10-18.998 0-6.618-4.333-12.204-11.886-12.204zM16.515 29.849c-0.035 0.035-0.086 0.074-0.131 0.107-0.046-0.032-0.096-0.072-0.133-0.107l-0.523-0.602c-4.106-4.71-9.729-11.161-9.729-17.055 0-5.532 4.632-10.205 10.114-10.205 6.829 0 9.886 5.125 9.886 10.205 0 4.474-3.192 10.416-9.485 17.657zM16.035 6.044c-3.313 0-6 2.686-6 6s2.687 6 6 6 6-2.687 6-6-2.686-6-6-6zM16.035 16.044c-2.206 0-4.046-1.838-4.046-4.044s1.794-4 4-4c2.207 0 4 1.794 4 4 0.001 2.206-1.747 4.044-3.954 4.044z">
+                </path>
+              </svg>
+              <input id="city-to" class="city-input" type="text" placeholder="To" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="line"></div>
+          <div class="form-times">
+            <div class="form-item form-time">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M28.6667 4H27.3333V1.33337H24.6667V4H7.33334V1.33337H4.66667V4H3.33334C1.86667 4 0.666672 5.20004 0.666672 6.66671V28C0.666672 29.4667 1.86667 30.6667 3.33334 30.6667H28.6667C30.1333 30.6667 31.3333 29.4667 31.3333 28V6.66671C31.3333 5.20004 30.1333 4 28.6667 4ZM28.6667 28H3.33334V12H28.6667V28ZM10 16.6667H15.3333V22H10V16.6667Z">
+                </path>
+              </svg>
+              <input id="date-depart" class="date-input" type="text" placeholder="Depart" readonly>
+            </div>
+
+            <div class="form-item form-time">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M28.6667 4H27.3333V1.33337H24.6667V4H7.33334V1.33337H4.66667V4H3.33334C1.86667 4 0.666672 5.20004 0.666672 6.66671V28C0.666672 29.4667 1.86667 30.6667 3.33334 30.6667H28.6667C30.1333 30.6667 31.3333 29.4667 31.3333 28V6.66671C31.3333 5.20004 30.1333 4 28.6667 4ZM28.6667 28H3.33334V12H28.6667V28ZM10 16.6667H15.3333V22H10V16.6667Z">
+                </path>
+              </svg>
+              <input id="date-return" class="date-input" type="text" placeholder="Return" readonly>
+            </div>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="form-item form-passengers">
+            <svg fill="#000000" viewBox="0 0 32 32" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <style>
+                  .cls-1 {
+                    fill: none;
+                  }
+                </style>
+              </defs>
+              <path
+                d="M10.5,9A3.5,3.5,0,1,1,14,5.5,3.5042,3.5042,0,0,1,10.5,9Zm0-5A1.5,1.5,0,1,0,12,5.5,1.5017,1.5017,0,0,0,10.5,4Z"
+                transform="translate(0 0)" />
+              <path
+                d="M22.4739,31.313,19.34,24H12.2385a4.0072,4.0072,0,0,1-3.8662-2.9707l-1.6338-6.126a3.8988,3.8988,0,0,1,7.5342-2.0092L15.1008,16H21v2H13.5637l-1.2226-4.5908a1.9,1.9,0,0,0-3.6709.979l1.6338,6.1255A2.0051,2.0051,0,0,0,12.2385,22h8.42l3.6543,8.5254Z"
+                transform="translate(0 0)" />
+              <polygon points="30 6 26 6 26 2 24 2 24 6 20 6 20 8 24 8 24 12 26 12 26 8 30 8 30 6" />
+              <path d="M18,28H7.7676A2.0025,2.0025,0,0,1,5.835,26.5151L2.033,12.2576l1.9326-.5152L7.7676,26H18Z"
+                transform="translate(0 0)" />
+              <rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32"
+                height="32" />
+            </svg>
+            <input id="passengers" type="number" min="1" max="10" value="1" class="passenger-input" />
+          </div>
+        </div>
+
+        <button type="submit" id="search-btn" class="search-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" />
+          </svg>
+          Search
+        </button>
+
+      </form>
+    </section>
+    </section>
+
+
+      <footer class="footer">
+        <div class="container">
+
+          <!-- Top Row: Services, About, Volare -->
+          <div class="footer-top">
+            <div class="item">
+              <h3>Our Services</h3>
+              <ul>
+                <li><a href="#">Airplane Tickets</a></li>
+                <li><a href="#">Bus Tickets</a></li>
+                <li><a href="#">Train Tickets</a></li>
+              </ul>
+            </div>
+
+            <div class="item">
+              <h3>About</h3>
+              <ul>
+                <li><a href="#">Our Company</a></li>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </div>
+
+            <div class="item text">
+              <h3>Volare</h3>
+              <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+                reliable.</p>
+            </div>
+          </div>
+
+          <!-- Middle Row: Social Icons -->
+          <div class="footer-middle">
+            <div class="item social">
+              <a href="#"><i class="icon ion-social-facebook"></i></a>
+              <a href="#"><i class="icon ion-social-twitter"></i></a>
+              <a href="#"><i class="icon ion-social-snapchat"></i></a>
+              <a href="#"><i class="icon ion-social-instagram"></i></a>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Copyright -->
+          <div class="footer-bottom">
+            <p class="copyright">Volare © 2025</p>
+          </div>
+
+        </div>
+      </footer>
+
+  </main>
+</body>
+
+</html>
