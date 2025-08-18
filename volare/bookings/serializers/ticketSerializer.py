@@ -95,6 +95,19 @@ from search.es_search import search_tickets_es
 # In serializers.py
 # ... (rest of the imports and functions)
 
+# In serializers.py
+from search.es_search import search_tickets_es
+
+# In serializers.py
+from search.es_search import search_tickets_es
+
+# In serializers.py
+from search.es_search import search_tickets_es
+
+
+# In serializers.py
+# ... (rest of the imports and functions)
+
 def search(filters):
     es_results = search_tickets_es(filters)
 
@@ -117,7 +130,6 @@ def search(filters):
         results.append(ticket_summary)
 
     return results
-
 class BaseTicketFilterSerializer(serializers.Serializer):
     origin_id = serializers.IntegerField(required=False)
     destination_id = serializers.IntegerField(required=False)
