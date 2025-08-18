@@ -29,5 +29,8 @@ class LocationListView(APIView):
         with connection.cursor() as cursor:
             cursor.execute("SELECT country, city FROM bookings_location ORDER BY country, city")
             rows = cursor.fetchall()
-        locations = [{'country': country, 'city': city} for country, city in rows]
+
+        # CORRECTED: Change the variable and dictionary key to match
+        locations = [{'id': location_id, 'country': country, 'city': city} for location_id, country, city in rows]
+
         return Response({'locations': locations}, status=status.HTTP_200_OK)
