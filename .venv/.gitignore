@@ -1,11 +1,2 @@
-# Ignore everything in the root directory
+# Created by venv; see https://docs.python.org/3/library/venv.html
 *
-
-# But NOT these (the ! means "don't ignore")
-!.gitignore
-!*.py
-!*.sql
-!manage.py
-!requirements.txt
-!.env
-!.venv/

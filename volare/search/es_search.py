@@ -3,6 +3,7 @@ from search.es_client import get_es
 es = get_es()
 INDEX = "tickets_index"
 
+
 def search_tickets_es(filters):
     query = {"bool": {"must": [], "filter": []}}
 
@@ -13,8 +14,14 @@ def search_tickets_es(filters):
         query["bool"]["filter"].append({"term": {"route.destination_id": filters["destination_id"]}})
     if "company_id" in filters:
         query["bool"]["filter"].append({"term": {"trip.company_id": filters["company_id"]}})
+
+    # --- CORRECTED CODE HERE ---
     if "transport_type" in filters:
-        query["bool"]["filter"].append({"term": {"vehicle.type": filters["transport_type"]}})
+        # Convert the value to lowercase to ensure it matches the Elasticsearch index
+        transport_type_for_es = filters["transport_type"].lower()
+        query["bool"]["filter"].append({"term": {"vehicle.type": transport_type_for_es}})
+    # --- END OF CORRECTION ---
+
     if "class_code" in filters:
         query["bool"]["filter"].append({"term": {"vehicle.class_code": filters["class_code"]}})
     if "min_price" in filters:
@@ -43,7 +50,7 @@ def search_tickets_es(filters):
     sort = [{"trip.departure_datetime": {"order": order.lower()}}]
 
     # Execute search
-    response = es.search(index=INDEX, query=query, sort=sort, size=1000)  # size=1000 can be adjusted
+    response = es.search(index=INDEX, query=query, sort=sort, size=1000)
 
     results = []
     for hit in response["hits"]["hits"]:
