@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from kombu import Queue
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -190,3 +191,13 @@ ELASTICSEARCH = {
 ES_INDEXES = {
     "ticket": "tickets_v1",
 }
+
+CELERY_TASK_QUEUES = (
+    Queue('default', routing_key='default'),
+    Queue('tickets', routing_key='tickets'),
+    Queue('reservations', routing_key='reservations'),
+)
+
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_EXCHANGE = 'default'
+CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'

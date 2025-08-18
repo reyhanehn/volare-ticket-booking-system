@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.utils.dateparse import parse_datetime
 from django.db import connection
 from datetime import datetime, timedelta
+from bookings.tasks import index_ticket_to_es
 
 
 class TripCreateSerializer(serializers.Serializer):
@@ -116,9 +117,12 @@ class TripCreateSerializer(serializers.Serializer):
                         trip_id, section_id, price,
                         remaining_seats, seat_start_number, seat_end_number
                     ) VALUES (%s, %s, %s, %s, %s, %s)
+                    RETURNING ticket_id
                 """, [
                     trip_id, section_id, price,
                     seats, 1, seats
                 ])
+                ticket_id = cursor.fetchone()[0]
+                index_ticket_to_es.delay(ticket_id)
 
         return {"trip_id": trip_id, "total_capacity": total_capacity}
