@@ -1,3 +1,5 @@
+
+
 from django.core.management.base import BaseCommand
 from bookings.models import Ticket
 from elasticsearch import Elasticsearch
@@ -132,3 +134,5 @@ class Command(BaseCommand):
             indexed_count += 1
 
         self.stdout.write(self.style.SUCCESS(f"Successfully indexed {indexed_count} tickets."))
+
+
