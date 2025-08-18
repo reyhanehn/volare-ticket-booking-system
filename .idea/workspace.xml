@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b1a9ce51-1b31-4424-9239-b85b70d15045" name="Changes" comment=" merging sql_serer again">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/volare/volare/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-design/js/tomselect-init.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/js/tomselect-init.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

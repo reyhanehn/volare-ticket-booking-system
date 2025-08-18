@@ -1,31 +1,42 @@
 // js/tomselect-init.js
 window.addEventListener('DOMContentLoaded', () => {
-  const CITY_OPTIONS = [
-    { value: 'Tehran',  text: 'Tehran'  },
-    { value: 'Mashhad', text: 'Mashhad' },
-    { value: 'Isfahan', text: 'Isfahan' },
-    { value: 'Shiraz',  text: 'Shiraz'  },
-    { value: 'Tabriz',  text: 'Tabriz'  },
-    // هر شهری خواستی اضافه کن یا بعداً از سرور لود کنیم
-  ];
+  async function fetchLocations() {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/bookings/locations/list/");
+      if (!response.ok) {
+        throw new Error(`Error fetching locations: ${response.status}`);
+      }
+      const data = await response.json();
 
-  function initCityInput(selector){
+      // adjust this depending on your API response shape
+      // e.g. [{id:1, city:"Tehran", country:"Iran"}, ...]
+      return data.locations.map(loc => ({
+        value: loc.city,             // what will be submitted
+        text: `${loc.city}, ${loc.country}` // what user sees
+      }));
+    } catch (err) {
+      console.error("❌ Failed to load locations:", err);
+      return [];
+    }
+  }
+
+  async function initCityInput(selector) {
     const el = document.querySelector(selector);
     if (!el) return null;
 
+    const options = await fetchLocations();
+
     const ts = new TomSelect(el, {
-      options: CITY_OPTIONS,
-      items: [],              // مقدار اولیه خالی
-      create: false,          // اجازه ایجاد گزینه‌ی جدید نده
+      options,
+      items: [],              // start empty
+      create: false,          // don’t allow custom values
       maxItems: 1,
       openOnFocus: true,
       searchField: ['text', 'value'],
       allowEmptyOption: true,
-      // کنترل استایل: با CSS بالا مرزها حذف شده‌اند
-      onInitialize(){
-        // ارتفاع کنترل را به والد sync کند (دلخواه)
-        const wrapper = this.wrapper; // .ts-control
-        if (wrapper){
+      onInitialize() {
+        const wrapper = this.wrapper;
+        if (wrapper) {
           wrapper.style.height = '100%';
           wrapper.style.alignItems = 'center';
         }
@@ -35,11 +46,16 @@ window.addEventListener('DOMContentLoaded', () => {
     return ts;
   }
 
-  // ایجاد TomSelect برای دو ورودی
-  window.cityFromTS = initCityInput('#city-from');
-  window.cityToTS   = initCityInput('#city-to');
+  // init TomSelect after fetching data
+  Promise.all([
+    initCityInput('#city-from'),
+    initCityInput('#city-to')
+  ]).then(([fromTS, toTS]) => {
+    window.cityFromTS = fromTS;
+    window.cityToTS = toTS;
+  });
 
-  // کلیک روی کل باکس فرم‌شهر => فوکِس روی input و باز شدن لیست
+  // Make the whole input box clickable
   document.querySelectorAll('.form-cities .form-city').forEach(box => {
     box.addEventListener('click', (e) => {
       const input = box.querySelector('.city-input');
