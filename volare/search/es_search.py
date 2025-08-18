@@ -14,14 +14,8 @@ def search_tickets_es(filters):
         query["bool"]["filter"].append({"term": {"route.destination_id": filters["destination_id"]}})
     if "company_id" in filters:
         query["bool"]["filter"].append({"term": {"trip.company_id": filters["company_id"]}})
-
-    # --- CORRECTED CODE HERE ---
     if "transport_type" in filters:
-        # Convert the value to lowercase to ensure it matches the Elasticsearch index
-        transport_type_for_es = filters["transport_type"].lower()
-        query["bool"]["filter"].append({"term": {"vehicle.type": transport_type_for_es}})
-    # --- END OF CORRECTION ---
-
+        query["bool"]["filter"].append({"term": {"vehicle.type": filters["transport_type"].lower()}})
     if "class_code" in filters:
         query["bool"]["filter"].append({"term": {"vehicle.class_code": filters["class_code"]}})
     if "min_price" in filters:
@@ -29,18 +23,16 @@ def search_tickets_es(filters):
     if "max_price" in filters:
         query["bool"]["filter"].append({"range": {"price": {"lte": filters["max_price"]}}})
     if "departure_date_exact" in filters:
-        query["bool"]["filter"].append({
-            "term": {"trip.departure_date": filters["departure_date_exact"]}
-        })
+        query["bool"]["filter"].append({"term": {"trip.departure_date": filters["departure_date_exact"]}})
     if "departure_date_start" in filters or "departure_date_end" in filters:
         range_query = {}
         if "departure_date_start" in filters:
             range_query["gte"] = filters["departure_date_start"]
         if "departure_date_end" in filters:
-            range_query["lt"] = filters["departure_date_end"]
+            range_query["lte"] = filters["departure_date_end"]
         query["bool"]["filter"].append({"range": {"trip.departure_date": range_query}})
 
-    # Text search (optional)
+    # Text search / other conditions
     if "search" in filters:
         query["bool"]["must"].append({"range": {"remaining_seats": {"gt": 0}}})
         query["bool"]["must"].append({"range": {"trip.departure_datetime": {"gt": "now"}}})
@@ -48,6 +40,8 @@ def search_tickets_es(filters):
     # Sorting
     order = filters.get("order", "DESC")
     sort = [{"trip.departure_datetime": {"order": order.lower()}}]
+    print("FILTERS:", filters)
+    print("QUERY:", query)
 
     # Execute search
     response = es.search(index=INDEX, query=query, sort=sort, size=1000)
@@ -55,6 +49,8 @@ def search_tickets_es(filters):
     results = []
     for hit in response["hits"]["hits"]:
         source = hit["_source"]
+        vehicle = source.get("vehicle", {})
+        trip = source.get("trip", {})
         results.append({
             "ticket_id": source["ticket_id"],
             "price": source["price"],
@@ -63,7 +59,8 @@ def search_tickets_es(filters):
             "section": source["section"],
             "origin": source["route"]["origin"],
             "destination": source["route"]["destination"],
-            "departure_datetime": source["trip"]["departure_datetime"],
-            "company": source["trip"]["company_name"],
+            "departure_datetime": trip.get("departure_datetime"),
+            "company": trip.get("company_name"),
         })
+
     return results

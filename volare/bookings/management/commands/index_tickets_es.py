@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from bookings.models import Ticket
 from elasticsearch import Elasticsearch
+from search.es_client import get_es
 
 # Name of your Elasticsearch index
 TICKET_INDEX = "tickets_index"
@@ -9,7 +10,8 @@ class Command(BaseCommand):
     help = "Index all tickets in Elasticsearch"
 
     def handle(self, *args, **kwargs):
-        es = Elasticsearch(hosts=["http://localhost:9200"])
+        # Connect to Elasticsearch
+        es = get_es()
 
         # Delete index if it exists
         if es.indices.exists(index=TICKET_INDEX):

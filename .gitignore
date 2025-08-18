@@ -8,7 +8,7 @@
 # PyCharm project files
 .idea/
 shelf/
-workspace.xml
+.idea/workspace.xml
 
 # Ignore all migrations except __init__.py
 volare/accounts/migrations/*

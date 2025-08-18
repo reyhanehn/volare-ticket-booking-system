@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch
-from search.es_client import get_es  # Use your Django settings
+from search.es_client import get_es
 
 es: Elasticsearch = get_es()
 TICKET_INDEX = "tickets_index"
@@ -13,7 +13,7 @@ TICKET_MAPPING = {
             "section": {"type": "keyword"},
             "vehicle": {
                 "properties": {
-                    "type": {"type": "keyword"},
+                    "type": {"type": "keyword", "normalizer": "lowercase"},
                     "class_code": {"type": "keyword"},
                 }
             },
@@ -30,7 +30,7 @@ TICKET_MAPPING = {
                     "trip_id": {"type": "keyword"},
                     "departure_datetime": {"type": "date"},
                     "company_id": {"type": "keyword"},
-                    "company_name": {"type": "keyword"},  # Added
+                    "company_name": {"type": "keyword"},
                 }
             },
         }
