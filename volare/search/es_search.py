@@ -1,21 +1,31 @@
 from search.es_client import get_es
+from elasticsearch import Elasticsearch
 
-es = get_es()
+es: Elasticsearch = get_es()
 INDEX = "tickets_index"
 
 
 def search_tickets_es(filters):
     query = {"bool": {"must": [], "filter": []}}
 
-    # Exact match filters
+    # Exact match filters, using terms for robust matching
     if "origin_id" in filters:
-        query["bool"]["filter"].append({"term": {"route.origin_id": filters["origin_id"]}})
+        # Querying the string ID field directly from the index
+        query["bool"]["filter"].append({"term": {"route.origin_id": str(filters["origin_id"])}})
+
     if "destination_id" in filters:
-        query["bool"]["filter"].append({"term": {"route.destination_id": filters["destination_id"]}})
+        # Querying the string ID field directly from the index
+        query["bool"]["filter"].append({"term": {"route.destination_id": str(filters["destination_id"])}})
+
     if "company_id" in filters:
         query["bool"]["filter"].append({"term": {"trip.company_id": filters["company_id"]}})
     if "transport_type" in filters:
-        query["bool"]["filter"].append({"term": {"vehicle.type": filters["transport_type"].lower()}})
+        transport_type_lower = filters["transport_type"].lower()
+        query["bool"]["filter"].append({
+            "terms": {
+                "vehicle.type": [transport_type_lower, filters["transport_type"]]
+            }
+        })
     if "class_code" in filters:
         query["bool"]["filter"].append({"term": {"vehicle.class_code": filters["class_code"]}})
     if "min_price" in filters:
@@ -23,14 +33,14 @@ def search_tickets_es(filters):
     if "max_price" in filters:
         query["bool"]["filter"].append({"range": {"price": {"lte": filters["max_price"]}}})
     if "departure_date_exact" in filters:
-        query["bool"]["filter"].append({"term": {"trip.departure_date": filters["departure_date_exact"]}})
+        query["bool"]["filter"].append({"term": {"trip.departure_datetime": filters["departure_date_exact"]}})
     if "departure_date_start" in filters or "departure_date_end" in filters:
         range_query = {}
         if "departure_date_start" in filters:
             range_query["gte"] = filters["departure_date_start"]
         if "departure_date_end" in filters:
             range_query["lte"] = filters["departure_date_end"]
-        query["bool"]["filter"].append({"range": {"trip.departure_date": range_query}})
+        query["bool"]["filter"].append({"range": {"trip.departure_datetime": range_query}})
 
     # Text search / other conditions
     if "search" in filters:

@@ -5,6 +5,17 @@ es: Elasticsearch = get_es()
 TICKET_INDEX = "tickets_index"
 
 TICKET_MAPPING = {
+    "settings": {
+        "analysis": {
+            "normalizer": {
+                "lowercase": {
+                    "type": "custom",
+                    "char_filter": [],
+                    "filter": ["lowercase"]
+                }
+            }
+        }
+    },
     "mappings": {
         "properties": {
             "ticket_id": {"type": "keyword"},
