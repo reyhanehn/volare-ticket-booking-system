@@ -2,15 +2,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   async function loadCities() {
     try {
+      // Your URL to the locations list endpoint
       const response = await fetch("http://127.0.0.1:8000/bookings/locations/list/");
       if (!response.ok) throw new Error("Failed to fetch locations");
 
       const data = await response.json();
 
-      // تبدیل به فرمت TomSelect
+      // **FIXED CODE HERE**
+      // Use the unique 'id' as the value and the city/country as the text
       return data.locations.map(loc => ({
-        value: `${loc.city}, ${loc.country}`,
-        text: `${loc.city}, ${loc.country}`
+        id: loc.id, // This is the ID that will be passed to your Django API
+        name: `${loc.city}, ${loc.country}` // This is what the user sees
       }));
 
     } catch (err) {
@@ -19,7 +21,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  function initCityInput(selector, options){
+  function initCityInput(selector, options) {
     const el = document.querySelector(selector);
     if (!el) return null;
 
@@ -29,11 +31,17 @@ window.addEventListener('DOMContentLoaded', async () => {
       create: false,
       maxItems: 1,
       openOnFocus: true,
-      searchField: ['text', 'value'],
+
+      // **FIXED CODE HERE**
+      // Explicitly tell TomSelect to use 'id' for the value and 'name' for the text
+      valueField: 'id',
+      labelField: 'name',
+      searchField: ['name'], // Only search on the visible text
+
       allowEmptyOption: true,
-      onInitialize(){
+      onInitialize() {
         const wrapper = this.wrapper;
-        if (wrapper){
+        if (wrapper) {
           wrapper.style.height = '100%';
           wrapper.style.alignItems = 'center';
         }
@@ -43,14 +51,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     return ts;
   }
 
-  // لود شهرها از سرور
+  // Load cities from the server
   const CITY_OPTIONS = await loadCities();
 
-  // ایجاد TomSelect برای دو ورودی
+  // Initialize TomSelect for the two inputs
   window.cityFromTS = initCityInput('#city-from', CITY_OPTIONS);
-  window.cityToTS   = initCityInput('#city-to', CITY_OPTIONS);
+  window.cityToTS = initCityInput('#city-to', CITY_OPTIONS);
 
-  // کلیک روی کل باکس فرم‌شهر => فوکِس روی input و باز شدن لیست
+  // Click handler for the whole city box
   document.querySelectorAll('.form-cities .form-city').forEach(box => {
     box.addEventListener('click', (e) => {
       const input = box.querySelector('.city-input');

@@ -88,9 +88,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'volare',
+        'NAME': 'Volare',
         'USER': 'postgres',
-        'PASSWORD': 'HaHa1312!',
+        'PASSWORD': 'reyh00n83',
         'HOST': 'localhost',
         'PORT': '5432',
     }

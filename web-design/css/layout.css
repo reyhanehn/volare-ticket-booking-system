@@ -439,3 +439,94 @@ header {
 }
 
 /* ========== footer ========== */
+
+.results-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.results-container h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+#ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loading-message {
+    color: #888;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 50px;
+}
+
+/* Individual Ticket Styling */
+.ticket-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.ticket-item:hover {
+    box-shadow: 0 6px retailers.12px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.ticket-airline img {
+    width: 40px;
+    height: 40px;
+}
+
+.ticket-time {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.ticket-duration {
+    color: #777;
+    text-align: center;
+}
+
+.ticket-price-section {
+    text-align: right;
+}
+
+.ticket-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #D84E55; /* A color from your design */
+}
+
+.select-button {
+    margin-top: 8px;
+    padding: 10px 20px;
+    background-color: #1a73e8; /* A nice blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.select-button:hover {
+    background-color: #155ab6;
+}
