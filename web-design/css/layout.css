@@ -233,6 +233,44 @@ header {
 }
 
 
+/*============ search filtirs ===========*/
+
+.search-filters {
+  display: flex;
+  gap: 1rem; 
+  align-items: center;
+  justify-content: left;
+}
+
+.searchfilter {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 2rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchfilter:hover {
+  border-color: #888;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-select {
+  font-size: var(--font-size-base);
+  color: #333;
+}
+
+.filter-icon {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  color: #666;
+}
+
+
 /*============ search form ===========*/
 .search-form {
     height: 4rem;
@@ -255,6 +293,11 @@ header {
     background-color: var(--color-light-blue);
 }
 
+.form-item:active {
+    background-color: var(--color-light-blue);
+    border: 0.1rem solid black;
+}
+
 .form-item {
     background-color: white;
     cursor: pointer;
@@ -262,7 +305,7 @@ header {
 
 .form-cities {
     position: relative;
-    width: 50%;
+    width: 48%;
     height: 100%;
     display: flex;
     gap: 0.6rem;
@@ -300,7 +343,6 @@ header {
     background-color: var(--color-light-blue);
 }
 
-/* فقط برای ورودی شهرها */
 .city-input{
   width: 100%;
   height: 100%;
@@ -308,12 +350,11 @@ header {
   outline: none;
   background: transparent;
   font: inherit;
-  padding: 0 .5rem 0 .25rem; /* با SVG فاصله داشته باشه */
+  padding: 0 .5rem 0 .25rem; 
   display: grid;
   align-items: center;
 }
 
-/* حذف حاشیه‌های پیشفرض TomSelect روی input-های معمولی */
 .ts-control{
   border: none !important;
   background: transparent !important;
@@ -321,8 +362,9 @@ header {
 }
 
 .city-input,
-.ts-control {
-  font-size: 1.25rem; /* هر سایزی خواستی */
+.ts-control, 
+.ts-control input {
+  font-size: 1rem; 
 }
 
 .ts-dropdown{
@@ -340,6 +382,7 @@ header {
 }
 
 .form-time {
+    display: flex;
     width: calc(50% - 0.15rem);
     height: 100%;
     border-radius: 0.5rem;
@@ -347,12 +390,52 @@ header {
     justify-content: start;
 }
 
-.passengers-number {
+.form-time svg {
+    margin-left: 0.7rem;
+    width: 1rem;
+    height: 1rem;
+}
+
+.date-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  padding: 0 0 0 1rem;
+}
+
+.flatpickr-calendar {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+  border-radius: 8px;
+}
+
+.form-passengers {
     width: 15%;
     height: 100%;
     border-radius: 0.5rem;
+    display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 0 0.5rem;
+}
+
+.passenger-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem; 
+    text-align: center;
+}
+
+.form-passengers svg {
+    margin-left: 0.7rem;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 /* ========== footer ========== */

@@ -1,27 +1,19 @@
-// flatpickr-init.js
-// مقداردهی flatpickr و قرار دادن instances در window برای کنترل متقابل
+window.addEventListener('DOMContentLoaded', () => {
+  function initDatePicker(selector){
+    const el = document.querySelector(selector);
+    if (!el) return;
 
-(function(){
-  const departInput = document.getElementById('date-depart');
-  const returnInput = document.getElementById('date-return');
-
-  window.departPicker = flatpickr(departInput, {
-    altInput: true,
-    altFormat: "F j, Y",
-    dateFormat: "Y-m-d",
-    minDate: "today",
-    onChange: function(selectedDates, dateStr) {
-      // اگر تاریخ برگشت تنظیم شده باشد حداقلش را برابر تاریخ رفت بگذار
-      if (window.returnPicker) {
-        window.returnPicker.set('minDate', dateStr || "today");
+    flatpickr(el, {
+      dateFormat: "Y-m-d",   
+      minDate: "today",      
+      allowInput: false,     
+      onOpen: (selectedDates, dateStr, instance) => {
+      },
+      onClose: (selectedDates, dateStr, instance) => {
       }
-    }
-  });
+    });
+  }
 
-  window.returnPicker = flatpickr(returnInput, {
-    altInput: true,
-    altFormat: "F j, Y",
-    dateFormat: "Y-m-d",
-    minDate: "today"
-  });
-})();
+  initDatePicker('#date-depart');
+  initDatePicker('#date-return');
+});
