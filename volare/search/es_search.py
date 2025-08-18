@@ -1,11 +1,10 @@
 from search.es_client import get_es
 from elasticsearch import Elasticsearch
 
-es: Elasticsearch = get_es()
-INDEX = "tickets_index"
-
-
+# The 'es' variable is now defined inside the function
 def search_tickets_es(filters):
+    es: Elasticsearch = get_es()
+    INDEX = "tickets_index"
     query = {"bool": {"must": [], "filter": []}}
 
     # Exact match filters, using terms for robust matching
@@ -62,15 +61,18 @@ def search_tickets_es(filters):
         vehicle = source.get("vehicle", {})
         trip = source.get("trip", {})
         results.append({
-            "ticket_id": source["ticket_id"],
-            "price": source["price"],
-            "remaining_seats": source["remaining_seats"],
-            "transport_type": source["vehicle"]["type"],
-            "section": source["section"],
-            "origin": source["route"]["origin"],
-            "destination": source["route"]["destination"],
+            "ticket_id": source.get("ticket_id"),
+            "price": source.get("price"),
+            "remaining_seats": source.get("remaining_seats"),
+            "transport_type": vehicle.get("name"),
+            "class_code": vehicle.get("class_code"),
+            "section": source.get("section"),
+            "origin": source.get("route", {}).get("origin"),
+            "destination": source.get("route", {}).get("destination"),
+            "origin_station": source.get("route", {}).get("origin_station"),
             "departure_datetime": trip.get("departure_datetime"),
-            "company": trip.get("company_name"),
+            "company_name": trip.get("company_name"),
+            "duration": trip.get("duration"),
         })
 
     return results
