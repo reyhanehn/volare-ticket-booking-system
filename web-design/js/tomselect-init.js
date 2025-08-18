@@ -70,3 +70,34 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   });
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // init TomSelect on hidden <select>
+  const selects = {
+    trip: new TomSelect("#trip-type", { create: false, maxItems: 1 }),
+    private: new TomSelect("#private", { create: false, maxItems: 1 }),
+    car: new TomSelect("#car-transport", { create: false, maxItems: 1 }),
+  };
+
+  // bind clicks on buttons
+  document.querySelectorAll(".searchfilter").forEach(box => {
+    box.addEventListener("click", () => {
+      const select = box.querySelector("select");
+      if (!select || !select.tomselect) return;
+
+      // open TomSelect dropdown programmatically
+      select.tomselect.open();
+
+      // mark as active
+      document.querySelectorAll(".searchfilter").forEach(b => b.classList.remove("active"));
+      box.classList.add("active");
+
+      // when option selected, update label
+      select.tomselect.on("change", (val) => {
+        const label = box.querySelector(".searchfilter-label");
+        label.textContent = val ? select.tomselect.getItem(val).textContent : label.dataset.default;
+      });
+    });
+  });
+});
