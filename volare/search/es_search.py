@@ -1,3 +1,5 @@
+# In search/es_search.py
+
 from search.es_client import get_es
 from elasticsearch import Elasticsearch
 
@@ -9,22 +11,41 @@ def search_tickets_es(filters):
 
     # Exact match filters, using terms for robust matching
     if "origin_id" in filters:
-        # Querying the string ID field directly from the index
         query["bool"]["filter"].append({"term": {"route.origin_id": str(filters["origin_id"])}})
 
     if "destination_id" in filters:
-        # Querying the string ID field directly from the index
         query["bool"]["filter"].append({"term": {"route.destination_id": str(filters["destination_id"])}})
 
     if "company_id" in filters:
         query["bool"]["filter"].append({"term": {"trip.company_id": filters["company_id"]}})
+
+    # <-- ADDED: Filter based on flight type (Domestic/International)
     if "transport_type" in filters:
-        transport_type_lower = filters["transport_type"].lower()
-        query["bool"]["filter"].append({
-            "terms": {
-                "vehicle.type": [transport_type_lower, filters["transport_type"]]
-            }
-        })
+        transport_type = filters["transport_type"]
+        if "flight_type" in filters and transport_type.lower() == 'airplane':
+            flight_type = filters["flight_type"]
+            if flight_type.lower() == 'domestic':
+                query["bool"]["filter"].append({"term": {"route.origin_country": "Iran"}})
+                query["bool"]["filter"].append({"term": {"route.destination_country": "Iran"}})
+            elif flight_type.lower() == 'international':
+                query["bool"]["filter"].append({
+                    "bool": {
+                        "must_not": [
+                            {"term": {"route.origin_country": "Iran"}},
+                            {"term": {"route.destination_country": "Iran"}}
+                        ]
+                    }
+                })
+        else: # Regular transport_type filter for Bus/Train
+            transport_type_lower = transport_type.lower()
+            query["bool"]["filter"].append({
+                "terms": {
+                    "vehicle.type": [transport_type_lower, transport_type]
+                }
+            })
+
+    # ... rest of your code remains the same ...
+
     if "class_code" in filters:
         query["bool"]["filter"].append({"term": {"vehicle.class_code": filters["class_code"]}})
     if "min_price" in filters:

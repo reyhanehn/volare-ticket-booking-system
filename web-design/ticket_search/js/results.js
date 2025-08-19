@@ -1,9 +1,12 @@
+// In ticket_search/results.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const originId = params.get('origin_id');
     const destinationId = params.get('destination_id');
     const departDate = params.get('departure_date_exact');
     const transportType = params.get('transport_type');
+    const flightType = params.get('flight_type'); // <-- ADDED
 
     if (!originId || !destinationId || !departDate || !transportType) {
         window.location.href = "../home_page/index.html";

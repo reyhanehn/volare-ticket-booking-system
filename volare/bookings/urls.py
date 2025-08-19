@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views.adminReservationCancellation import AdminCancelReservationView
-from .views.locationView import CreateLocationView, LocationListView
+from .views.locationView import CreateLocationView, LocationListView, LocationID
 from .views.passengerView import CreatePassengerView, PassengerListView
 from .views.reservationCancellationView import ReservationCancelInfoView, ReservationCancelConfirmView
 from .views.reservationView import CreateReservationView, ReservationListView, AdminReservationFilterView, CustomerReservationView, AdminReservationView
@@ -22,6 +22,7 @@ urlpatterns = [
     #   "country": "France",
     #   "city": "Paris"
     # }
+    path('locations/id/', LocationID.as_view(), name='get_location_id'),
     path('locations/list/', LocationListView.as_view(), name='location-list'),
     #this is a get request to see all the locations and customers can use this as well as the admins and company admins
     path('admin/stations/create/', CreateStationView.as_view(), name='create-station'),

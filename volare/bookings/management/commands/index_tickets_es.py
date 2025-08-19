@@ -1,4 +1,4 @@
-
+# In bookings/management/commands/index_tickets_es.py
 
 from django.core.management.base import BaseCommand
 from bookings.models import Ticket
@@ -41,6 +41,8 @@ TICKET_MAPPING = {
                     "destination": {"type": "keyword"},
                     "origin_station": {"type": "keyword"},
                     "destination_station": {"type": "keyword"},
+                    "origin_country": {"type": "keyword"},  # <-- ADDED
+                    "destination_country": {"type": "keyword"},  # <-- ADDED
                 }
             },
             "trip": {
@@ -78,11 +80,11 @@ class Command(BaseCommand):
             "trip",
             "section",
             "trip__vehicle",
-            "trip__vehicle__company",  # <-- Added to fetch company info
+            "trip__vehicle__company",
             "trip__route",
             "trip__route__origin",
             "trip__route__destination",
-            "trip__route__origin_station",  # <-- Added to fetch origin station info
+            "trip__route__origin_station",
             "trip__route__destination_station",
         ).all()
 
@@ -117,6 +119,10 @@ class Command(BaseCommand):
                     "origin_station": getattr(origin_station, "name", "") if origin_station else "",
                     "destination_station": getattr(route.destination_station, "name",
                                                    "") if route and route.destination_station else "",
+                    "origin_country": getattr(route.origin, "country", "") if route and route.origin else "",
+                    # <-- ADDED
+                    "destination_country": getattr(route.destination, "country",
+                                                   "") if route and route.destination else "",  # <-- ADDED
                 },
                 "trip": {
                     "trip_id": str(getattr(trip, "trip_id", "")) if trip else "",
@@ -134,5 +140,3 @@ class Command(BaseCommand):
             indexed_count += 1
 
         self.stdout.write(self.style.SUCCESS(f"Successfully indexed {indexed_count} tickets."))
-
-
