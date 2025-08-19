@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import connection
+from django.http import JsonResponse, Http404
+from bookings.models import Location
 
 from ..serializers.locationSerializer import LocationSerializer
 from accounts.permissions import IsAdmin
@@ -35,3 +37,6 @@ class LocationListView(APIView):
         locations = [{'id': location_id, 'country': country, 'city': city} for location_id, country, city in rows]
 
         return Response({'locations': locations}, status=status.HTTP_200_OK)
+
+  # Make sure this import is correct
+

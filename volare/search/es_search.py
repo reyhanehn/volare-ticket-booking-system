@@ -1,31 +1,51 @@
+# In search/es_search.py
+
 from search.es_client import get_es
 from elasticsearch import Elasticsearch
 
-es: Elasticsearch = get_es()
-INDEX = "tickets_index"
-
-
+# The 'es' variable is now defined inside the function
 def search_tickets_es(filters):
+    es: Elasticsearch = get_es()
+    INDEX = "tickets_index"
     query = {"bool": {"must": [], "filter": []}}
 
     # Exact match filters, using terms for robust matching
     if "origin_id" in filters:
-        # Querying the string ID field directly from the index
         query["bool"]["filter"].append({"term": {"route.origin_id": str(filters["origin_id"])}})
 
     if "destination_id" in filters:
-        # Querying the string ID field directly from the index
         query["bool"]["filter"].append({"term": {"route.destination_id": str(filters["destination_id"])}})
 
     if "company_id" in filters:
         query["bool"]["filter"].append({"term": {"trip.company_id": filters["company_id"]}})
+
+    # <-- ADDED: Filter based on flight type (Domestic/International)
     if "transport_type" in filters:
-        transport_type_lower = filters["transport_type"].lower()
-        query["bool"]["filter"].append({
-            "terms": {
-                "vehicle.type": [transport_type_lower, filters["transport_type"]]
-            }
-        })
+        transport_type = filters["transport_type"]
+        if "flight_type" in filters and transport_type.lower() == 'airplane':
+            flight_type = filters["flight_type"]
+            if flight_type.lower() == 'domestic':
+                query["bool"]["filter"].append({"term": {"route.origin_country": "Iran"}})
+                query["bool"]["filter"].append({"term": {"route.destination_country": "Iran"}})
+            elif flight_type.lower() == 'international':
+                query["bool"]["filter"].append({
+                    "bool": {
+                        "must_not": [
+                            {"term": {"route.origin_country": "Iran"}},
+                            {"term": {"route.destination_country": "Iran"}}
+                        ]
+                    }
+                })
+        else: # Regular transport_type filter for Bus/Train
+            transport_type_lower = transport_type.lower()
+            query["bool"]["filter"].append({
+                "terms": {
+                    "vehicle.type": [transport_type_lower, transport_type]
+                }
+            })
+
+    # ... rest of your code remains the same ...
+
     if "class_code" in filters:
         query["bool"]["filter"].append({"term": {"vehicle.class_code": filters["class_code"]}})
     if "min_price" in filters:
@@ -62,15 +82,18 @@ def search_tickets_es(filters):
         vehicle = source.get("vehicle", {})
         trip = source.get("trip", {})
         results.append({
-            "ticket_id": source["ticket_id"],
-            "price": source["price"],
-            "remaining_seats": source["remaining_seats"],
-            "transport_type": source["vehicle"]["type"],
-            "section": source["section"],
-            "origin": source["route"]["origin"],
-            "destination": source["route"]["destination"],
+            "ticket_id": source.get("ticket_id"),
+            "price": source.get("price"),
+            "remaining_seats": source.get("remaining_seats"),
+            "transport_type": vehicle.get("name"),
+            "class_code": vehicle.get("class_code"),
+            "section": source.get("section"),
+            "origin": source.get("route", {}).get("origin"),
+            "destination": source.get("route", {}).get("destination"),
+            "origin_station": source.get("route", {}).get("origin_station"),
             "departure_datetime": trip.get("departure_datetime"),
-            "company": trip.get("company_name"),
+            "company_name": trip.get("company_name"),
+            "duration": trip.get("duration"),
         })
 
     return results

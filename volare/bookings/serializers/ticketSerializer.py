@@ -85,33 +85,51 @@ def build_ticket_detail(cursor, ticket_id):
     }
 
 
+# In serializers.py
+from search.es_search import search_tickets_es
+
+# In serializers.py
+from search.es_search import search_tickets_es
+
+
+# In serializers.py
+# ... (rest of the imports and functions)
+
+# In serializers.py
+from search.es_search import search_tickets_es
+
+# In serializers.py
+from search.es_search import search_tickets_es
+
+# In serializers.py
+from search.es_search import search_tickets_es
+
+
+# In serializers.py
+# ... (rest of the imports and functions)
+
 def search(filters):
-    # Run ES search
     es_results = search_tickets_es(filters)
 
     results = []
     for ticket in es_results:
-        ticket_id = ticket.get("ticket_id")
         ticket_summary = {
-            "ticket_id": ticket_id,
+            "ticket_id": ticket.get("ticket_id"),
             "price": ticket.get("price"),
             "remaining_seats": ticket.get("remaining_seats"),
-            "transport_type": ticket.get("transport_type"),
             "section": ticket.get("section"),
-            "origin": ticket.get("origin"),
-            "destination": ticket.get("destination"),
-            "departure_datetime": ticket.get("departure_datetime"),
-            "company": ticket.get("company"),
+            "origin": ticket.get('origin'),
+            "destination": ticket.get('destination'),
+            "departure_datetime": ticket.get('departure_datetime'),
+            "company_name": ticket.get('company_name'),
+            "transport_type": ticket.get('transport_type'),  # This is the vehicle name
+            "class_code": ticket.get('class_code'),
+            "origin_station": ticket.get('origin_station'),
+            "duration": ticket.get('duration'),
         }
         results.append(ticket_summary)
 
-        # Cache detailed info if not cached
-        if not get_ticket_cache(ticket_id):
-            detail = build_ticket_detail(connection.cursor(), ticket_id)
-            set_ticket_cache(ticket_id, detail)
-
     return results
-
 class BaseTicketFilterSerializer(serializers.Serializer):
     origin_id = serializers.IntegerField(required=False)
     destination_id = serializers.IntegerField(required=False)
