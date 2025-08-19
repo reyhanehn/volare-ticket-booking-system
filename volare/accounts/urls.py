@@ -11,8 +11,11 @@ from .views.logoutView import LogoutView
 from .views.forgotPasswordView import RequestForgotPasswordView
 from .views.forgotPasswordView import VerifyForgotPasswordView
 from .views.wallet_transactionsView import WalletChargeView, WalletTransactionListView
+from rest_framework_simplejwt.views import TokenVerifyView
+
 
 urlpatterns = [
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('signup/', SignupView.as_view(), name='signup'),
     path('loginOTP/', RequestOTPView.as_view(), name='loginOTP'),
     path('verifyOTP/', VerifyOTPView.as_view(), name='verifyOTP'),

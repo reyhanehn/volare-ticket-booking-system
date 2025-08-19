@@ -15,15 +15,19 @@ class RequestOTPSerializer(serializers.Serializer):
             """, [value, value])
             row = cursor.fetchone()
 
-        if not row:
-            raise serializers.ValidationError("User not found.")
+            if not row:
+                raise serializers.ValidationError("User not found.")
 
-        columns = [col[0] for col in cursor.description]
-        user_data = dict(zip(columns, row))
-        user = Account(**user_data)
-        user._state.adding = False
+            # Safe use of cursor.description
+            if cursor.description is None:
+                raise serializers.ValidationError("Database error: no column info available.")
 
-        self.context['user'] = user
+            columns = [col[0] for col in cursor.description]
+            user_data = dict(zip(columns, row))
+            user = Account(**user_data)
+            user._state.adding = False
+
+            self.context['user'] = user
         return value
 
 
@@ -46,13 +50,16 @@ class VerifyOTPSerializer(serializers.Serializer):
             """, [identifier, identifier])
             row = cursor.fetchone()
 
-        if not row:
-            raise serializers.ValidationError("No account found with that identifier.")
+            if not row:
+                raise serializers.ValidationError("No account found with that identifier.")
 
-        columns = [col[0] for col in cursor.description]
-        user_data = dict(zip(columns, row))
-        user = Account(**user_data)
-        user._state.adding = False
+            if cursor.description is None:
+                raise serializers.ValidationError("Database error: no column info available.")
 
-        data['user'] = user
+            columns = [col[0] for col in cursor.description]
+            user_data = dict(zip(columns, row))
+            user = Account(**user_data)
+            user._state.adding = False
+
+            data['user'] = user
         return data

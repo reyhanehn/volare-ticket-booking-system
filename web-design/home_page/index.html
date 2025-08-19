@@ -31,7 +31,9 @@
   <script src="js/flatpickr-init.js" defer></script>
   <script src="js/swap.js" defer></script>
   <script src="js/passengers.js" defer></script>
-  <!-- <script src="js/search.js" defer></script> -->
+  <script src="js/search.js" defer></script>
+  <script type="module" src="js/authenticated.js" defer></script>
+  
 
   <!-- fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,13 +97,13 @@
             </svg>
             My Bookings
           </a>
-          <a href="#" class="nav-action">
+          <a href="../auth-pages/login_page/index.html" class="nav-action">
             <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="8" r="5" stroke="currentColor" stroke-width="2" />
               <path d="M20 21C20 16.5817 16.4183 13 12 13C7.58172 13 4 16.5817 4 21" stroke="currentColor"
                 stroke-width="2" />
             </svg>
-            Account
+            Sign In
           </a>
         </div>
       </div>
@@ -208,11 +210,6 @@
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
-            <select id="private" class="ts-hidden">
-              <option value="">Private?</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
             <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               viewBox="0 0 16 16">
               <path d="M1.5 5.5l6.5 6 6.5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
@@ -220,11 +217,6 @@
             </svg>
           </div>
           <div class="searchfilter">
-            <select id="car-transport" class="ts-hidden">
-              <option value="">Car transport?</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
             <select id="car-transport" class="ts-hidden">
               <option value="">Car transport?</option>
               <option value="yes">Yes</option>
