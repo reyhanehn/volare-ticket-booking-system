@@ -1,43 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@300..900&display=swap" rel="stylesheet">
-</head>
-<body style="margin: 0;padding: 0; box-sizing: border-box;min-height: 100vh;background: linear-gradient(#6459b6, #cd856e);font-family: 'Libre Franklin', sans-serif, Arial;">
-    <div style="margin: 0 auto;padding: 0; box-sizing: border-box;width: 100%;height: 100%;max-width: 500px;min-height: 100vh;background-image: url('https://i.postimg.cc/L5p1L7F0/BG.png');background-size: cover;background-position: bottom;background-repeat: no-repeat;padding: 2rem;padding-bottom: 12rem;">
-        <div style="margin: 0;padding: 0; box-sizing: border-box;width: 100%;height: 100%;background: #fff;color: #444;border-radius: 1rem;font-size: 1rem;font-size: 0.8rem;box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;">
-            <div style="margin: 0;padding: 0; box-sizing: border-box;width: 100%;background: linear-gradient(to top, #f06245, #D91656);border-radius: 0.9rem 0.9rem 0 0;color: #fff;font-size: 1.5rem;font-weight: 600;padding: 2rem;">
-                <p style="padding: 0; margin: 0;" >Welcome to Volare</p>
-            </div>
-            <div style="margin: 0;padding: 0; box-sizing: border-box;padding: 2rem;">
-                <div>
-                    <p style="margin: 0;padding: 0; box-sizing: border-box;margin-bottom: 0.5rem;">Dear <b>{{ name }}</b>,</p>
-                    <p style="margin: 0;padding: 0; box-sizing: border-box;line-height: 1.15;">Hi, Thank you for using our service. To complete your request, please use the following one-time password:</p>
-                </div>
-                <div style="margin: 0;padding: 0; box-sizing: border-box;width: 100%;text-align: center;font-size: 2.2rem;padding: 1rem 0;cursor: pointer;">
-                    <code><span style="margin: 0;padding: 0; box-sizing: border-box;background-color: #1e1e1e11;padding: 0.2rem 0.65rem;border-radius: 3px;">{{ otp }}</span></code>
-                </div>
-                <p style="margin: 0;padding: 0; box-sizing: border-box;text-align: center;">This code will expire in 180s.</p>
-                <section style="margin: 0;padding: 0; box-sizing: border-box;margin-top: 1rem;text-align: center;">
-                    <div style="width: 100%;margin-bottom: 1rem;">
-                        <p style="margin: 0 auto;padding: 0; box-sizing: border-box;max-width: 300px;">If you did not request this code or need any assistance, please contact our support team at <a href="mailto:astheshriketoyoursharp@gmail.com" style="margin: 0;padding: 0; box-sizing: border-box;color: #0a8dff;text-decoration: none;">astheshriketoyoursharp@gmail.com</a>.</p>
-                    </div>
-                    <div>
-                        <p style="margin: 0;padding: 0; box-sizing: border-box;font-family: 'Sansita Swashed', sans-serif, Arial;font-weight: 600;margin-bottom: 0.25rem;">Cheers,</p>
-                        <p style="margin: 0;padding: 0; box-sizing: border-box;font-size: 0.875rem;margin-bottom: -2px;">Volare</p>
-                        <p style="margin: 0;padding: 0; box-sizing: border-box;font-size: 0.875rem;">nel blu dipinto di blu</p>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
-</body>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100..900&family=Sansita+Swashed:wght@300..900&display=swap" rel="stylesheet">
 
+  <style>
+    /* Basic reset */
+    .reset {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 6rem 0;
+      min-height: 100vh;
+      font-family: 'Libre Franklin', sans-serif, Arial;
+      background-size: cover;
+      background-position: bottom;
+      background-repeat: no-repeat;
+      background-image: url(https://i.postimg.cc/K8g6Wkjf/login-bg.png);
+      background-color: #f0f9ff; /* secondary text bg fallback */
+    }
+
+    .container {
+      margin: 0 auto;
+      min-width: 350px;
+      width: 30%;
+      background: #ffffff; /* primary bg */
+      color: #2c3e50; /* primary text */
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px,
+                  rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    }
+
+    .header {
+      width: 100%;
+      background: linear-gradient(to right, #7886C7, #2D336B); /* medium → dark blue */
+      border-radius: 0.9rem 0.9rem 0 0;
+      color: #f0f9ff; /* secondary text */
+      font-size: 2rem;
+      font-weight: 600;
+      padding: 2rem;
+      font-family: "Delius", cursive;
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .otp {
+      width: 100%;
+      text-align: center;
+      font-size: 2.2rem;
+      padding: 1rem 0;
+    }
+
+    .otp span {
+      background-color: #e5e7eb; /* border/neutral bg */
+      padding: 0.2rem 0.65rem;
+      border-radius: 3px;
+      color: #2c3e50; /* dark text */
+    }
+
+    .support {
+      max-width: 300px;
+      margin: 0 auto 1rem auto;
+      text-align: center;
+      color: #6B7280; /* muted text */
+    }
+
+    .support a {
+      color: #7886C7; /* secondary hover accent */
+      text-decoration: none;
+    }
+
+    .brand {
+      font-family: "Delius", cursive;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #2D336B; /* brand */
+    }
+
+    .brand-small {
+      font-size: 0.875rem;
+      color: #2c3e50; /* dark text */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header reset">
+      <p class="reset">Welcome to Volare</p>
+    </div>
+
+    <div class="content reset">
+      <p class="reset" style="margin-bottom:0.5rem;">Dear <b>{{ name }}</b>,</p>
+      <p class="reset" style="line-height:1.15;">
+        Hi, Thank you for using our service. To complete your request, please use the following one-time password:
+      </p>
+
+      <div class="otp reset">
+        <code><span>&#8203;{{ otp }}</span></code>
+      </div>
+
+      <p class="reset" style="text-align:center;">This code will expire in 180s.</p>
+
+      <section class="reset" style="margin-top:1.5rem;text-align:center;">
+        <div class="support">
+          <p class="reset">
+            If you did not request this code or need any assistance, please contact our support team at
+            <a href="mailto:astheshriketoyoursharp@gmail.com">
+              astheshriketoyoursharp@gmail.com
+            </a>.
+          </p>
+        </div>
+
+        <div>
+          <p class="reset brand">Cheers,</p>
+          <p class="reset brand-small">Volare</p>
+          <p class="reset brand-small">nel blu dipinto di blu</p>
+        </div>
+        <!-- hidden anti-trim token -->
+        <p style="font-size:0;line-height:0;color:#fff;">{{ unique_token }}</p>
+      </section>
+    </div>
+  </div>
+</body>
 </html>

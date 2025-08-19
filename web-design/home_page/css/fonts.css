@@ -13,3 +13,11 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'theater';
+  src: url('../fonts/theater/Theater_Bold.otf') format('opentype'),
+      url('../fonts/theater/Theaterv04_Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
