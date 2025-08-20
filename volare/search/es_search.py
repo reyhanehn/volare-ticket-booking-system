@@ -85,7 +85,7 @@ def search_tickets_es(filters):
             "ticket_id": source.get("ticket_id"),
             "price": source.get("price"),
             "remaining_seats": source.get("remaining_seats"),
-            "transport_type": vehicle.get("name"),
+            "transport_type": vehicle.get("type"),
             "class_code": vehicle.get("class_code"),
             "section": source.get("section"),
             "origin": source.get("route", {}).get("origin"),
