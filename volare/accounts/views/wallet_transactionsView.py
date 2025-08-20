@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from ..serializers.wallet_transactionsSerializer import WalletChargeSerializer
 from ..serializers.wallet_transactionsSerializer import WalletTransactionListSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class WalletChargeView(APIView):

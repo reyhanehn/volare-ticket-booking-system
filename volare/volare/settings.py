@@ -89,9 +89,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'volare',
+        'NAME': 'Volare',
         'USER': 'postgres',
-        'PASSWORD': 'h.tah1584',
+        'PASSWORD': 'reyh00n83',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -182,7 +182,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 ELASTICSEARCH = {
-    "hosts": ["https://localhost:9200"],
+    "hosts": ["http://localhost:9200"],
     "username": "elastic",
     "password": "qH3yjkb-1CXu+EiIPF2S",
     "verify_certs": False,   # OK for local dev
