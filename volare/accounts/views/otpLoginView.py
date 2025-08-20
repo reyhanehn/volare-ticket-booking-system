@@ -5,8 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+import uuid
 
 from ..serializers.otpLoginSerializer import RequestOTPSerializer, VerifyOTPSerializer
 from redis_client import redis_client
@@ -24,21 +25,31 @@ class RequestOTPView(APIView):
             redis_client.setex(f"otp:{user.account_id}", 300, otp)
 
             if user.email:
+                # Render your HTML
+                unique_token = str(uuid.uuid4())  # makes email unique
                 html_message = render_to_string('emails/otp_email.html', {
                     'name': user.name,
                     'otp': otp,
+                    'unique_token': unique_token,
                 })
 
-                send_mail(
-                    subject="Your OTP Code",
-                    message=f"Your OTP code is: {otp}",
-                    from_email="astheshriketoyoursharp@gmail.com",
-                    recipient_list=[user.email],
-                    fail_silently=False,
-                    html_message=html_message
-                )
+                text_message = f"Your OTP code is: {otp}"
 
-                return Response({"message": "OTP sent to your email"}, status=status.HTTP_200_OK)
+                subject = f"Your OTP Code {otp}"  # subject unique too
+                from_email = "astheshriketoyoursharp@gmail.com"
+                to = [user.email]
+
+                msg = EmailMultiAlternatives(subject, text_message, from_email, to)
+                msg.attach_alternative(html_message, "text/html")
+
+                # 🚀 Force Gmail to treat it as unique
+                msg.extra_headers = {
+                    "Message-ID": f"<{uuid.uuid4()}@volare.com>",
+                    "References": "",
+                    "In-Reply-To": "",
+                }
+
+                msg.send()
 
             return Response({"error": "User does not have an email address"}, status=status.HTTP_400_BAD_REQUEST)
 

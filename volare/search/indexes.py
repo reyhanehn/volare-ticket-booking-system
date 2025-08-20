@@ -34,12 +34,17 @@ TICKET_MAPPING = {
                     "destination_id": {"type": "keyword"},
                     "origin": {"type": "keyword"},
                     "destination": {"type": "keyword"},
+                    "origin_station": {"type": "keyword"},
+                    "destination_station": {"type": "keyword"},
+                    "origin_country": {"type": "keyword"},
+                    "destination_country": {"type": "keyword"}
                 }
             },
             "trip": {
                 "properties": {
                     "trip_id": {"type": "keyword"},
                     "departure_datetime": {"type": "date"},
+                    "duration": {"type": "keyword"},
                     "company_id": {"type": "keyword"},
                     "company_name": {"type": "keyword"},
                 }

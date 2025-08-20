@@ -9,13 +9,12 @@ EXPIRATION_DURATION_MINUTES = 3
 
 class ReservationSerializer(serializers.Serializer):
     passenger_id = serializers.IntegerField()
-    ticket_id = serializers.IntegerField()
     seat_number = serializers.CharField(max_length=10)
 
     def validate(self, data):
         account_id = self.context['account_id']
         passenger_id = data['passenger_id']
-        ticket_id = data['ticket_id']
+        ticket_id = self.context['ticket_id']
         seat_number = data['seat_number']
 
         with connection.cursor() as cursor:
@@ -52,6 +51,7 @@ class ReservationSerializer(serializers.Serializer):
         expiration_duration = timedelta(minutes=EXPIRATION_DURATION_MINUTES)
         expiration_time = timezone.now() + expiration_duration
         account_id = self.context['account_id']
+        ticket_id = self.context['ticket_id']
 
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -62,7 +62,7 @@ class ReservationSerializer(serializers.Serializer):
             """, [
                 account_id,
                 validated_data['passenger_id'],
-                validated_data['ticket_id'],
+                ticket_id,
                 validated_data['seat_number'],
                 expiration_time,
             ])

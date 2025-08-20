@@ -89,14 +89,13 @@ urlpatterns = [
     # }
     path('customer/passenger/list/', PassengerListView.as_view(), name='passenger-list'),
     #a get request for the customer to get the list of the customers added for themselves
-    path('reservation/create/', CreateReservationView.as_view(), name='create-reservation'),
+    path('reservation/create/<int:ticket_id>/', CreateReservationView.as_view(), name='create-reservation'),
     #a post request to actually reserve a ticket
     #this request needs the ticket_id and the seat number as well as the passenger_id(it will be checked that the passenger is related to the account that is making the reservation)
     #it will be checked that the seat number wasn't reserved before
     #this reservation will be reserved in the pending status till the payment is done if the payment hadn't been done by 10 minutes the reservation will be canceled by the system and others can reserve it again
     #  {
     #   "passenger_id": 1,
-    #   "ticket_id": 1,
     #   "seat_number": "10"
     # }
     path('customer/reservation/list/', ReservationListView.as_view(), name='reservation-list'),

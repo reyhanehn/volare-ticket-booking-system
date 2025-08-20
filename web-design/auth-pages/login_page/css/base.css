@@ -51,7 +51,7 @@ body {
 }
 
 .main {
-  background-image: url(../images/login-bg.png);
+  background-image: url(../../../images/login-bg.png);
   background-attachment: scroll;
   background-size: cover;
   background-repeat: no-repeat;

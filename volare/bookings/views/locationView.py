@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import connection
 from django.http import JsonResponse, Http404
-from bookings.models import Location
 
 from ..serializers.locationSerializer import LocationSerializer
 from accounts.permissions import IsAdmin

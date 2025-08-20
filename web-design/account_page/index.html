@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/logo/volare-logo-gold_transparent.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+    defer></script>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/animation.css">
+
+
+
+  <script type="module" src="js/authenticated.js" defer></script>
+  <script type="module" src="js/accountBox.js" defer></script>
+  <script type="module" src="js/infoEdit.js" defer></script>
+
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
+
+
+  <title>Volare</title>
+
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <div class="brand">
+            <div class="brand-icon">
+              <img src="../images/logo/volare-logo-gold_transparent.png" alt="volare icon">
+            </div>
+            <div class="brand-text">
+              VOLARE
+            </div>
+          </div>
+        </div>
+        <div class="nav-right">
+          <a href="#" class="nav-action nav-contact">
+            <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="12" cy="16" r="1" fill="#1C274C" />
+              <path
+                d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" class="circle" />
+            </svg>
+            Contact
+          </a>
+          <a href="#" class="nav-action nav-booking">
+            <svg class="nav-action-icon" viewBox="0 0 460.054 460.054" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g>
+                <path class="dot dot1"
+                  d="M40.003,69.679C17.914,69.679,0,87.592,0,109.697c0,22.089,17.914,39.987,40.003,39.987c22.089,0,40.003-17.898,40.003-39.987C80.006,87.592,62.092,69.679,40.003,69.679z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="dot dot2"
+                  d="M40.003,190.032C17.914,190.032,0,207.93,0,230.035c0,22.089,17.914,40.002,40.003,40.002c22.089,0,40.003-17.913,40.003-40.002C80.006,207.93,62.092,190.032,40.003,190.032z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="dot dot3"
+                  d="M40.003,310.37C17.914,310.37,0,328.283,0,350.372c0,22.089,17.914,40.003,40.003,40.003c22.089,0,40.003-17.914,40.003-40.003C80.006,328.283,62.092,310.37,40.003,310.37z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="line line1"
+                  d="M429.973,79.601H145.419c-16.611,0-30.081,13.47-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554c16.61,0,30.081-13.469,30.081-30.081C460.054,93.071,446.583,79.601,429.973,79.601z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="line line2"
+                  d="M429.973,199.939H145.419c-16.611,0-30.081,13.469-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554c16.61,0,30.081-13.469,30.081-30.081C460.054,213.408,446.583,199.939,429.973,199.939z"
+                  stroke="currentColor" stroke-width="2" />
+                <path class="line line3"
+                  d="M429.973,320.291H145.419c-16.611,0-30.081,13.469-30.081,30.081c0,16.611,13.469,30.08,30.081,30.08h284.554c16.61,0,30.081-13.469,30.081-30.08C460.054,333.759,446.583,320.291,429.973,320.291z"
+                  stroke="currentColor" stroke-width="2" />
+              </g>
+            </svg>
+            My Bookings
+          </a>
+          <a href="../auth-pages/login_page/index.html" class="nav-action nav-account">
+            <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="5" stroke="currentColor" stroke-width="2" />
+              <path d="M20 21C20 16.5817 16.4183 13 12 13C7.58172 13 4 16.5817 4 21" stroke="currentColor"
+                stroke-width="2" />
+            </svg>
+            Sign In
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+
+  <!-- Dropdown box -->
+  <div id="accountBox" class="account-box hidden">
+    <div class="account-header">
+      <p class="email">alialavinikoo@gmail.com</p>
+      <div class="pic">
+        <p>A</p>
+      </div>
+    </div>
+    <div class="wallet">
+      <svg xmlns="http://www.w3.org/2000/svg" class="wallet-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2 6a2 2 0 0 1 2-2h16a1 1 0 0 1 1 1v3h-4a3 3 0 0 0 0 6h4v3a1 1 0 0 1-1 1H4a2 2 0 0 1-2-2V6z" />
+      </svg>
+      <span class="balance">$0.00</span>
+      <a href="#" class="charge-link">Charge</a>
+      <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M1.5 5.5l6.5 6 6.5-6" stroke="#7886C7" stroke-width="2" fill="none" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </div>
+    <ul class="account-links">
+      <li><a href="../account_page/index.html">Your Account</a></li>
+      <li><a href="#">Notifications</a></li>
+    </ul>
+    <div class="logout"><button href="#">Sign out</button></div>
+  </div>
+
+
+
+  <div class="main">
+    <div class="hero">
+      <div class="hero-img">
+        <img src="../images/one-line-airplane.png" alt="one-line-airplane">
+      </div>
+      <div class="hero-content">
+        <div class="hero-group">
+          <h2>Welcome Ali</h2>
+          <div class="hero-info">
+            <div class="info-text">
+              <p>Email</p>
+              <span>alialavinikoo@gmail.com</span>
+            </div>
+            <div class="info-text">
+              <p>City</p>
+              <span>Iran, Tehran</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-group">
+          <div class="account-pic">
+            <p>A</p>
+            <div class="edit-pic">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M14.7566 2.62145C16.5852 0.792851 19.55 0.792851 21.3786 2.62145C23.2072 4.45005 23.2072 7.41479 21.3786 9.24339L11.8933 18.7287C11.3514 19.2706 11.0323 19.5897 10.6774 19.8665C10.2592 20.1927 9.80655 20.4725 9.32766 20.7007C8.92136 20.8943 8.49334 21.037 7.76623 21.2793L4.43511 22.3897L3.63303 22.6571C2.98247 22.8739 2.26522 22.7046 1.78032 22.2197C1.29542 21.7348 1.1261 21.0175 1.34296 20.367L2.72068 16.2338C2.96303 15.5067 3.10568 15.0787 3.29932 14.6724C3.52755 14.1935 3.80727 13.7409 4.13354 13.3226C4.41035 12.9677 4.72939 12.6487 5.27137 12.1067L14.7566 2.62145ZM4.40051 20.8201L7.24203 19.8729C8.03314 19.6092 8.36927 19.4958 8.68233 19.3466C9.06287 19.1653 9.42252 18.943 9.75492 18.6837C10.0284 18.4704 10.2801 18.2205 10.8698 17.6308L18.4393 10.0614C17.6506 9.78321 16.6346 9.26763 15.6835 8.31651C14.7324 7.36538 14.2168 6.34939 13.9387 5.56075L6.36917 13.1302C5.77951 13.7199 5.52959 13.9716 5.3163 14.2451C5.05704 14.5775 4.83476 14.9371 4.65341 15.3177C4.50421 15.6307 4.3908 15.9669 4.12709 16.758L3.17992 19.5995L4.40051 20.8201ZM15.1554 4.34404C15.1896 4.519 15.2474 4.75684 15.3438 5.03487C15.561 5.66083 15.9712 6.48288 16.7442 7.25585C17.5171 8.02881 18.3392 8.43903 18.9651 8.6562C19.2432 8.75266 19.481 8.81046 19.656 8.84466L20.3179 8.18272C21.5607 6.93991 21.5607 4.92492 20.3179 3.68211C19.0751 2.4393 17.0601 2.4393 15.8173 3.68211L15.1554 4.34404Z"
+                  fill="#fff" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="content-info">
+        <h3>Account Info</h3>
+
+        <div class="info">
+          <p>Email</p>
+          <div class="info-container">
+            <input type="text" name="email" class="info-content" readonly>
+            <button class="edit-btn">Edit</button>
+          </div>
+        </div>
+
+        <div class="info">
+          <p>Phone number</p>
+          <div class="info-container">
+            <input type="text" name="phone_number" class="info-content" readonly>
+            <button class="edit-btn">Edit</button>
+          </div>
+        </div>
+
+        <div class="info">
+          <p>Name</p>
+          <div class="info-container">
+            <input type="text" name="name" class="info-content" readonly>
+            <button class="edit-btn">Edit</button>
+          </div>
+        </div>
+
+        <div class="info">
+          <p>Lastname</p>
+          <div class="info-container">
+            <input type="text" name="lastname" class="info-content" readonly>
+            <button class="edit-btn">Edit</button>
+          </div>
+        </div>
+
+        <div class="info">
+          <p>Birth Date</p>
+          <div class="info-container">
+            <input type="date" name="birth_date" class="info-content" readonly>
+            <button class="edit-btn">Edit</button>
+          </div>
+        </div>
+
+        <div class="info">
+          <p>Password</p>
+          <div class="info-container">
+            <input type="password" name="password" class="info-content" value="********" readonly>
+            <button class="edit-btn">Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-img">
+        <img src="../images/one-line-balloons.png" alt="one-line-balloon">
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+
+      <!-- Top Row: Services, About, Volare -->
+      <div class="footer-top">
+        <div class="item">
+          <h3>Our Services</h3>
+          <ul>
+            <li><a href="#">Airplane Tickets</a></li>
+            <li><a href="#">Bus Tickets</a></li>
+            <li><a href="#">Train Tickets</a></li>
+          </ul>
+        </div>
+
+        <div class="item">
+          <h3>About</h3>
+          <ul>
+            <li><a href="#">Our Company</a></li>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="item text">
+          <h3>Volare</h3>
+          <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+            reliable.</p>
+        </div>
+      </div>
+
+      <!-- Middle Row: Social Icons -->
+      <div class="footer-middle">
+        <div class="item social">
+          <a href="#"><i class="icon ion-social-facebook"></i></a>
+          <a href="#"><i class="icon ion-social-twitter"></i></a>
+          <a href="#"><i class="icon ion-social-snapchat"></i></a>
+          <a href="#"><i class="icon ion-social-instagram"></i></a>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Copyright -->
+      <div class="footer-bottom">
+        <p class="copyright">Volare © 2025</p>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+
+</html>
