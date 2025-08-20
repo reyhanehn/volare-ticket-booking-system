@@ -108,10 +108,10 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes = 1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes = 30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days = 7),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    # 'BLACKLIST_AFTER_ROTATION': True,
     'USER_ID_FIELD': 'account_id',
     'USER_ID_CLAIM': 'user_id',
     'AUTH_HEADER_TYPES': ('Bearer',),

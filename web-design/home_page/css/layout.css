@@ -14,7 +14,7 @@ header {
 }
 
 .nav-container {
-    max-width: 75rem;
+    max-width: 90rem;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -79,6 +79,153 @@ header {
 .nav-action:hover .nav-action-icon g {
     fill: var(--color-primary-text);
 }
+
+
+/* ========== account box ========== */
+.account-box {
+    position: fixed;
+    top: 5rem;
+    right: 0.5rem;
+    width: 18rem;
+    background: var(--color-primary-bg);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 1000;
+}
+
+/* hidden fully */
+.hidden {
+    display: none;
+}
+
+/* visible with animation */
+.showing {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* header section */
+.account-header {
+    background-color: var(--color-primary-bg-hover);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.account-header .email {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-primary-text);
+}
+
+.account-header .pic {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-primary-text);
+    background-color: var(--color-ice-blue);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    width: 2rem;
+    text-align: center;
+    position: relative;
+}
+.account-header .pic p{
+    position: absolute;
+    left: .635rem;
+    top: .25rem;
+}
+
+/* wallet row */
+.wallet {
+    display: flex;
+    align-items: center;
+    margin: .5rem 1rem 0;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.wallet-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--color-primary-text);
+    margin-right: .5rem;
+}
+
+.balance {
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    color: var(--color-primary-text);
+    margin-right: 7rem;
+}
+
+.charge-link {
+    font-size: var(--font-size-base);
+    color: var(--color-medium-blue);
+    text-decoration: none;
+}
+
+.charge-link:hover {
+    text-decoration: underline;
+}
+
+.wallet .filter-icon {
+    width: .7rem;
+    aspect-ratio: 1 / 1;
+    transform: rotate(-90deg);
+}
+
+/* account links */
+.account-links {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.account-links li {
+    padding: .5rem 1rem;
+}
+
+.account-links li:hover {
+    background-color: var(--color-primary-bg-hover);
+}
+
+.account-links a {
+    text-decoration: none;
+    color: var(--color-primary-text);
+    font-size: var(--font-size-base);
+}
+
+.logout {
+    margin: 1rem;
+}
+
+/* logout button */
+.logout button {
+    width: 100%;
+    padding: 0.6rem;
+    background: #e47b8b;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.logout button:hover {
+    background: #d14358;
+}
+
+
 
 /* ========== HERO ========== */
 .hero {
@@ -207,14 +354,14 @@ header {
     box-shadow: 0 0.2rem var(--color-dark-blue);
 }
 
-#train-option.active circle{
-    fill:#fcf64e;
-    stroke:#fcf64e;
+#train-option.active circle {
+    fill: #fcf64e;
+    stroke: #fcf64e;
 }
 
-#bus-option.active circle{
-    fill:#fcf64e;
-    stroke:#fcf64e;
+#bus-option.active circle {
+    fill: #fcf64e;
+    stroke: #fcf64e;
 }
 
 #domestic-flight-option svg {

@@ -26,28 +26,29 @@
 
   /** Check if user is authenticated (simple local check) */
   export async function isAuthenticated() {
-    const token = getAccessToken();
-    if (!token) return false;
+  const token = getAccessToken();
+  if (!token) return false;
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/account/token/verify/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token })
-      });
+  try {
+    const res = await fetch("http://127.0.0.1:8000/account/token/verify/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
+    });
 
-      if (res.ok) {
-        console.log("Token is valid");
-        return true;
-      } else {
-        console.warn("Token invalid or expired");
-        return false;
-      }
-    } catch (err) {
-      console.error("Token verification failed (network error)", err);
-      return false;
+    if (res.ok) {
+      return true; // still valid
+    } else {
+      // Try refresh if invalid
+      const newAccess = await refreshAccessToken();
+      return !!newAccess; // true if refreshed successfully
     }
+  } catch (err) {
+    console.error("Token verification failed (network error)", err);
+    return false;
   }
+}
+
 
 
   /** Refresh access token */
@@ -64,7 +65,6 @@
 
       if (!res.ok) {
           clearTokens();
-        window.location.href = "/auth-pages/login_page/index.html"; // redirect to login
       }
 
       const data = await res.json();
@@ -92,7 +92,7 @@
     }
 
     clearTokens();
-    window.location.href = "/auth-pages/login_page/index.html"; // redirect to login
+    window.location.href = "../home_page/index.html"; // redirect to login
   }
 
 
@@ -105,7 +105,7 @@ window.addEventListener("DOMContentLoaded", () => {
   requireAuth("/auth-pages/signup_page/index.html");
 });
  */
-export async function requireAuth(redirectUrl = "/auth-pages/login_page/index.html") {
+export async function requireAuth(redirectUrl = "../login_page/index.html") {
   const ok = await isAuthenticated();
   if (!ok) {
     alert("You must be signed in to access this page.");
@@ -117,7 +117,7 @@ export async function requireAuth(redirectUrl = "/auth-pages/login_page/index.ht
  * Redirect away if already authenticated
  * Use on login/signup pages
  */
-export async function redirectIfAuthenticated(redirectUrl = "/home_page/index.html") {
+export async function redirectIfAuthenticated(redirectUrl = "../../home_page/index.html") {
   const ok = await isAuthenticated();
   if (ok) {
     alert("You are already signed in.");

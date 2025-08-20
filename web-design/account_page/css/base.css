@@ -2,7 +2,9 @@
 :root {
   /* Colors */
   --color-primary-bg: #ffffff;
+  --color-primary-bg-hover: #f6f6f6;
   --color-secondary-bg: #2c3e50;
+  --color-secondary-bg-hover: #2c3e50;
 
 
   --color-primary-text: #2c3e50;
@@ -47,4 +49,5 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-primary-bg);
   color: var(--color-primary-text);
+  position: relative;
 }

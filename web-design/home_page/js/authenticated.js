@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   if (auth) {
     navAction.innerHTML = `${icon} Account`;
-    navAction.href = "#";
+    navAction.href = "javascript:void(0)";
   } else {
     navAction.innerHTML = `${icon} Sign In`;
     navAction.href = "../auth-pages/login_page/index.html";

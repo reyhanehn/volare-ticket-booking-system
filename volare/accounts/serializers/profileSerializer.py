@@ -42,6 +42,10 @@ class ProfileSerializer(serializers.Serializer):
                 cursor.execute("SELECT 1 FROM account WHERE phone_number = %s AND account_id != %s", [phone_number, account_id])
                 if cursor.fetchone():
                     raise serializers.ValidationError({"phone_number": "This phone number is already in use."})
+                phone_pattern = re.compile(r'^09\d{9}$')
+                if not phone_pattern.match(phone_number):
+                    raise serializers.ValidationError(
+                        {"phone_number": "Invalid Iranian phone number format. Must be 11 digits and start with 09."})
 
             if city_id is not None:
                 cursor.execute("SELECT 1 FROM bookings_location WHERE location_id = %s", [city_id])
