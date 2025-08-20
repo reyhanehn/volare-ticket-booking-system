@@ -91,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'volare',
         'USER': 'postgres',
-        'PASSWORD': 'HaHa1312!',
+        'PASSWORD': 'h.tah1584',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -108,7 +108,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes = 30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days = 1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days = 7),
     'ROTATE_REFRESH_TOKENS': True,
     # 'BLACKLIST_AFTER_ROTATION': True,
@@ -182,9 +182,9 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 ELASTICSEARCH = {
-    "hosts": ["http://127.0.0.1:9200"],
-    "username": None,        # No username needed
-    "password": None,        # No password needed
+    "hosts": ["https://localhost:9200"],
+    "username": "elastic",
+    "password": "qH3yjkb-1CXu+EiIPF2S",
     "verify_certs": False,   # OK for local dev
 }
 

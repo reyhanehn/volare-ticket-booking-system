@@ -12,8 +12,8 @@ from accounts.permissions import IsAdmin
 class CreateReservationView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        serializer = ReservationSerializer(data=request.data, context={'account_id': request.user.account_id})
+    def post(self, request, ticket_id):
+        serializer = ReservationSerializer(data=request.data, context={'account_id': request.user.account_id, 'ticket_id' : ticket_id})
         if serializer.is_valid():
             reservation = serializer.save()
             return Response({

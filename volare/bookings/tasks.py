@@ -1,7 +1,7 @@
 from celery import shared_task
 from bookings.models import Ticket
 from elasticsearch import Elasticsearch
-from search.indexes import TICKET_INDEX
+from bookings.management.commands.index_tickets_es import TICKET_INDEX
 from search.es_client import get_es
 
 @shared_task(queue='reservations')
@@ -31,13 +31,12 @@ def index_ticket_to_es(self, ticket_id):
             "trip__route__origin", "trip__route__destination"
         ).get(pk=ticket_id)
 
-        trip = getattr(ticket, "trip", None)
-        section = getattr(ticket, "section", None)
-        vehicle = getattr(trip, "vehicle", None) if trip else None
-        route = getattr(trip, "route", None) if trip else None
-        origin = getattr(route, "origin", None) if route else None
-        destination = getattr(route, "destination", None) if route else None
-        company_name = getattr(trip, "company_name", "") if trip else ""
+        trip = ticket.trip
+        section = ticket.section
+        vehicle = trip.vehicle if trip else None
+        route = trip.route if trip else None
+        company = vehicle.company if vehicle else None
+        origin_station = route.origin_station if route else None
 
         doc = {
             "ticket_id": str(getattr(ticket, "ticket_id", ticket.pk)),
@@ -45,20 +44,32 @@ def index_ticket_to_es(self, ticket_id):
             "remaining_seats": getattr(ticket, "remaining_seats", 0),
             "section": getattr(section, "name", "") if section else "",
             "vehicle": {
+                "name": getattr(vehicle, "name", "") if vehicle else "",
                 "type": getattr(vehicle, "type", "") if vehicle else "",
-                "class_code": str(getattr(vehicle, "class_code", "")) if vehicle else "",
+                "class_code": getattr(vehicle, "class_code", "") if vehicle else "",
             },
             "route": {
-                "origin_id": str(getattr(origin, "location_id", "")) if origin else "",
-                "destination_id": str(getattr(destination, "location_id", "")) if destination else "",
-                "origin": getattr(origin, "city", "") if origin else "",
-                "destination": getattr(destination, "city", "") if destination else "",
+                "origin_id": str(getattr(route.origin, "location_id", "")) if route and route.origin else "",
+                "destination_id": str(
+                    getattr(route.destination, "location_id", "")) if route and route.destination else "",
+                "origin": getattr(route.origin, "city", "") if route and route.origin else "",
+                "destination": getattr(route.destination, "city", "") if route and route.destination else "",
+                "origin_station": getattr(origin_station, "name", "") if origin_station else "",
+                "destination_station": getattr(route.destination_station, "name",
+                                               "") if route and route.destination_station else "",
+                "origin_country": getattr(route.origin, "country", "") if route and route.origin else "",
+                # <-- ADDED
+                "destination_country": getattr(route.destination, "country",
+                                               "") if route and route.destination else "",  # <-- ADDED
             },
             "trip": {
                 "trip_id": str(getattr(trip, "trip_id", "")) if trip else "",
-                "departure_datetime": trip.departure_datetime.isoformat() if trip and getattr(trip, "departure_datetime", None) else "",
-                "company_id": str(getattr(trip, "company_id", "")) if trip else "",
-                "company_name": company_name,
+                "departure_datetime": trip.departure_datetime.isoformat() if trip and getattr(trip,
+                                                                                              "departure_datetime",
+                                                                                              None) else "",
+                "duration": str(getattr(trip, "duration", "")) if trip else "",
+                "company_id": str(getattr(company, "company_id", "")) if company else "",
+                "company_name": getattr(company, "name", "") if company else "",
             },
         }
 

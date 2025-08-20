@@ -49,9 +49,9 @@ def search_tickets_es(filters):
     if "class_code" in filters:
         query["bool"]["filter"].append({"term": {"vehicle.class_code": filters["class_code"]}})
     if "min_price" in filters:
-        query["bool"]["filter"].append({"range": {"price": {"gte": filters["min_price"]}}})
+        query["bool"]["filter"].append({"range": {"price": {"gte": float(filters["min_price"])}}})
     if "max_price" in filters:
-        query["bool"]["filter"].append({"range": {"price": {"lte": filters["max_price"]}}})
+        query["bool"]["filter"].append({"range": {"price": {"lte": float(filters["max_price"])}}})
     if "departure_date_exact" in filters:
         query["bool"]["filter"].append({"term": {"trip.departure_datetime": filters["departure_date_exact"]}})
     if "departure_date_start" in filters or "departure_date_end" in filters:
@@ -85,7 +85,7 @@ def search_tickets_es(filters):
             "ticket_id": source.get("ticket_id"),
             "price": source.get("price"),
             "remaining_seats": source.get("remaining_seats"),
-            "transport_type": vehicle.get("name"),
+            "transport_type": vehicle.get("type"),
             "class_code": vehicle.get("class_code"),
             "section": source.get("section"),
             "origin": source.get("route", {}).get("origin"),
