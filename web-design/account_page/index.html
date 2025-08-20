@@ -22,14 +22,13 @@
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/animation.css">
 
-
-
   <script type="module" src="js/authenticated.js" defer></script>
   <script type="module" src="js/accountBox.js" defer></script>
   <script type="module" src="js/infoEdit.js" defer></script>
 
 
-  <!-- fonts -->
+  <link rel="stylesheet" href="css/charging_layout.css">
+  <script type="module" src="js/chargeWallet.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
@@ -105,7 +104,6 @@
   </header>
 
 
-  <!-- Dropdown box -->
   <div id="accountBox" class="account-box hidden">
     <div class="account-header">
       <p class="email">alialavinikoo@gmail.com</p>
@@ -229,7 +227,6 @@
   <footer class="footer">
     <div class="container">
 
-      <!-- Top Row: Services, About, Volare -->
       <div class="footer-top">
         <div class="item">
           <h3>Our Services</h3>
@@ -256,7 +253,6 @@
         </div>
       </div>
 
-      <!-- Middle Row: Social Icons -->
       <div class="footer-middle">
         <div class="item social">
           <a href="#"><i class="icon ion-social-facebook"></i></a>
@@ -266,7 +262,6 @@
         </div>
       </div>
 
-      <!-- Bottom Row: Copyright -->
       <div class="footer-bottom">
         <p class="copyright">Volare © 2025</p>
       </div>
@@ -274,6 +269,23 @@
     </div>
   </footer>
 
-</body>
+  <div id="chargeModalOverlay" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Charge Wallet</h3>
+        <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter the amount you wish to charge:</p>
+        <input type="number" id="chargeAmountInput" class="modal-input" placeholder="0.00" min="1" step="0.01">
+        <div id="modalMessage" class="modal-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmChargeBtn" class="charge-button">Confirm</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  </body>
 
 </html>
