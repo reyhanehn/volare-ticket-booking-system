@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b1a9ce51-1b31-4424-9239-b85b70d15045" name="Changes" comment="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/management/commands/index_tickets_es.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/management/commands/index_tickets_es.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/volare/bookings/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/views/locationView.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/views/locationView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/search/es_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/search/es_search.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/home_page/js/search.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/js/search.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/ticket_search/js/results.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/ticket_search/js/results.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
