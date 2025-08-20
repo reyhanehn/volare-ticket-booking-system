@@ -372,7 +372,7 @@ header {
 .option-name {
     font-size: var(--font-size-base);
     text-align: center;
-    color: var(--color-dark-blue);
+    color: var(--color-primary-text);
     overflow: hidden;
     text-overflow: ellipsis;
 }

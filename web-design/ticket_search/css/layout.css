@@ -8,14 +8,13 @@ header {
 
 
 .navbar {
-    background: var(--color-card-bg);
+    background: var(--color-primary-bg);
     border-bottom: 1px solid var(--color-border);
     padding: .75rem 1.25rem;
 }
 
 .nav-container {
-    max-width: 75rem;
-    /* 1200px */
+    max-width: 90rem;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -26,7 +25,6 @@ header {
     display: flex;
     align-items: center;
     gap: 2rem;
-    /* 32px */
 }
 
 .brand {
@@ -42,9 +40,10 @@ header {
 }
 
 .brand-text {
-    font-size: var(--font-size-3xl);
     font-weight: 700;
-    color: var(--color-text);
+    font-family: var(--font-family-volare);
+    font-size: var(--font-size-3xl);
+    color: var(--color-primary-text);
 }
 
 .nav-right {
@@ -65,11 +64,11 @@ header {
 }
 
 .nav-action:hover {
-    color: var(--color-text);
+    color: var(--color-primary-text);
 }
 
 .nav-action-icon {
-    width: 1.25rem;
+    width: 2.25rem;
     height: 1.25rem;
 }
 
@@ -78,255 +77,154 @@ header {
 }
 
 .nav-action:hover .nav-action-icon g {
-    fill: var(--color-text);
+    fill: var(--color-primary-text);
 }
 
-/* ========== HERO ========== */
-.hero {
-    position: relative;
-    /* padding: var(--space-5) 1.5rem var(--space-7-5); */
+
+/* ========== account box ========== */
+.account-box {
+    position: fixed;
+    top: 5rem;
+    right: 0.5rem;
+    width: 18rem;
+    background: var(--color-primary-bg);
+    border-radius: 0.5rem;
     overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 1000;
 }
 
-.hero-img {
-    width: 100%;
-    object-fit: cover;
+/* hidden fully */
+.hidden {
+    display: none;
 }
 
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 18.75rem 6.25rem at 20% 60%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse 25rem 9.375rem at 80% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+/* visible with animation */
+.showing {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
-.hero-text {
-    position: absolute;
-    top: 2%;
-    left: 3%;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
-}
-
-.hero-text h2 {
-    font-size: 2.5vw;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--color-light-blue);
-    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-}
-
-.hero-illustration {
+/* header section */
+.account-header {
+    background-color: var(--color-primary-bg-hover);
+    padding: 1rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.road {
-    position: absolute;
-    bottom: -2.5rem;
-    /* -40px */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12.5rem;
-    /* 200px */
-    height: 0.5rem;
-    /* 8px */
-    background: var(--color-gray-dark);
-    border-radius: var(--radius-md);
-}
-
-.road::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 0.125rem;
-    /* 2px */
-    background: repeating-linear-gradient(to right,
-            var(--color-white) 0rem,
-            var(--color-white) 1.25rem,
-            transparent 1.25rem,
-            transparent 2.5rem);
-}
-
-
-/*============ search form ===========*/
-.search-form {
-    height: 4rem;
-    display: flex;
-    margin: 1rem 0;
-    align-items: center;
-    border-radius: 0.5rem;
-    box-shadow: 0 3px 6px 0 rgba(25, 32, 36, 0.16), 0 -1px 4px 0 rgba(25, 32, 36, 0.04);
-}
-
-.search-form .line {
-    width: 0.5px;
-    height: 60%;
-    background-color: rgb(211, 211, 211);
-    margin: 0 auto;
-    z-index: 10;
-}
-
-.form-item:hover {
-    background-color: var(--color-light-blue);
-}
-
-.form-item:active {
-    background-color: var(--color-light-blue);
-    border: 0.1rem solid black;
-}
-
-.form-item {
-    background-color: white;
-    cursor: pointer;
-}
-
-.form-cities {
-    position: relative;
-    width: 48%;
-    height: 100%;
-    display: flex;
-    gap: 0.6rem;
-    border-radius: 0.5rem;
     align-items: center;
     justify-content: space-between;
 }
 
-.form-city {
-    width: calc(50% - 0.3rem);
-    height: 100%;
-    display: flex;
-    gap: 0.2rem;
-    border-radius: 0.5rem;
-    align-items: center;
-    justify-content: start;
+.account-header .email {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-primary-text);
 }
 
-.form-city svg {
-    margin-left: 0.7rem;
-    width: 1rem;
-    height: 1rem;
-}
-
-.form-cities .swap-cities {
-    border-radius: .5rem;
-    position: absolute;
-    top: calc(50% - 1rem);
-    left: calc(50% - 1.3rem);
+.account-header .pic {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-primary-text);
+    background-color: var(--color-ice-blue);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
     width: 2rem;
-    height: 2rem;
-    padding: 0.2rem;
+    text-align: center;
+    position: relative;
+}
+.account-header .pic p{
+    position: absolute;
+    left: .635rem;
+    top: .25rem;
 }
 
-.form-cities .swap-cities:hover {
-    background-color: var(--color-light-blue);
-}
-
-.city-input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    font: inherit;
-    padding: 0 .5rem 0 .25rem;
-    display: grid;
+/* wallet row */
+.wallet {
+    display: flex;
     align-items: center;
+    margin: .5rem 1rem 0;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--color-border);
 }
 
-.ts-control {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0.25rem;
+.wallet-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--color-primary-text);
+    margin-right: .5rem;
 }
 
-.city-input,
-.ts-control,
-.ts-control input {
-    min-width: 5rem;
+.balance {
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    color: var(--color-primary-text);
+    margin-right: 7rem;
+}
+
+.charge-link {
+    font-size: var(--font-size-base);
+    color: var(--color-medium-blue);
+    text-decoration: none;
+}
+
+.charge-link:hover {
+    text-decoration: underline;
+}
+
+.wallet .filter-icon {
+    width: .7rem;
+    aspect-ratio: 1 / 1;
+    transform: rotate(-90deg);
+}
+
+/* account links */
+.account-links {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.account-links li {
+    padding: .5rem 1rem;
+}
+
+.account-links li:hover {
+    background-color: var(--color-primary-bg-hover);
+}
+
+.account-links a {
+    text-decoration: none;
+    color: var(--color-primary-text);
     font-size: var(--font-size-base);
 }
 
-.ts-dropdown {}
-
-
-.form-times {
-    width: 35%;
-    height: 100%;
-    display: flex;
-    gap: 0.3rem;
-    border-radius: 0.5rem;
-    align-items: center;
-    justify-content: space-between;
+.logout {
+    margin: 1rem;
 }
 
-.form-time {
-    display: flex;
-    width: calc(50% - 0.15rem);
-    height: 100%;
-    border-radius: 0.5rem;
-    align-items: center;
-    justify-content: start;
-}
-
-.form-time svg {
-    margin-left: 0.7rem;
-    width: 1rem;
-    height: 1rem;
-}
-
-.date-input {
+/* logout button */
+.logout button {
     width: 100%;
-    height: 100%;
+    padding: 0.6rem;
+    background: #e47b8b;
+    color: white;
+    font-weight: 600;
     border: none;
-    outline: none;
-    background: transparent;
-    font: inherit;
-    padding: 0 0 0 1rem;
-}
-
-.flatpickr-calendar {
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.form-passengers {
-    width: 15%;
-    height: 100%;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0.5rem;
+.logout button:hover {
+    background: #d14358;
 }
 
-.passenger-input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 1rem;
-    text-align: center;
-}
-
-.form-passengers svg {
-    margin-left: 0.7rem;
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-/* ========== footer ========== */
 
 .results-container {
     max-width: 900px;

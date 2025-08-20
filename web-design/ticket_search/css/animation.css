@@ -1,0 +1,122 @@
+/* booking dots */
+
+.nav-booking .dot {
+    transform: translateX(0);
+    transition: transform 0.5s ease;
+}
+
+.nav-booking .dot1 {
+    transition-delay: 0s;
+}
+
+.nav-booking .dot2 {
+    transition-delay: 0.2s;
+}
+
+.nav-booking .dot3 {
+    transition-delay: 0.4s;
+}
+
+.nav-booking:hover .dot1 {
+    transform: translateX(-10rem);
+    transition-delay: 0s;
+}
+
+.nav-booking:hover .dot2 {
+    transform: translateX(-10rem);
+    transition-delay: 0.2s;
+}
+
+.nav-booking:hover .dot3 {
+    transform: translateX(-10rem);
+    transition-delay: 0.4s;
+}
+
+
+/* contact rotate */
+
+.nav-account circle {
+    transform: translateY(0);
+    transition: transform 1s ease;
+}
+
+.nav-account:hover circle {
+    transform: translateY(-10rem);
+}
+
+
+.nav-contact .circle {
+    transform: rotateZ(0);
+    transition: transform 1s ease;
+    transform-origin: 50% 50%;
+}
+
+.nav-contact:hover .circle {
+    transform: rotateZ(360deg);
+}
+
+
+/* train option */
+
+#train-option:hover circle {
+    animation: light 1.5s ease;
+}
+#bus-option:hover circle {
+    animation: light 1.5s ease;
+}
+
+@keyframes light {
+    
+    15% {
+        fill: #fcf64e;
+        stroke: #fcf64e;
+    }
+    30% {
+        fill: none;
+        stroke: none;
+    }
+    45% {
+        fill: none;
+        stroke: none;
+    }
+    60% {
+        fill: #fcf64e;
+        stroke: #fcf64e;
+    }
+    75% {
+        fill: none;
+        stroke: none;
+    }
+}
+
+
+#international-flight-option:hover path {
+    animation: 
+      fly-right1 1s ease 0s,
+      fly-right2 1s ease 1s;
+}
+
+@keyframes fly-right1 {
+    0% {transform: translateX(0rem);}
+    100% {transform: translateX(50rem);}
+}
+@keyframes fly-right2 {
+    0% {transform: translateX(-50rem);}
+    100% {transform: translateX(0rem);}
+}
+
+
+#domestic-flight-option:hover path {
+    animation: 
+      fly-left1 1s ease 0s,
+      fly-left2 1s ease 1s;
+}
+
+@keyframes fly-left1 {
+    0% {transform: translateX(0rem);}
+    100% {transform: translateX(40rem);}
+}
+@keyframes fly-left2 {
+    0% {transform: translateX(-40rem);}
+    100% {transform: translateX(0rem);}
+}
