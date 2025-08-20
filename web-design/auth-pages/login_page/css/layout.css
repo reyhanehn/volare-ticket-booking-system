@@ -170,6 +170,8 @@ figure {
 }
 
 .forgot {
+  display: flex;
+  gap: 2rem;
   margin: -0.5rem 0 1.5rem 0;
 }
 
@@ -288,7 +290,7 @@ label.valid:after {
 
 .social-login {
   align-items: center;
-  margin-top: 5rem;
+  margin-top: 2rem;
 }
 
 .social-label {
@@ -336,3 +338,12 @@ label.valid:after {
   background: #e72734;
 }
 
+.signup-link {
+  display: flex;
+  justify-content: center;
+}
+
+.signup-link a:hover {
+  text-decoration: none;
+  color: var(--color-muted);
+}

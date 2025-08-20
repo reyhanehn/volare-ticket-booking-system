@@ -8,10 +8,10 @@
     <title>Volare | Sign In</title>
 
     <!-- Font Icon -->
-    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="../../fonts/material-icon/css/material-design-iconic-font.min.css">
 
     <!-- icon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="images/logo/volare-logo-gold_transparent.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../images/logo/volare-logo-gold_transparent.png">
 
     <!-- style libraries -->
 
@@ -32,8 +32,7 @@
 
 
     <!-- scripts -->
-    <script src="js/form-utils.js" defer></script>
-    <script src="js/scripts.js" defer></script>
+    <script type="module" src="js/signin.js" defer></script>
 
     <title>Volare</title>
 
@@ -46,7 +45,7 @@
             <div class="container">
                 <div class="signin-content">
                     <div class="signin-image">
-                        <img src="images/main-img.PNG" alt="sing up image">
+                        <img src="../../images/main-img.PNG" alt="sing up image">
                     </div>
 
                     <div class="signin-form">
@@ -54,21 +53,28 @@
                         <form method="POST" class="register-form" id="login-form">
                             <div class="form-group">
                                 <label for="username"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="text" name="username" id="username" placeholder="Username"/>
+                                <input type="text" name="username" id="username" placeholder="Username" />
                             </div>
                             <div class="form-group">
                                 <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>
+                                <input type="password" name="your_pass" id="your_pass" placeholder="Password" />
                             </div>
                             <div class="form-group forgot">
-                                <a href="#">Forgot Password?</a>
+                                <a href="#">Reset Password</a>
+                                <a href="../login_otp_page/index.html">Sign In With OTP</a>
                             </div>
+                            
                             <div class="form-group">
                                 <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
-                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
+                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember
+                                    me</label>
                             </div>
+                            <div id="message-box" style="display: none;"></div>
                             <div class="form-group form-button">
-                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in" />
+                            </div>
+                            <div class="form-group signup-link">
+                                <a href="#">Already have an account</a>
                             </div>
                         </form>
                         <div class="social-login">
@@ -83,7 +89,7 @@
                 </div>
             </div>
         </section>
-        
+
     </div>
 </body>
 

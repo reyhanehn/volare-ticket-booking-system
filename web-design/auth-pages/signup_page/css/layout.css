@@ -6,7 +6,6 @@ display-flex,
 .social-login,
 .socials {
   display: flex;
-  display: -webkit-flex;
 }
 
 /* @extend list-type-ulli; */
@@ -142,7 +141,7 @@ figure {
 }
 
 .signup-form {
-  padding: 5rem 4rem;
+  padding: 4rem 4rem;
   background-color: var(--color-primary-bg);
 }
 
@@ -267,4 +266,14 @@ label.valid:after {
   position: relative;
   top: 0;
   transform: translateY(0);
+}
+
+.signin-link {
+  display: flex;
+  justify-content: center;
+}
+
+.signin-link a:hover {
+  text-decoration: none;
+  color: var(--color-muted);
 }

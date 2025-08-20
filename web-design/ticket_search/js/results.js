@@ -1,25 +1,23 @@
+// In ticket_search/results.js
+
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Get the URL parameters
     const params = new URLSearchParams(window.location.search);
     const originId = params.get('origin_id');
     const destinationId = params.get('destination_id');
     const departDate = params.get('departure_date_exact');
     const transportType = params.get('transport_type');
+    const flightType = params.get('flight_type'); // <-- ADDED
 
-    // Make sure we have the necessary parameters before making an API call
     if (!originId || !destinationId || !departDate || !transportType) {
         window.location.href = "../home_page/index.html";
-        return; // Stop execution
+        return;
     }
 
-    // 2. Build the API URL with the parameters
     const apiUrl = `http://127.0.0.1:8000/bookings/customer/tickets/search/?${params.toString()}`;
 
-    // 3. Select the container to display results and show a loading message
     const ticketListContainer = document.getElementById('ticket-list');
     ticketListContainer.innerHTML = '<p class="loading-message">Searching for available tickets...</p>';
 
-    // 4. Fetch data from your backend
     fetch(apiUrl)
         .then(response => {
             if (!response.ok) {
@@ -39,28 +37,57 @@ document.addEventListener('DOMContentLoaded', () => {
             ticketListContainer.innerHTML = '';
 
             tickets.forEach(ticket => {
-                const ticketItem = document.createElement('div');
-                ticketItem.classList.add('ticket-item');
-
                 const departureDate = new Date(ticket.departure_datetime);
                 const departureTime = departureDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+                const ticketItem = document.createElement('div');
+                ticketItem.classList.add('ticket-item');
+
                 ticketItem.innerHTML = `
-                    <div class="ticket-details">
-                        <div class="ticket-time">
-                            <span class="departure-time">${departureTime}</span>
+                    <div class="ticket-header">
+                        <div class="ticket-route">
                             <span class="origin-city">${ticket.origin}</span>
-                            <svg class="flight-icon" viewBox="0 0 24 24"></svg>
+                            <span class="departure-time">(${departureTime})</span>
+                            <span class="line"></span>
                             <span class="destination-city">${ticket.destination}</span>
                         </div>
+                        <div class="ticket-price-section">
+                            <div class="ticket-price">£${ticket.price}</div>
+                            <button class="select-button">Select</button>
+                        </div>
                     </div>
-                    <div class="ticket-price-section">
-                        <div class="ticket-price">£${ticket.price}</div>
-                        <button class="select-button">Select</button>
+                    <div class="ticket-details-slider">
+                        <div class="detail-row">
+                            <span>Duration:</span>
+                            <span class="detail-value">${ticket.duration}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Company:</span>
+                            <span class="detail-value">${ticket.company_name}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Vehicle:</span>
+                            <span class="detail-value">${ticket.transport_type} (${ticket.section})</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Origin Station:</span>
+                            <span class="detail-value">${ticket.origin_station}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Remaining Seats:</span>
+                            <span class="detail-value">${ticket.remaining_seats}</span>
+                        </div>
                     </div>
                 `;
 
                 ticketListContainer.appendChild(ticketItem);
+
+                ticketItem.addEventListener('click', (event) => {
+                    if (event.target.tagName === 'BUTTON') {
+                        return;
+                    }
+                    ticketItem.classList.toggle('expanded');
+                });
             });
         })
         .catch(error => {
