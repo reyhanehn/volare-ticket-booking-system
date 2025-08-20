@@ -182,7 +182,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 ELASTICSEARCH = {
-    "hosts": ["https://localhost:9200"],
+    "hosts": ["http://localhost:9200"],
     "username": "elastic",
     "password": "qH3yjkb-1CXu+EiIPF2S",
     "verify_certs": False,   # OK for local dev
