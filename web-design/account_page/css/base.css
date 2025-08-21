@@ -1,5 +1,7 @@
-/* Base styles and variables */
-:root[data-theme="default"] {
+
+
+
+:root {
   /* Colors */
   --color-primary-bg: #ffffff;
   --color-primary-bg-hover: #f6f6f6;

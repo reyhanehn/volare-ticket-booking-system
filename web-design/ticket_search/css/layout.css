@@ -212,8 +212,8 @@ header {
 .logout button {
     width: 100%;
     padding: 0.6rem;
-    background: #e47b8b;
-    color: white;
+    background: var(--color-brand);
+    color: var(--color-primary-text);
     font-weight: 600;
     border: none;
     border-radius: 8px;
@@ -222,7 +222,7 @@ header {
 }
 
 .logout button:hover {
-    background: #d14358;
+    background: var(--color-brand-hover);
 }
 
 
