@@ -1,4 +1,4 @@
-import { isAuthenticated } from "../../js/auth.js";
+import { isAuthenticated } from "./auth.js";
 
 const navAction = document.getElementsByClassName("nav-action")[2];
 
