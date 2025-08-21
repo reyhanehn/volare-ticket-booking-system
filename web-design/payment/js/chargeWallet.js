@@ -86,13 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalMessage.textContent = data.message;
                 modalMessage.classList.add('success');
                 modalMessage.classList.remove('error');
-                try {
-                    updateBalance(amountToCharge);
-                } catch (error) {
-                    console.error('Error updating balance:', error);
-                }
-                
 
+                // Update the balance with the charged amount
+                updateBalance(amountToCharge);
 
                 // Automatically close the modal after a short delay
                 setTimeout(hideModal, 2000);

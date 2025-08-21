@@ -4,7 +4,7 @@
 
 (function() {
   const DEFAULT_TIMEOUT_MS = 20000;
-  const API_BASE_URL = window.API_BASE_URL || 'http://127.0.0.1:8000/bookings/';
+  const API_BASE_URL = window.API_BASE_URL || 'http://127.0.0.1:8000/';
   // If your backend uses cookie-based sessions/CSRF, set to true to send cookies.
   // With JWT Authorization headers, keep this false to simplify CORS.
   const USE_COOKIES = false;
@@ -64,11 +64,11 @@
   }
 
   async function getReservationDetails(reservationId) {
-    return fetchWithAuth(`customer/reservation/${encodeURIComponent(reservationId)}/`, { method: 'GET' });
+    return fetchWithAuth(`bookings/customer/reservation/${encodeURIComponent(reservationId)}/`, { method: 'GET' });
   }
 
   async function processPayment(reservationId, paymentMethod) {
-    return fetchWithAuth(`customer/reservation/${encodeURIComponent(reservationId)}/pay/`, {
+    return fetchWithAuth(`bookings/customer/reservation/${encodeURIComponent(reservationId)}/pay/`, {
       method: 'POST',
       body: JSON.stringify({ method: paymentMethod })
     });
