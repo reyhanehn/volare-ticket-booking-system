@@ -22,7 +22,7 @@
 
 .reservation-header h1 {
   margin-bottom: var(--spacing-sm);
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
 }
 
 .reservation-header p {
@@ -42,7 +42,7 @@
 .passenger-section h2,
 .seat-section h2 {
   margin-bottom: var(--spacing-lg);
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
   font-size: var(--font-size-xl);
 }
 
@@ -81,7 +81,7 @@
   display: block;
   margin-bottom: var(--spacing-sm);
   font-weight: 600;
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
   font-size: var(--font-size-base);
 }
 
@@ -181,7 +181,7 @@
 
 .modal-header h3 {
   margin: 0;
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
 }
 
 .modal-close {
