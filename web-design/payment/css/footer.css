@@ -1,0 +1,158 @@
+/* Footer CSS - Flex Version */
+.footer {
+    margin-top: 5rem;
+    padding: 3rem 5rem 1rem;
+    color: var(--color-secondary-text);
+    background-color: var(--color-secondary-bg);
+    font-family: var(--font-family-footer);
+    text-align: center;
+}
+
+/* Top Row Flex */
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.footer-top .item {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 2rem;
+}
+
+.footer-top .item h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.footer-top .item ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-top .item ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-top .item ul li a {
+    color: var(--color-secondary-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-top .item ul li a:hover {
+    color: var(--color-secondary-text-hover);
+}
+
+.footer-top .item.text {
+    flex: 2;
+    min-width: 300px;
+}
+
+.footer-top .item.text p {
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Middle Row: Social Icons */
+.footer-middle {
+    margin-bottom: 2rem;
+}
+
+.footer-middle .social {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.footer-middle .social a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-secondary-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-middle .social a:hover {
+    background: var(--color-secondary-text-hover);
+    transform: translateY(-2px);
+}
+
+.footer-middle .social a i {
+    font-size: 1.25rem;
+}
+
+/* Bottom Row: Copyright */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+}
+
+.footer-bottom .copyright {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 2rem 1rem;
+    }
+    
+    .footer-top {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-top .item {
+        min-width: auto;
+        margin-bottom: 1.5rem;
+    }
+    
+    .footer-top .item.text {
+        min-width: auto;
+    }
+    
+    .footer-top .item.text p {
+        max-width: 100%;
+    }
+    
+    .footer-middle .social {
+        gap: 1rem;
+    }
+    
+    .footer-middle .social a {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 1.5rem 1rem 1rem;
+    }
+    
+    .footer-top .item h3 {
+        font-size: 1.125rem;
+    }
+    
+    .footer-middle .social a {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .footer-middle .social a i {
+        font-size: 1rem;
+    }
+}
