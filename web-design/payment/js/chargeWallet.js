@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // Select the necessary DOM elements
-    const chargeLink = document.querySelector('.charge-link');
+    const chargeLinks = document.querySelectorAll('.charge-link');
     const chargeModalOverlay = document.getElementById('chargeModalOverlay');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const confirmChargeBtn = document.getElementById('confirmChargeBtn');
@@ -88,7 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalMessage.classList.remove('error');
 
                 // Update the balance with the charged amount
-                updateBalance(amountToCharge);
+                try {
+                    updateBalance(amountToCharge);
+                } catch (error) {
+                    console.error('Failed to update balance:', error);
+                }
 
                 // Automatically close the modal after a short delay
                 setTimeout(hideModal, 2000);
@@ -114,9 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event listeners
-    chargeLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        showModal();
+    chargeLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal();
+        });
     });
 
     closeModalBtn.addEventListener('click', hideModal);

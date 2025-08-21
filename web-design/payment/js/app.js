@@ -428,11 +428,11 @@ async function handleWalletCharge() {
   try {
     const result = await window.PaymentAPI.chargeWallet(amount);
     
-    if (modalMessage) {
+        if (modalMessage) {
       modalMessage.textContent = result.message || 'Wallet charged successfully!';
-      modalMessage.classList.add('success');
-      modalMessage.classList.remove('error');
-    } else {
+          modalMessage.classList.add('success');
+          modalMessage.classList.remove('error');
+        } else {
       showNotification(result.message || 'Wallet charged successfully!', 'success');
     }
     
@@ -441,22 +441,22 @@ async function handleWalletCharge() {
     updateWalletBalanceDisplay(window.paymentState.walletAmount);
     
     // Close modal after delay
-    setTimeout(closeWalletModal, 2000);
+        setTimeout(closeWalletModal, 2000);
     
   } catch (error) {
     console.error('Wallet charge error:', error);
     const errorMessage = error.message || 'Failed to charge wallet';
     
-    if (modalMessage) {
-      modalMessage.textContent = errorMessage;
-      modalMessage.classList.add('error');
-      modalMessage.classList.remove('success');
-    } else {
-      showNotification(errorMessage, 'error');
-    }
+        if (modalMessage) {
+          modalMessage.textContent = errorMessage;
+          modalMessage.classList.add('error');
+          modalMessage.classList.remove('success');
+        } else {
+          showNotification(errorMessage, 'error');
+        }
   } finally {
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = 'Confirm';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Confirm';
   }
 }
 
@@ -497,7 +497,7 @@ async function handlePayment() {
   }
   
   try {
-    const reservationId = getReservationIdFromUrl();
+  const reservationId = getReservationIdFromUrl();
     if (!reservationId) {
       throw new Error('Missing reservation ID');
     }

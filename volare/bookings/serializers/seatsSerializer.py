@@ -19,7 +19,7 @@ class AvailableSeatsSerializer(serializers.Serializer):
             ) s
             LEFT JOIN bookings_reservation r
               ON r.ticket_id = %s
-             AND r.status NOT IN ('CANCELLED', 'EXPIRED')
+             AND r.status NOT IN ('Cancelled')
              AND r.seat_number::int = s.seat
             WHERE r.seat_number IS NULL
             ORDER BY s.seat;
