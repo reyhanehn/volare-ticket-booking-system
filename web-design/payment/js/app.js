@@ -9,6 +9,86 @@ window.paymentState = {
   walletAmount: 0
 };
 
+// Utility: Get JWT token from localStorage
+function getAuthToken() {
+  return localStorage.getItem('access_token');
+}
+
+// Utility: Get reservation_id from URL
+function getReservationIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('reservation_id');
+}
+
+// Fetch reservation details from backend
+async function fetchReservationDetails(reservationId) {
+  const token = getAuthToken();
+  if (!token) {
+    showNotification('You must be logged in to view this page.', 'error');
+    return null;
+  }
+  try {
+    const response = await fetch(`http://localhost:8000/bookings/customer/reservation/${reservationId}/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error('Failed to fetch reservation details');
+    return await response.json();
+  } catch (err) {
+    showNotification(err.message, 'error');
+    return null;
+  }
+}
+
+// Render reservation summary with real data
+function renderReservationSummary(data) {
+  const infoCard = document.querySelector('.payment-info-card');
+  if (!infoCard || !data || !data.ticket_info) return;
+  const ticket = data.ticket_info;
+  const route = `${ticket.route.origin} → ${ticket.route.destination}`;
+  const [date, timeRaw] = ticket.trip.departure_datetime.split('T');
+  const time = timeRaw ? timeRaw.split('+')[0] : '';
+  infoCard.innerHTML = `
+    <div class="info-group">
+      <h3>Ticket Information</h3>
+      <div class="info-item"><span class="info-label">Route:</span> <span class="info-value">${route}</span></div>
+      <div class="info-item"><span class="info-label">Date:</span> <span class="info-value">${date}</span></div>
+      <div class="info-item"><span class="info-label">Time:</span> <span class="info-value">${time}</span></div>
+    </div>
+    <div class="info-group">
+      <h3>Passenger Information</h3>
+      <div class="info-item"><span class="info-label">Name:</span> <span class="info-value">${data.passenger_id}</span></div>
+    </div>
+    <div class="info-group">
+      <h3>Seat Information</h3>
+      <div class="info-item"><span class="info-label">Seat:</span> <span class="info-value">${data.seat_number}</span></div>
+      <div class="info-item"><span class="info-label">Class:</span> <span class="info-value">${ticket.vehicle.class_code}</span></div>
+      <div class="info-item"><span class="info-label">Section:</span> <span class="info-value">${ticket.section}</span></div>
+    </div>
+    <div class="info-group total-group">
+      <h3>Total Amount</h3>
+      <div class="total-amount">
+        <span class="currency">$</span>
+        <span class="amount">${ticket.price}</span>
+        <span class="currency">USD</span>
+      </div>
+    </div>
+  `;
+  // Update payment amount in state
+  window.paymentState.paymentAmount = ticket.price;
+}
+
+// Update wallet balance display
+function updateWalletBalanceDisplay(balance) {
+  const balanceSpan = document.querySelector('.current-balance span');
+  if (balanceSpan) {
+    balanceSpan.textContent = `Current Balance: $${balance.toFixed(2)}`;
+  }
+}
+
 /**
  * Initialize the payment page
  */
@@ -25,6 +105,20 @@ function initializePaymentPage() {
   wirePayButton();
   
   console.log('Payment page initialized successfully');
+  // Fetch and render reservation details
+  const reservationId = getReservationIdFromUrl();
+  if (!reservationId) {
+    showNotification('Missing reservation_id in URL.', 'error');
+    return;
+  }
+  fetchReservationDetails(reservationId).then(data => {
+    if (data) {
+      renderReservationSummary(data);
+      window.paymentState.paymentAmount = data.ticket_info.price;
+    }
+  });
+  // Optionally fetch wallet balance from backend here
+  // updateWalletBalanceDisplay(window.paymentState.walletBalance);
 }
 
 /**
@@ -249,21 +343,49 @@ function handlePayment() {
     payButton.classList.add('loading');
     payButton.disabled = true;
   }
-  
-  // Simulate payment processing delay
-  setTimeout(() => {
-    // Reset button state
+  // Real payment API call
+  const reservationId = getReservationIdFromUrl();
+  const token = getAuthToken();
+  if (!token) {
+    showNotification('You must be logged in.', 'error');
     if (payButton) {
       payButton.classList.remove('loading');
       payButton.disabled = false;
     }
-    
-    // Show success message
-    showNotification('Payment processed successfully!', 'success');
-    
-    // In a real app, this would redirect to confirmation page
-    console.log('Payment processed for method:', selectedPaymentMethod);
-  }, 2000);
+    return;
+  }
+  // Optional: Check wallet balance before proceeding
+  if (selectedPaymentMethod === 'wallet' && !window.PaymentStateManager.hasSufficientWalletBalance()) {
+    showNotification('Insufficient wallet balance.', 'error');
+    if (payButton) {
+      payButton.classList.remove('loading');
+      payButton.disabled = false;
+    }
+    return;
+  }
+  fetch(`http://localhost:8000/bookings/customer/reservation/${reservationId}/pay/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ method: selectedPaymentMethod })
+  })
+    .then(async response => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Payment failed');
+      showNotification('Payment successful! Confirmation email sent.', 'success');
+      // Optionally redirect or update UI
+    })
+    .catch(err => {
+      showNotification(err.message, 'error');
+    })
+    .finally(() => {
+      if (payButton) {
+        payButton.classList.remove('loading');
+        payButton.disabled = false;
+      }
+    });
 }
 
 /**
