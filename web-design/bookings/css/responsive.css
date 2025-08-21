@@ -1,0 +1,125 @@
+/* Mobile First Responsive Design */
+
+/* Base mobile styles (default) */
+.booking-card {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spacing-md);
+  text-align: center;
+}
+
+.booking-info {
+  order: 1;
+}
+
+.booking-price {
+  order: 2;
+  text-align: center;
+  min-width: auto;
+}
+
+.booking-actions {
+  order: 3;
+  justify-content: center;
+}
+
+.booking-details {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.booking-route {
+  justify-content: center;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .booking-card {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+  
+  .booking-info {
+    order: 1;
+  }
+  
+  .booking-price {
+    order: 2;
+    text-align: right;
+    min-width: 80px;
+  }
+  
+  .booking-actions {
+    order: 3;
+    justify-content: flex-end;
+  }
+  
+  .booking-details {
+    flex-direction: row;
+    gap: var(--spacing-md);
+    align-items: center;
+  }
+  
+  .booking-route {
+    justify-content: flex-start;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .bookings-list {
+    max-width: 900px;
+  }
+  
+  .booking-card {
+    padding: var(--spacing-xl);
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1280px) {
+  .bookings-list {
+    max-width: 1000px;
+  }
+}
+
+/* Extra large screens */
+@media (min-width: 1536px) {
+  .bookings-list {
+    max-width: 1100px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .page-header {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .bookings-section {
+    padding: var(--spacing-xl) 0;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .booking-card {
+    border-width: 0.5px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .booking-card {
+    box-shadow: none;
+    border: 1px solid #000;
+    break-inside: avoid;
+  }
+  
+  .page-header,
+  .footer {
+    display: none;
+  }
+}

@@ -1,0 +1,217 @@
+/* Layout Structure */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Main Layout */
+.bookings-main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page Header */
+.page-header {
+  background: var(--color-gray-50);
+  padding: var(--spacing-2xl) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-title {
+  text-align: center;
+  color: var(--color-primary-text);
+  margin: 0;
+}
+
+/* Bookings Section */
+.bookings-section {
+  flex: 1;
+  padding: var(--spacing-3xl) 0;
+  background: var(--color-gray-50);
+}
+
+/* Bookings List */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Grid and Flex Utilities */
+.grid {
+  display: grid;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-sm {
+  gap: var(--spacing-sm);
+}
+
+.gap-md {
+  gap: var(--spacing-md);
+}
+
+.gap-lg {
+  gap: var(--spacing-lg);
+}
+
+.gap-xl {
+  gap: var(--spacing-xl);
+}
+
+/* Spacing Utilities */
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+
+.pt-sm { padding-top: var(--spacing-sm); }
+.pt-md { padding-top: var(--spacing-md); }
+.pt-lg { padding-top: var(--spacing-lg); }
+.pt-xl { padding-top: var(--spacing-xl); }
+
+.pb-sm { padding-bottom: var(--spacing-sm); }
+.pb-md { padding-bottom: var(--spacing-md); }
+.pb-lg { padding-bottom: var(--spacing-lg); }
+.pb-xl { padding-bottom: var(--spacing-xl); }
+
+/* Responsive Grid Adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .page-header {
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .bookings-section {
+    padding: var(--spacing-2xl) 0;
+  }
+  
+  .bookings-list {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+}
+
+
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+
+.navbar {
+    background: var(--color-primary-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding: .75rem 1.25rem;
+}
+
+.nav-container {
+    max-width: 75rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand-icon {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+}
+
+.brand-text {
+    font-weight: 700;
+    font-family: var(--font-family-volare);
+    font-size: var(--font-size-3xl);
+    color: var(--color-primary-text);
+}
+
+.nav-right {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    padding: 0.5rem 0;
+}
+
+.nav-action:hover {
+    color: var(--color-primary-text);
+}
+
+.nav-action-icon {
+    width: 2.25rem;
+    height: 1.25rem;
+}
+
+.nav-action-icon g {
+    fill: var(--color-muted);
+}
+
+.nav-action:hover .nav-action-icon g {
+    fill: var(--color-primary-text);
+}
