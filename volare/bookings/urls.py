@@ -13,6 +13,7 @@ from .views.ticketView import TicketSearchView, TicketCacheDetailView, AdminTick
 from .views.paymentView import ReservationPaymentView, PaymentStatusView
 from .views.paymentHistoryView import PaymentHistoryView
 from .views.adminReservationView import AdminEditReservationView, AdminConfirmReservationView
+from .views.seatsView import AvailableSeatsView
 
 urlpatterns = [
     path('admin/locations/create/', CreateLocationView.as_view(), name='create-location'),
@@ -77,6 +78,7 @@ urlpatterns = [
     path('admin/tickets/search/', AdminTicketListView.as_view(), name='admin-tickets-list'),
     path('company/tickets/search/', CompanyTicketListView.as_view(), name='company-tickets-list'),
     path('tickets/search/<int:ticket_id>/', TicketCacheDetailView.as_view(), name='ticket-details'),
+    path('tickets/<int:ticket_id>/available_seats/', AvailableSeatsView.as_view(), name='available-seats'),
     # path('admin/tickets/<int:ticket_id>/edit/',  , name='edit-ticket'),  # not done
     # path('admin/tickets/<int:ticket_id>/cancel/',  , name='edit-ticket'),  # not done
     path('customer/passenger/create/', CreatePassengerView.as_view(), name='create-passenger'),
