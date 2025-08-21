@@ -24,8 +24,9 @@ TICKET_MAPPING = {
             "section": {"type": "keyword"},
             "vehicle": {
                 "properties": {
+                    "name": {"type": "keyword"},
                     "type": {"type": "keyword", "normalizer": "lowercase"},
-                    "class_code": {"type": "keyword"},
+                    "class_code": {"type": "keyword"}
                 }
             },
             "route": {
@@ -36,8 +37,8 @@ TICKET_MAPPING = {
                     "destination": {"type": "keyword"},
                     "origin_station": {"type": "keyword"},
                     "destination_station": {"type": "keyword"},
-                    "origin_country": {"type": "keyword"},
-                    "destination_country": {"type": "keyword"}
+                    "origin_country": {"type": "keyword"},  # <-- ADDED
+                    "destination_country": {"type": "keyword"},  # <-- ADDED
                 }
             },
             "trip": {
@@ -52,6 +53,7 @@ TICKET_MAPPING = {
         }
     }
 }
+
 
 def create_ticket_index():
     try:
