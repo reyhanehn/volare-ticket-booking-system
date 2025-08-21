@@ -136,14 +136,12 @@ const ReservationStateManager = {
       status: data.status,
       route: {
         from: {
-          code: route.origin_id,
-          name: route.origin,
+          code: route.origin,
           country: route.origin_country,
           station: route.origin_station
         },
         to: {
-          code: route.destination_id,
-          name: route.destination,
+          code: route.destination,
           country: route.destination_country,
           station: route.destination_station
         }

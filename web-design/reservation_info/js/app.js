@@ -155,7 +155,6 @@ class ReservationInfoApp {
         <div class="ticket-location">
           <div class="ticket-detail-label">Origin</div>
           <div class="ticket-location-code">${data.route.from.code}</div>
-          <div class="ticket-location-name">${data.route.from.name}</div>
           <div class="ticket-location-country">${data.route.from.country}</div>
           <div class="ticket-location-station">${data.route.from.station}</div>
         </div>
