@@ -20,16 +20,25 @@
 
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="../css/navbar.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/fonts.css">
-  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="css/animation.css">
 
   <script src="js/app.js" defer></script>
   <script src="js/api.js" defer></script>
   <script src="js/state.js" defer></script>
-  <script type="module" src="js/chargeWallet.js" defer></script>
+  <script type="module" src="../js/accountBox.js" defer></script>
+  <script type="module" src="../js/authenticated.js" defer></script>
+  <script type="module" src="../js/theme.js" defer></script>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
 
 
   <title>Payment - Volare</title>
@@ -55,8 +64,8 @@
               <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <circle cx="12" cy="16" r="1" fill="#1C274C" />
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <circle cx="12" cy="16" r="1" fill="currentColor" />
                 <path
                   d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" class="circle" />
@@ -100,6 +109,31 @@
         </div>
       </nav>
     </header>
+
+    <div id="accountBox" class="account-box hidden">
+      <div class="account-header">
+        <p class="email">alialavinikoo@gmail.com</p>
+        <div class="pic">
+          <p>A</p>
+        </div>
+      </div>
+      <div class="wallet">
+        <svg xmlns="http://www.w3.org/2000/svg" class="wallet-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2 6a2 2 0 0 1 2-2h16a1 1 0 0 1 1 1v3h-4a3 3 0 0 0 0 6h4v3a1 1 0 0 1-1 1H4a2 2 0 0 1-2-2V6z" />
+        </svg>
+        <span class="balance">$0.00</span>
+        <a href="#" class="charge-link">Charge</a>
+        <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M1.5 5.5l6.5 6 6.5-6" stroke="#7886C7" stroke-width="2" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <ul class="account-links">
+        <li><a href="../account_page/index.html">Your Account</a></li>
+        <li><a href="#">Notifications</a></li>
+      </ul>
+      <div class="logout"><button href="#">Sign out</button></div>
+    </div>
 
     <main class="payment-main">
       <div class="container">

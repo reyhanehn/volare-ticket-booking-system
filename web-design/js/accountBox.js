@@ -1,6 +1,6 @@
 const API_BASE = "http://127.0.0.1:8000";  
 
-import { isAuthenticated } from "../../js/auth.js";
+import { isAuthenticated } from "./auth.js";
 
 
 const accountBtn = document.getElementsByClassName("nav-account")[0];
@@ -82,7 +82,7 @@ document.addEventListener("click", (e) => {
 });
 
 
-import { logout } from "../../js/auth.js";
+import { logout } from "./auth.js";
 
 document.getElementsByClassName("logout")[0].addEventListener("click", async (e) => {
   e.preventDefault(); // prevent any unwanted navigation
