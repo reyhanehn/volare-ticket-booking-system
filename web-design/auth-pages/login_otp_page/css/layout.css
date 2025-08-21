@@ -146,10 +146,12 @@ figure {
 }
 
 .form-group {
+
   position: relative;
   margin-bottom: 1.5625rem;
   overflow: hidden;
 }
+
 
 .password {
   margin-top: 1rem;
@@ -169,6 +171,8 @@ figure {
 }
 
 input {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary-text);
   width: 100%;
   display: block;
   border: none;

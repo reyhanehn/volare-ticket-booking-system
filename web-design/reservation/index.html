@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/logo/volare-logo-gold_transparent.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
+      defer></script>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/footer.css">
+
+  <script src="js/app.js" defer></script>
+  <script src="js/ui-ticket.js" defer></script>
+  <script src="js/ui-passenger.js" defer></script>
+  <script src="js/ui-seat.js" defer></script>
+  <script src="js/ui-modal.js" defer></script>
+
+  <title>Reservation - Volare</title>
+</head>
+
+<body>
+  <main>
+    <header>
+      <nav class="navbar">
+        <div class="nav-container">
+          <div class="nav-left">
+            <div class="brand">
+              <div class="brand-icon">
+                <img src="../images/logo/volare-logo-gold_transparent.png" alt="volare icon">
+              </div>
+              <div class="brand-text">
+                VOLARE
+              </div>
+            </div>
+          </div>
+          <div class="nav-right">
+            <a href="#" class="nav-action nav-contact">
+              <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="12" cy="16" r="1" fill="#1C274C" />
+                <path
+                  d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" class="circle" />
+              </svg>
+              Contact
+            </a>
+            <a href="#" class="nav-action nav-booking">
+              <svg class="nav-action-icon" viewBox="0 0 460.054 460.054" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                  <path class="dot dot1"
+                    d="M40.003,69.679C17.914,69.679,0,87.592,0,109.697c0,22.089,17.914,39.987,40.003,39.987c22.089,0,40.003-17.898,40.003-39.987C80.006,87.592,62.092,69.679,40.003,69.679z"
+                    stroke="currentColor" stroke-width="2" />
+                  <path class="dot dot2"
+                    d="M40.003,190.032C17.914,190.032,0,207.93,0,230.035c0,22.089,17.914,40.002,40.003,40.002c22.089,0,40.003-17.913,40.003-40.002C80.006,207.93,62.092,190.032,40.003,190.032z"
+                    stroke="currentColor" stroke-width="2" />
+                  <path class="dot dot3"
+                    d="M40.003,310.37C17.914,310.37,0,328.283,0,350.372c0,22.089,17.914,40.003,40.003,40.003c22.089,0,40.003-17.914,40.003-40.003C80.006,328.283,62.092,310.37,40.003,310.37z"
+                    stroke="currentColor" stroke-width="2" />
+                  <path class="line line1"
+                    d="M429.973,79.601H145.419c-16.611,0-30.081,13.47-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554c16.61,0,30.081-13.469,30.081-30.081C460.054,93.071,446.583,79.601,429.973,79.601z"
+                    stroke="currentColor" stroke-width="2" />
+                  <path class="line line2"
+                    d="M429.973,199.939H145.419c-16.611,0-30.081,13.469-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554c16.61,0,30.081-13.469,30.081-30.081C460.054,213.408,446.583,199.939,429.973,199.939z"
+                    stroke="currentColor" stroke-width="2" />
+                  <path class="line line3"
+                    d="M429.973,320.291H145.419c-16.611,0-30.081,13.469-30.081,30.081c0,16.611,13.469,30.08,30.081,30.08h284.554c16.61,0,30.081-13.469,30.081-30.08C460.054,333.759,446.583,320.291,429.973,320.291z"
+                    stroke="currentColor" stroke-width="2" />
+                </g>
+              </svg>
+              My Bookings
+            </a>
+            <a href="../auth-pages/login_page/index.html" class="nav-action nav-account">
+              <svg class="nav-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="5" stroke="currentColor" stroke-width="2" />
+                <path d="M20 21C20 16.5817 16.4183 13 12 13C7.58172 13 4 16.5817 4 21" stroke="currentColor"
+                  stroke-width="2" />
+              </svg>
+              Sign In
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+
+    <main class="reservation-main">
+      <div class="container">
+        <div class="reservation-header">
+          <h1>Complete Your Reservation</h1>
+          <p>Review your ticket details and select your preferences</p>
+        </div>
+
+        <!-- Ticket Summary Section -->
+        <section class="ticket-summary-section">
+          <h2>Ticket Summary</h2>
+          <div class="ticket-card" id="ticket-summary">
+            <!-- Ticket content will be populated by JavaScript -->
+          </div>
+        </section>
+
+        <!-- Passenger Section -->
+        <section class="passenger-section">
+          <h2>Passenger Information</h2>
+          <div class="form-group">
+            <label for="passenger-select">Select Passenger</label>
+            <select id="passenger-select" class="form-select">
+              <option value="">Choose a passenger...</option>
+              <!-- Options will be populated by JavaScript -->
+            </select>
+          </div>
+        </section>
+
+        <!-- Seat Selection Section -->
+        <section class="seat-section">
+          <h2>Seat Selection</h2>
+          <div class="form-group">
+            <label for="seat-select">Select Seat</label>
+            <div class="seat-selection-wrapper">
+              <select id="seat-select" class="form-select">
+                <option value="">Choose a seat...</option>
+                <!-- Options will be populated by JavaScript -->
+              </select>
+              <button type="button" id="view-seat-map" class="btn btn-secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                View Seat Map
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Confirm Section -->
+        <section class="confirm-section">
+          <div class="confirm-wrapper">
+            <button type="button" id="confirm-reservation" class="btn btn-primary btn-large">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Confirm & Continue to Payment
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Passenger Modal -->
+    <div id="passenger-modal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="others">Add New Passenger</h3>
+          <button type="button" class="modal-close" aria-label="Close modal">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="passenger-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="lastName" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ssn">SSN</label>
+                <input type="text" id="ssn" name="ssn" required>
+              </div>
+              <div class="form-group">
+                <label for="date-of-birth">Date of Birth</label>
+                <input type="date" id="date-of-birth" name="dateOfBirth" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="passengerPhotoUrl">Profile Image URL (optional)</label>
+              <input
+                type="url"
+                id="passengerPhotoUrl"
+                name="photo_url"
+                placeholder="https://example.com/avatar.jpg"
+                inputmode="url"
+                autocomplete="off"
+              >
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-passenger">Save Passenger</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seat Map Modal -->
+    <div id="seat-map-modal" class="modal" aria-hidden="true">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h3 class="others">Seat Map</h3>
+          <button type="button" class="modal-close" aria-label="Close modal">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="seat-map-container">
+            <div class="seat-map" id="seat-map">
+              <!-- Seat grid will be populated by JavaScript -->
+            </div>
+            <div class="seat-legend">
+              <div class="legend-item">
+                <div class="legend-seat available"></div>
+                <span>Available</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-seat selected"></div>
+                <span>Selected</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-seat occupied"></div>
+                <span>Occupied</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-modal-close>Confirm Seat</button>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+
+        <!-- Top Row: Services, About, Volare -->
+        <div class="footer-top">
+          <div class="item">
+            <h3 class="white-heading">Our Services</h3>
+            <ul>
+              <li><a href="#">Airplane Tickets</a></li>
+              <li><a href="#">Bus Tickets</a></li>
+              <li><a href="#">Train Tickets</a></li>
+            </ul>
+          </div>
+
+          <div class="item">
+            <h3 class="white-heading">About</h3>
+            <ul>
+              <li><a href="#">Our Company</a></li>
+              <li><a href="#">Team</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="item text">
+            <h3 class="white-heading">Volare</h3>
+            <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+              reliable.</p>
+          </div>
+        </div>
+
+        <!-- Middle Row: Social Icons -->
+        <div class="footer-middle">
+          <div class="item social">
+            <a href="#"><i class="icon ion-social-facebook"></i></a>
+            <a href="#"><i class="icon ion-social-twitter"></i></a>
+            <a href="#"><i class="icon ion-social-snapchat"></i></a>
+            <a href="#"><i class="icon ion-social-instagram"></i></a>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Copyright -->
+        <div class="footer-bottom">
+          <p class="copyright">Volare © 2025</p>
+        </div>
+
+      </div>
+    </footer>
+  </main>
+</body>
+
+</html>

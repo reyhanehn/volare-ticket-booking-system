@@ -1,0 +1,386 @@
+/* Component styles - Ticket, Dropdown, Buttons, Modals, Seat Grid */
+
+/* Ticket styling */
+.ticket-card {
+  position: relative;
+  background: white;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* Ticket perforated edges effect */
+.ticket-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 0 0, transparent 0, transparent 8px, white 8px, white 10px),
+    radial-gradient(circle at 100% 0, transparent 0, transparent 8px, white 8px, white 10px),
+    radial-gradient(circle at 0 100%, transparent 0, transparent 8px, white 8px, white 10px),
+    radial-gradient(circle at 100% 100%, transparent 0, transparent 8px, white 8px, white 10px);
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 
+    0 0,
+    100% 0,
+    0 100%,
+    100% 100%;
+  pointer-events: none;
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px dashed var(--color-border);
+}
+
+.ticket-company {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.ticket-company-logo {
+  width: 40px;
+  height: 40px;
+  background: var(--color-brand);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: var(--font-size-lg);
+}
+
+.ticket-company-name {
+  font-weight: 600;
+  color: var(--color-dark-blue);
+  font-size: var(--font-size-lg);
+}
+
+.ticket-type {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-ice-blue);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-dark-blue);
+  font-weight: 500;
+}
+
+.ticket-route {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--spacing-lg);
+  align-items: center;
+  margin: var(--spacing-xl) 0;
+  padding: var(--spacing-lg) 0;
+}
+
+.ticket-location {
+  text-align: center;
+}
+
+.ticket-location-code {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-dark-blue);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ticket-location-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ticket-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.ticket-arrow-line {
+  width: 60px;
+  height: 2px;
+  background: var(--color-brand);
+  position: relative;
+}
+
+.ticket-arrow-line::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: -3px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--color-brand);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.ticket-arrow-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ticket-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ticket-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.ticket-detail-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ticket-detail-value {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-dark-blue);
+}
+
+.ticket-price {
+  text-align: right;
+  margin-top: var(--spacing-lg);
+}
+
+.ticket-price-amount {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-brand);
+}
+
+.ticket-price-currency {
+  font-size: var(--font-size-lg);
+  color: var(--color-muted);
+  margin-left: var(--spacing-xs);
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--color-brand);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-brand-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--color-dark-blue);
+  border: 2px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-large {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Form select styling */
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right var(--spacing-sm) center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: var(--spacing-xl);
+}
+
+/* Seat grid styling */
+.seat {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-dark-blue);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.seat:hover {
+  border-color: var(--color-brand);
+  transform: scale(1.05);
+}
+
+.seat.available {
+  background: white;
+  border-color: var(--color-border);
+}
+
+.seat.selected {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: white;
+}
+
+.seat.occupied {
+  background: var(--color-muted);
+  border-color: var(--color-muted);
+  color: white;
+  cursor: not-allowed;
+}
+
+.seat.occupied:hover {
+  transform: none;
+}
+
+/* Seat row labels */
+.seat-row {
+  display: contents;
+}
+
+.seat-row-label {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-muted);
+  height: 40px;
+}
+
+/* Modal animations */
+.modal {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  transform: scale(0.9) translateY(-20px);
+  transition: transform var(--transition-normal);
+}
+
+.modal.active .modal-content {
+  transform: scale(1) translateY(0);
+}
+
+/* Focus trap for modals */
+.modal:focus-within {
+  outline: none;
+}
+
+/* Close button hover effects */
+.modal-close:hover {
+  background: var(--color-ice-blue);
+  color: var(--color-dark-blue);
+}
+
+/* Form validation states */
+.form-group input:invalid,
+.form-group select:invalid {
+  border-color: var(--color-error);
+}
+
+.form-group input:valid,
+.form-group select:valid {
+  border-color: var(--color-success);
+}
+
+/* Loading states */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

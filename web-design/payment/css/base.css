@@ -1,0 +1,128 @@
+/* Base styles and variables */
+:root {
+  /* Colors */
+  --color-primary-bg: #ffffff;
+  --color-secondary-bg: #2c3e50;
+  --color-primary-text: #2c3e50;
+  --color-primary-text-hover: #2c3e50;
+  --color-secondary-text: #f0f9ff;
+  --color-secondary-text-hover: #1abc9c;
+  --color-line: rgb(211, 211, 211);
+  --color-ice-blue: rgb(205 212 237);
+  --color-light-blue: #A9B5DF;
+  --color-medium-blue: #7886C7;
+  --color-dark-blue: #2D336B;
+  --color-brand: #e47b8b;
+  --color-brand-hover: #d14358;
+  --color-muted: #6B7280;
+  --color-border: #E5E7EB;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Shadows */
+  --shadow-sm: 0 0.375rem 0.75rem rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 0.625rem 1.5625rem rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.12);
+
+  /* Typography */
+  --font-family-footer: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-volare: "Delius", cursive;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  
+  --font-size-sm: 0.75rem;   /* 12px */
+  --font-size-base: 0.875rem;/* 14px */
+  --font-size-lg: 1rem;      /* 16px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.75rem;  /* 28px */
+  --font-size-3xl: 2rem;     /* 32px */
+  --font-size-4xl: 3rem;     /* 48px */
+
+  /* Spacing */
+  --spacing-2xs: 0.125rem; /* 2px */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+
+  /* Border radius */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.25s ease-in-out;
+  --transition-slow: 0.35s ease-in-out;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary-text);
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.white-heading {
+  color: white;
+}
+
+.others {
+  color: var(--color-primary-text);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+}
+
+p {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-muted);
+}
+
+/* Links */
+a {
+  color: var(--color-brand);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-brand-hover);
+}
+
+/* Focus styles */
+*:focus {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-brand);
+  color: white;
+}

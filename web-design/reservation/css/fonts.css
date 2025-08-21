@@ -1,0 +1,236 @@
+/* Font imports and font classes */
+
+/* Google Fonts - Inter (modern, clean font) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Google Fonts - Poppins (alternative option) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* Font family variables */
+:root {
+  --font-family-primary: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-family-secondary: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-family-display: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+/* Base font settings */
+body {
+  font-family: var(--font-family-primary);
+  font-weight: 400;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  font-variation-settings: 'opsz' 14;
+}
+
+/* Font weight classes */
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+/* Font size classes */
+.text-xs {
+  font-size: var(--font-size-sm);
+  line-height: 1.25;
+}
+
+.text-sm {
+  font-size: var(--font-size-base);
+  line-height: 1.4;
+}
+
+.text-base {
+  font-size: var(--font-size-lg);
+  line-height: 1.5;
+}
+
+.text-lg {
+  font-size: var(--font-size-xl);
+  line-height: 1.4;
+}
+
+.text-xl {
+  font-size: var(--font-size-2xl);
+  line-height: 1.3;
+}
+
+.text-2xl {
+  font-size: var(--font-size-3xl);
+  line-height: 1.2;
+}
+
+.text-3xl {
+  font-size: var(--font-size-4xl);
+  line-height: 1.1;
+}
+
+/* Font family classes */
+.font-primary {
+  font-family: var(--font-family-primary);
+}
+
+.font-secondary {
+  font-family: var(--font-family-secondary);
+}
+
+.font-display {
+  font-family: var(--font-family-display);
+}
+
+.font-mono {
+  font-family: var(--font-family-mono);
+}
+
+/* Text utility classes */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+/* Text transform classes */
+.uppercase {
+  text-transform: uppercase;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+/* Letter spacing classes */
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+.tracking-normal {
+  letter-spacing: 0em;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+/* Line height classes */
+.leading-none {
+  line-height: 1;
+}
+
+.leading-tight {
+  line-height: 1.25;
+}
+
+.leading-snug {
+  line-height: 1.375;
+}
+
+.leading-normal {
+  line-height: 1.5;
+}
+
+.leading-relaxed {
+  line-height: 1.625;
+}
+
+.leading-loose {
+  line-height: 2;
+}
+
+/* Font feature settings for better readability */
+.font-features {
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* Font smoothing */
+.font-smooth {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Specific font classes for components */
+.ticket-location-code {
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+.ticket-price-amount {
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+.btn {
+  font-family: var(--font-family-primary);
+  font-weight: 600;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+  .text-3xl {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .text-2xl {
+    font-size: var(--font-size-xl);
+  }
+  
+  .text-xl {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Print font adjustments */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .text-3xl,
+  .text-2xl,
+  .text-xl {
+    font-size: 16pt;
+  }
+}

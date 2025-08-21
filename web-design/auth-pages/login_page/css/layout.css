@@ -176,6 +176,8 @@ figure {
 }
 
 input {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary-text);
   width: 100%;
   display: block;
   border: none;

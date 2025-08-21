@@ -50,6 +50,7 @@ class RequestOTPView(APIView):
                 }
 
                 msg.send()
+                return Response({"message": "OTP sent successfully"}, status=status.HTTP_200_OK)
 
             return Response({"error": "User does not have an email address"}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -1,0 +1,238 @@
+/* Responsive styles - Mobile-first approach */
+
+/* Base mobile styles (default) */
+.container {
+  padding: 0 var(--spacing-md);
+}
+
+.payment-main {
+  padding: var(--spacing-lg) 0;
+}
+
+.payment-header h1 {
+  font-size: var(--font-size-2xl);
+}
+
+.payment-info-card {
+  padding: var(--spacing-lg);
+}
+
+.payment-methods-card {
+  padding: var(--spacing-md);
+}
+
+.info-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+}
+
+.info-label {
+  font-size: var(--font-size-sm);
+}
+
+.info-value {
+  font-size: var(--font-size-sm);
+}
+
+.total-amount .amount {
+  font-size: var(--font-size-2xl);
+}
+
+.payment-method-label {
+  padding: var(--spacing-sm);
+}
+
+.payment-method-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.payment-method-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modal-content {
+  width: 95%;
+  margin: var(--spacing-md);
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+  
+  .payment-main {
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .payment-header h1 {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .payment-info-card {
+    padding: var(--spacing-xl);
+  }
+  
+  .payment-methods-card {
+    padding: var(--spacing-lg);
+  }
+  
+  .info-item {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+  
+  .info-label {
+    font-size: var(--font-size-base);
+  }
+  
+  .info-value {
+    font-size: var(--font-size-base);
+  }
+  
+  .total-amount .amount {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .payment-method-label {
+    padding: var(--spacing-md);
+  }
+  
+  .payment-method-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .payment-method-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .modal-content {
+    width: 90%;
+    margin: var(--spacing-lg);
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+  
+  .payment-main {
+    padding: var(--spacing-2xl) 0;
+  }
+  
+  .modal-content {
+    max-width: 500px;
+    margin: var(--spacing-xl);
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1000px;
+  }
+}
+
+/* Extra large screens */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .payment-main {
+    padding: var(--spacing-md) 0;
+  }
+  
+  .payment-header {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .payment-info-section,
+  .payment-methods-section,
+  .pay-button-section {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .modal-content {
+    max-height: 80vh;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .payment-info-card,
+  .payment-methods-card {
+    border-width: 1px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .footer,
+  .btn,
+  .modal {
+    display: none !important;
+  }
+  
+  .payment-main {
+    background: white !important;
+    padding: 0 !important;
+  }
+  
+  .payment-info-card,
+  .payment-methods-card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+  
+  .container {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .modal-content {
+    transform: none !important;
+  }
+  
+  .btn:hover {
+    transform: none !important;
+  }
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  /* Dark mode styles can be added here */
+}
+
+/* Focus visible for keyboard navigation */
+@media (prefers-reduced-motion: no-preference) {
+  .btn:focus-visible,
+  .payment-method-label:focus-visible,
+  .modal-close:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
