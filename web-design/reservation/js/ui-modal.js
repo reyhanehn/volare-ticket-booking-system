@@ -10,7 +10,7 @@ window.ModalManager = {
   init() {
     console.log('Initializing Modal Manager...');
     this.wireModalEvents();
-    this.setupFocusTrap();
+    // ❌ Removed this.setupFocusTrap(); here
   },
 
   /**
@@ -129,9 +129,10 @@ window.ModalManager = {
    * @param {HTMLElement} modal - Modal element
    */
   setupFocusTrap(modal) {
+    if (!modal) return; // ✅ Guard clause
+
     const focusableElements = this.getFocusableElements(modal);
-    
-    if (focusableElements.length === 0) return;
+    if (!focusableElements || focusableElements.length === 0) return;
 
     // Store first and last focusable elements
     modal.dataset.firstFocusable = focusableElements[0];
@@ -156,8 +157,8 @@ window.ModalManager = {
       }
     };
 
+    modal._focusTrapHandler = focusTrapHandler;
     modal.addEventListener('keydown', focusTrapHandler);
-    modal.dataset.focusTrapHandler = focusTrapHandler;
   },
 
   /**
@@ -165,9 +166,9 @@ window.ModalManager = {
    * @param {HTMLElement} modal - Modal element
    */
   removeFocusTrap(modal) {
-    if (modal.dataset.focusTrapHandler) {
-      modal.removeEventListener('keydown', modal.dataset.focusTrapHandler);
-      delete modal.dataset.focusTrapHandler;
+    if (modal && modal._focusTrapHandler) {
+      modal.removeEventListener('keydown', modal._focusTrapHandler);
+      delete modal._focusTrapHandler;
     }
   },
 
@@ -177,6 +178,8 @@ window.ModalManager = {
    * @returns {Array} Array of focusable elements
    */
   getFocusableElements(modal) {
+    if (!modal) return []; // ✅ Guard against undefined
+
     const focusableSelectors = [
       'button:not([disabled])',
       'input:not([disabled])',
@@ -196,6 +199,7 @@ window.ModalManager = {
    * @param {HTMLElement} modal - Modal element
    */
   focusFirstFocusableElement(modal) {
+    if (!modal) return; // ✅ Guard
     const focusableElements = this.getFocusableElements(modal);
     if (focusableElements.length > 0) {
       focusableElements[0].focus();
@@ -231,7 +235,7 @@ window.ModalManager = {
    * Store and return focus for accessibility
    */
   returnFocus() {
-    if (window.reservationState.previousFocus) {
+    if (window.reservationState && window.reservationState.previousFocus) {
       window.reservationState.previousFocus.focus();
       delete window.reservationState.previousFocus;
     }
@@ -242,6 +246,7 @@ window.ModalManager = {
    * @param {HTMLElement} modal - Modal element
    */
   announceModal(modal) {
+    if (!modal) return; // ✅ Guard
     const modalTitle = modal.querySelector('h1, h2, h3, h4, h5, h6');
     if (modalTitle) {
       // Create live region for announcements

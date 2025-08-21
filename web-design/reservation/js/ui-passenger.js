@@ -1,53 +1,52 @@
 /**
- * Passenger Manager - Handles passenger selection and management
- * Populates dropdown with dummy passengers and handles add new passenger modal
+ * Passenger Manager - Loads passengers from API, manages selection and modal
  */
 
 window.PassengerManager = {
-  /**
-   * Initialize the passenger manager
-   */
-  init() {
-    console.log('Initializing Passenger Manager...');
-    this.populatePassengerDropdown();
-    this.wirePassengerEvents();
+  async loadPassengers() {
+    const select = document.getElementById('passenger-select');
+    if (!select) return;
+    this.setSelectLoading(select, true);
+    try {
+      const list = await window.ReservationAPI.getPassengers();
+      const passengers = Array.isArray(list) ? list : (list.results || []);
+      window.reservationState.passengers = passengers;
+      this.renderPassengerDropdown(passengers);
+    } catch (e) {
+      console.error(e);
+      this.renderPassengerDropdown([]);
+    } finally {
+      this.wirePassengerEvents();
+      this.setSelectLoading(select, false);
+    }
   },
 
-  /**
-   * Populate passenger dropdown with dummy data
-   */
-  populatePassengerDropdown() {
+  renderPassengerDropdown(passengers) {
     const passengerSelect = document.getElementById('passenger-select');
-    if (!passengerSelect) {
-      console.error('Passenger select not found');
-      return;
-    }
-
-    // Dummy passenger data
-    const passengers = [
-      { id: 1, name: 'John Doe', ssn: '123-45-6789', dob: '1985-03-15' },
-      { id: 2, name: 'Jane Smith', ssn: '987-65-4321', dob: '1990-07-22' },
-      { id: 3, name: 'Mike Johnson', ssn: '456-78-9012', dob: '1988-11-08' }
-    ];
-
-    // Store passengers in global state
-    window.reservationState.passengers = passengers;
-
-    // Clear existing options (except first placeholder)
+    if (!passengerSelect) return;
     passengerSelect.innerHTML = '<option value="">Choose a passenger...</option>';
 
-    // Add passenger options
-    passengers.forEach(passenger => {
-      const option = document.createElement('option');
-      option.value = passenger.id;
-      option.textContent = passenger.name;
-      passengerSelect.appendChild(option);
-    });
+    if (!passengers || passengers.length === 0) {
+      const empty = document.createElement('option');
+      empty.value = '';
+      empty.disabled = true;
+      empty.textContent = 'No passengers found';
+      passengerSelect.appendChild(empty);
+    } else {
+      passengers.forEach(p => {
+        const id = p.id || p.passenger_id || p.uuid;
+        const fullName = p.name || [p.firstName || p.first_name, p.lastname || p.last_name].filter(Boolean).join(' ');
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = fullName || `Passenger ${id}`;
+        option.dataset.raw = JSON.stringify(p);
+        passengerSelect.appendChild(option);
+      });
+    }
 
-    // Add "Add new passenger" option
     const addNewOption = document.createElement('option');
     addNewOption.value = 'add-new';
-    addNewOption.textContent = '+ Add new passenger';
+    addNewOption.textContent = '➕ Add New Passenger';
     passengerSelect.appendChild(addNewOption);
   },
 
@@ -79,7 +78,10 @@ window.PassengerManager = {
       // Reset selection to placeholder
       event.target.value = '';
     } else if (selectedValue) {
-      const selectedPassenger = window.reservationState.passengers.find(p => p.id == selectedValue);
+      const selectedPassenger = (window.reservationState.passengers || []).find(p => {
+        const id = p.id || p.passenger_id || p.uuid;
+        return String(id) === String(selectedValue);
+      });
       if (selectedPassenger) {
         window.reservationState.selectedPassenger = selectedPassenger;
         console.log('Selected passenger:', selectedPassenger);
@@ -103,7 +105,7 @@ window.PassengerManager = {
   /**
    * Handle save passenger button click
    */
-  handleSavePassenger() {
+  async handleSavePassenger() {
     const form = document.getElementById('passenger-form');
     if (!form) {
       console.error('Passenger form not found');
@@ -113,15 +115,15 @@ window.PassengerManager = {
     // Get form data
     const formData = new FormData(form);
     const passengerData = {
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
+      name: formData.get('firstName'),
+      lastname: formData.get('lastName'),
       ssn: formData.get('ssn'),
-      dateOfBirth: formData.get('dateOfBirth'),
-      photo: formData.get('photo_url')
+      birthdate: formData.get('dateOfBirth'),
+      picture_url: formData.get('photo_url')
     };
 
     // Validate required fields
-    if (!passengerData.firstName || !passengerData.lastName || !passengerData.ssn || !passengerData.dateOfBirth) {
+    if (!passengerData.name || !passengerData.lastname || !passengerData.ssn || !passengerData.birthdate) {
       this.showFormError('Please fill in all required fields');
       return;
     }
@@ -133,47 +135,30 @@ window.PassengerManager = {
     }
 
     // Validate photo URL if provided (optional field)
-    if (passengerData.photo && !this.isValidImageUrl(passengerData.photo)) {
+    if (passengerData.photo_url && !this.isValidImageUrl(passengerData.photo_url)) {
       this.showFormError('Please enter a valid image URL (png, jpg, webp, gif)');
       return;
     }
 
-    // Log photo URL for debugging
-    console.log('[Passenger Modal] Photo URL:', passengerData.photo);
+    // Disable button during API call
+    const saveBtn = document.getElementById('save-passenger');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.classList.add('loading'); }
 
-    // Create new passenger object
-    const newPassenger = {
-      id: Date.now(), // Simple ID generation
-      name: `${passengerData.firstName} ${passengerData.lastName}`,
-      firstName: passengerData.firstName,
-      lastName: passengerData.lastName,
-      ssn: passengerData.ssn,
-      dob: passengerData.dateOfBirth,
-      photo: passengerData.photo
-    };
-
-    // Add to passengers list
-    if (!window.reservationState.passengers) {
-      window.reservationState.passengers = [];
+    try {
+      await window.ReservationAPI.createPassenger(passengerData);
+      await this.loadPassengers();
+      // Close modal
+      if (window.ModalManager) {
+        window.ModalManager.close('passenger-modal');
+      }
+      form.reset();
+      this.showFormSuccess('Passenger added successfully!');
+    } catch (e) {
+      console.error(e);
+      this.showFormError(e.message || 'Failed to save passenger');
+    } finally {
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.classList.remove('loading'); }
     }
-    window.reservationState.passengers.push(newPassenger);
-
-    // Update dropdown
-    this.addPassengerToDropdown(newPassenger);
-
-    // Select the new passenger
-    window.reservationState.selectedPassenger = newPassenger;
-
-    // Close modal
-    if (window.ModalManager) {
-      window.ModalManager.close('passenger-modal');
-    }
-
-    // Reset form
-    form.reset();
-
-    // Show success message
-    this.showFormSuccess('Passenger added successfully!');
   },
 
   /**
@@ -191,9 +176,12 @@ window.PassengerManager = {
     }
 
     // Add new passenger option
+    const id = passenger.id || passenger.passenger_id || passenger.uuid;
+    const fullName = passenger.name || [passenger.firstName || passenger.first_name, passenger.lastName || passenger.last_name].filter(Boolean).join(' ');
     const option = document.createElement('option');
-    option.value = passenger.id;
-    option.textContent = passenger.name;
+    option.value = id;
+    option.textContent = fullName || `Passenger ${id}`;
+    option.dataset.raw = JSON.stringify(passenger);
     passengerSelect.appendChild(option);
 
     // Re-add "Add new passenger" option
@@ -202,7 +190,7 @@ window.PassengerManager = {
     }
 
     // Select the new passenger
-    passengerSelect.value = passenger.id;
+    passengerSelect.value = id;
   },
 
   /**
@@ -306,6 +294,14 @@ window.PassengerManager = {
    */
   getAllPassengers() {
     return window.reservationState.passengers || [];
+  },
+
+  setSelectLoading(select, isLoading) {
+    if (!select) return;
+    select.disabled = !!isLoading;
+    if (isLoading) {
+      select.innerHTML = '<option>Loading...</option>';
+    }
   }
 };
 

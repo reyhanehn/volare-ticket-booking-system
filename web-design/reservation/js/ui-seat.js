@@ -1,51 +1,46 @@
 /**
- * Seat Manager - Handles seat selection and seat map display
- * Populates seat dropdown and manages seat map modal
+ * Seat Manager - Loads available seats from API and renders seat map
  */
 
 window.SeatManager = {
-  /**
-   * Initialize the seat manager
-   */
-  init() {
-    console.log('Initializing Seat Manager...');
-    this.populateSeatDropdown();
-    this.wireSeatEvents();
-    this.generateSeatMap();
+  async loadSeats(ticketId) {
+    const seatSelect = document.getElementById('seat-select');
+    if (!seatSelect) return;
+    this.setSelectLoading(seatSelect, true);
+    try {
+      const seatsResponse = await window.ReservationAPI.getAvailableSeats(ticketId);
+      const seats = Array.isArray(seatsResponse) ? seatsResponse : (seatsResponse.seats || seatsResponse.available || []);
+      window.reservationState.availableSeats = seats;
+      this.renderSeatDropdown(seats);
+      this.wireSeatEvents();
+      this.generateSeatMap();
+    } catch (e) {
+      console.error(e);
+      this.renderSeatDropdown([]);
+      this.generateSeatMap();
+    } finally {
+      this.setSelectLoading(seatSelect, false);
+    }
   },
 
-  /**
-   * Populate seat dropdown with dummy data
-   */
-  populateSeatDropdown() {
+  renderSeatDropdown(seats) {
     const seatSelect = document.getElementById('seat-select');
-    if (!seatSelect) {
-      console.error('Seat select not found');
-      return;
-    }
-
-    // Dummy seat data
-    const seats = [
-      '1A', '1B', '1C', '1D', '1E', '1F',
-      '2A', '2B', '2C', '2D', '2E', '2F',
-      '3A', '3B', '3C', '3D', '3E', '3F',
-      '4A', '4B', '4C', '4D', '4E', '4F',
-      '5A', '5B', '5C', '5D', '5E', '5F'
-    ];
-
-    // Store seats in global state
-    window.reservationState.availableSeats = seats;
-
-    // Clear existing options (except first placeholder)
+    if (!seatSelect) return;
     seatSelect.innerHTML = '<option value="">Choose a seat...</option>';
-
-    // Add seat options
-    seats.forEach(seat => {
-      const option = document.createElement('option');
-      option.value = seat;
-      option.textContent = seat;
-      seatSelect.appendChild(option);
-    });
+    if (!seats || seats.length === 0) {
+      const empty = document.createElement('option');
+      empty.value = '';
+      empty.disabled = true;
+      empty.textContent = 'No seats available';
+      seatSelect.appendChild(empty);
+    } else {
+      seats.forEach(seat => {
+        const option = document.createElement('option');
+        option.value = seat;
+        option.textContent = seat;
+        seatSelect.appendChild(option);
+      });
+    }
   },
 
   /**
@@ -106,10 +101,11 @@ window.SeatManager = {
       console.error('Seat map container not found');
       return;
     }
-
-    // Generate seat grid (6 columns, 8 rows)
-    const rows = 8;
-    const cols = 6;
+    const ticket = window.reservationState.ticketData || {};
+    const availableSeats = new Set((window.reservationState.availableSeats || []).map(String));
+    const layout = this.getLayoutFromTicket(ticket);
+    const rows = layout.rows;
+    const cols = layout.cols;
     let seatMapHTML = '';
 
     for (let row = 1; row <= rows; row++) {
@@ -120,24 +116,22 @@ window.SeatManager = {
       
       // Add seats for this row
       for (let col = 0; col < cols; col++) {
-        const seatLetter = String.fromCharCode(65 + col); // A, B, C, D, E, F
+        const seatLetter = String.fromCharCode(65 + col);
         const seatNumber = `${row}${seatLetter}`;
-        const isOccupied = this.isSeatOccupied(seatNumber);
+        const isAvailable = availableSeats.has(seatNumber);
         const isSelected = seatNumber === window.reservationState.selectedSeat;
         
-        let seatClass = 'seat available';
-        if (isOccupied) {
-          seatClass = 'seat occupied';
-        } else if (isSelected) {
+        let seatClass = isAvailable ? 'seat available' : 'seat occupied';
+        if (isSelected && isAvailable) {
           seatClass = 'seat selected';
         }
         
         seatMapHTML += `
           <div class="${seatClass}" 
                data-seat="${seatNumber}" 
-               ${!isOccupied ? 'tabindex="0"' : ''}
-               ${!isOccupied ? 'role="button"' : ''}
-               ${!isOccupied ? 'aria-label="Select seat ' + seatNumber + '"' : ''}>
+               ${isAvailable ? 'tabindex="0"' : ''}
+               ${isAvailable ? 'role="button"' : ''}
+               ${isAvailable ? 'aria-label="Select seat ' + seatNumber + '"' : ''}>
             ${seatNumber}
           </div>
         `;
@@ -253,11 +247,8 @@ window.SeatManager = {
    * @param {string} seatNumber - Seat number to check
    * @returns {boolean} Is seat occupied
    */
-  isSeatOccupied(seatNumber) {
-    // Dummy logic: some seats are occupied
-    const occupiedSeats = ['1A', '2C', '3E', '4B', '5D', '6F', '7A', '8C'];
-    return occupiedSeats.includes(seatNumber);
-  },
+  // No longer needed; server determines availability
+  isSeatOccupied() { return false; },
 
   /**
    * Get selected seat
@@ -289,6 +280,40 @@ window.SeatManager = {
    */
   refreshSeatMap() {
     this.generateSeatMap();
+  },
+
+  getLayoutFromTicket(ticket) {
+    // Defaults
+    let rows = 20;
+    let cols = 6;
+    const vehicle = (ticket.vehicleType || '').toUpperCase();
+    const section = (ticket.section || '').toLowerCase();
+
+    if (vehicle === 'BUS') {
+      cols = section === 'single' ? 1 : 2;
+      rows = 12;
+    } else if (vehicle === 'PLANE') {
+      if (section === 'first') {
+        cols = 2; rows = 6;
+      } else if (section === 'business') {
+        cols = 4; rows = 8; // 2x2 visualized as 4 across
+      } else {
+        cols = 6; rows = 20; // economy 3x2 visualized as 6 across
+      }
+    } else if (vehicle === 'TRAIN') {
+      // Skipping custom layout as per requirement
+      cols = 4; rows = 12;
+    }
+
+    return { rows, cols };
+  },
+
+  setSelectLoading(select, isLoading) {
+    if (!select) return;
+    select.disabled = !!isLoading;
+    if (isLoading) {
+      select.innerHTML = '<option>Loading...</option>';
+    }
   }
 };
 
