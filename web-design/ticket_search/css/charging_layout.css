@@ -73,24 +73,19 @@
     justify-content: flex-end;
 }
 .charge-button {
-  background: var(--color-brand);
-  color: var(--color-secondary-text);
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  /*background-color: #007bff; /* A nice, visible blue */
-  /*color: #fff; /* White text for contrast */
+  background-color: #007bff; /* A nice, visible blue */
+  color: #fff; /* White text for contrast */
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
-  /*font-size: 16px;*/
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-  /*font-weight: bold;*/
+  font-weight: bold;
 }
 
 .charge-button:hover {
-  /*background-color: #0056b3; /* Darker blue on hover */
-  background: var(--color-brand-hover);
+  background-color: #0056b3; /* Darker blue on hover */
 }
 .modal-message {
     text-align: center;

@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b1a9ce51-1b31-4424-9239-b85b70d15045" name="Changes" comment="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/account_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/account_page/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-design/home_page/css/charging_layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/css/charging_layout.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,20 +52,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "frontend",
-    "last_opened_file_path": "C:/Users/reyhaneh/PycharmProjects/volare-ticket-booking-system/web-design/account_page/js"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;frontend&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/reyhaneh/PycharmProjects/volare-ticket-booking-system/web-design/ticket_search/css&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\ticket_search\css" />
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\ticket_search\js" />
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\account_page\js" />
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\account_page\css" />
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\ticket_search" />
-      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\volare\search" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\home_page\js" />
@@ -276,7 +277,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755711766962</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1755714859077</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1755714859077</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
