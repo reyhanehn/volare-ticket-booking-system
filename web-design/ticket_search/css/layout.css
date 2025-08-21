@@ -348,10 +348,12 @@ header {
 }
 
 .select-button {
+    transform: translateY(0.2rem);
+    background-color: var(--color-medium-blue);
+    box-shadow: 0 0.2rem var(--color-dark-blue);
+    font-size: var(--font-size-lg);
     margin-top: 5px; /* Smaller margin */
     padding: 8px 16px; /* Smaller button */
-    background-color: #1a73e8;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -360,7 +362,7 @@ header {
 }
 
 .select-button:hover {
-    background-color: #155ab6;
+    background: 0 0.4rem var(--color-dark-blue);
 }
 
 /* ============ Ticket Details Slider ============ */
