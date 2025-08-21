@@ -1,3 +1,4 @@
+
 /**
  * Main Application Module for Reservation Info Page
  * Handles API integration, data fetching, and UI updates
@@ -398,21 +399,54 @@ class ReservationInfoApp {
   updateCancellationModal(cancellationInfo) {
     const warningElement = this.cancellationModal.querySelector('.cancellation-warning');
     if (warningElement && cancellationInfo) {
-      const penaltyAmount = cancellationInfo.penalty_amount || 0;
+      const reservation = cancellationInfo.reservation;
       const ticketPrice = cancellationInfo.ticket_price || 0;
+      const penaltyPercentage = cancellationInfo.penalty_percentage || 0;
+      const penaltyAmount = cancellationInfo.penalty_amount || 0;
+      const refundAmount = cancellationInfo.refund_amount || 0;
       
       let message = '';
-      if (penaltyAmount > 0) {
-        message = `Cancelling now will charge a $${penaltyAmount} penalty fee`;
+      let details = '';
+      
+      if (reservation.status === 'Confirmed' && penaltyAmount > 0) {
+        message = `Cancelling this confirmed reservation will incur a ${penaltyPercentage}% penalty fee.`;
+        details = `
+          <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem;">
+            <div style="margin-bottom: 0.5rem;"><strong>Ticket Price:</strong> $${ticketPrice}</div>
+            <div style="margin-bottom: 0.5rem;"><strong>Penalty (${penaltyPercentage}%):</strong> $${penaltyAmount}</div>
+            <div style="margin-bottom: 0.5rem;"><strong>Refund Amount:</strong> $${refundAmount}</div>
+            <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #dee2e6; color: #dc3545;">
+              <strong>Total penalty to be charged: $${penaltyAmount}</strong>
+            </div>
+          </div>
+        `;
+      } else if (reservation.status === 'Pending') {
+        message = `Cancelling this pending reservation will charge the full ticket price.`;
+        details = `
+          <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem;">
+            <div style="margin-bottom: 0.5rem;"><strong>Ticket Price:</strong> $${ticketPrice}</div>
+            <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #dee2e6; color: #dc3545;">
+              <strong>Full ticket price will be charged: $${ticketPrice}</strong>
+            </div>
+          </div>
+        `;
       } else {
-        message = `Cancelling now will charge the full ticket price of $${ticketPrice}`;
+        message = `Cancelling this reservation will charge a $${penaltyAmount} penalty fee.`;
+        details = `
+          <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem;">
+            <div style="margin-bottom: 0.5rem;"><strong>Penalty Amount:</strong> $${penaltyAmount}</div>
+          </div>
+        `;
       }
       
       warningElement.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        ${message}
+        <div>
+          <div style="margin-bottom: 0.5rem;">${message}</div>
+          ${details}
+        </div>
       `;
     }
   }
@@ -449,6 +483,9 @@ class ReservationInfoApp {
       
       // Update status
       ReservationStateManager.updateStatus('Cancelled');
+      
+      // Re-render the ticket to update the status display
+      this.renderTicket();
       
       // Close the modal
       this.closeCancellationModal();
@@ -599,6 +636,7 @@ class ReservationInfoApp {
     ReservationStateManager.subscribe('statusChanged', (newStatus) => {
       console.log('[App] Reservation status changed to:', newStatus);
       this.updateCancelButton();
+      this.renderTicket(); // Re-render ticket to update status display
     });
 
     // Subscribe to loading changes

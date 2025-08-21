@@ -72,17 +72,11 @@
   }
 
   async function getCancellationInfo(reservationId) {
-    return fetchWithAuth(`reservation/cancellation/info/`, {
-      method: 'GET',
-      body: JSON.stringify({ reservation_id: reservationId })
-    });
+    return fetchWithAuth(`reservation/${encodeURIComponent(reservationId)}/cancellation/info/`, { method: 'POST' });
   }
 
   async function cancelReservation(reservationId) {
-    return fetchWithAuth(`reservation/cancel/`, {
-      method: 'POST',
-      body: JSON.stringify({ reservation_id: reservationId })
-    });
+    return fetchWithAuth(`reservation/${encodeURIComponent(reservationId)}/cancel/`, { method: 'POST' });
   }
 
   window.ReservationInfoAPI = {
