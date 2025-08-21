@@ -11,6 +11,8 @@
   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
+  <link rel="stylesheet" href="css/charging_layout.css">
+
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" defer></script>
@@ -25,8 +27,7 @@
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/animation.css">
-
-
+  <link rel="stylesheet" href="css/charging_layout.css">
   <script src="js/BookingOptions.js" defer></script>
   <script src="js/tomselect-init.js" defer></script>
   <script src="js/flatpickr-init.js" defer></script>
@@ -36,9 +37,9 @@
   <script type="module" src="../js/theme.js" defer></script>
   <script type="module" src="js/accountBox.js" defer></script>
   <script type="module" src="js/authenticated.js" defer></script>
+  <script type="module" src="js/chargeWallet.js" defer></script>
 
 
-  <!-- fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
@@ -113,7 +114,6 @@
     </nav>
   </header>
 
-  <!-- Dropdown box -->
   <div id="accountBox" class="account-box hidden">
     <div class="account-header">
       <p class="email">alialavinikoo@gmail.com</p>
@@ -219,7 +219,7 @@
                 </g>
                 <g>
                   <path class="st0"
-                    d="M437.575,351.629V89.868C437.575,40.233,397.351,0,347.707,0H164.293c-49.625,0-89.868,40.233-89.868,89.868v261.761c0,37.628,27.383,68.98,63.269,75.221L81.334,512h50.11l23.132-34.961h202.867L380.574,512h50.101l-56.35-85.15C410.201,420.601,437.575,389.257,437.575,351.629z M178.182,40.348h155.636v25.94H178.182V40.348z M131.355,124.186c0-11.284,9.137-20.438,20.421-20.438h208.456c11.276,0,20.429,9.154,20.429,20.438v86.206c0,11.284-9.154,20.429-20.429,20.429H151.777c-11.284,0-20.421-9.145-20.421-20.429V124.186z M150.808,374.004c-13.158,0-23.826-10.668-23.826-23.818c0-13.167,10.668-23.836,23.826-23.836c13.159,0,23.827,10.668,23.827,23.836C174.635,363.336,163.967,374.004,150.808,374.004z M169.618,454.312l17.41-26.318h137.953l17.41,26.318H169.618z M361.201,374.004c-13.158,0-23.826-10.668-23.826-23.818c0-13.167,10.668-23.836,23.826-23.836c13.159,0,23.827,10.668,23.827,23.836C385.028,363.336,374.36,374.004,361.201,374.004z" />
+                    d="M437.575,351.629V89.868C437.575,40.233,397.351,0,347.707,0H164.293c-49.625,0-89.868,40.233-89.868,89.868v261.761c0,37.628,27.383,68.98,63.269,75.221L81.334,512h50.11l23.132-34.961h202.867L380.574,512h50.101l-56.35-85.15C410.201,420.601,437.575,389.257,437.575,351.629z M178.182,40.348h155.636v25.94H178.182V40.348z M131.355,124.186c0-11.284,9.137-20.438,20.421-20.438h208.456c11.276,0,20.429,9.154,20.429,20.438v86.206c0,11.284-9.154,20.429-20.429-20.429H151.777c-11.284,0-20.421-9.145-20.421-20.429V124.186z M150.808,374.004c-13.158,0-23.826-10.668-23.826-23.818c0-13.167,10.668-23.836,23.826-23.836c13.159,0,23.827,10.668,23.827,23.836C174.635,363.336,163.967,374.004,150.808,374.004z M169.618,454.312l17.41-26.318h137.953l17.41,26.318H169.618z M361.201,374.004c-13.158,0-23.826-10.668-23.826-23.818c0-13.167,10.668-23.836,23.826-23.836c13.159,0,23.827,10.668,23.827,23.836C385.028,363.336,374.36,374.004,361.201,374.004z" />
                 </g>
               </svg>
             </button>
@@ -353,56 +353,70 @@
 
       </form>
     </section>
-
-    <footer class="footer">
-      <div class="container">
-
-        <!-- Top Row: Services, About, Volare -->
-        <div class="footer-top">
-          <div class="item">
-            <h3>Our Services</h3>
-            <ul>
-              <li><a href="#">Airplane Tickets</a></li>
-              <li><a href="#">Bus Tickets</a></li>
-              <li><a href="#">Train Tickets</a></li>
-            </ul>
-          </div>
-
-          <div class="item">
-            <h3>About</h3>
-            <ul>
-              <li><a href="#">Our Company</a></li>
-              <li><a href="#">Team</a></li>
-              <li><a href="#">Careers</a></li>
-            </ul>
-          </div>
-
-          <div class="item text">
-            <h3>Volare</h3>
-            <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
-              reliable.</p>
-          </div>
-        </div>
-
-        <!-- Middle Row: Social Icons -->
-        <div class="footer-middle">
-          <div class="item social">
-            <a href="#"><i class="icon ion-social-facebook"></i></a>
-            <a href="#"><i class="icon ion-social-twitter"></i></a>
-            <a href="#"><i class="icon ion-social-snapchat"></i></a>
-            <a href="#"><i class="icon ion-social-instagram"></i></a>
-          </div>
-        </div>
-
-        <!-- Bottom Row: Copyright -->
-        <div class="footer-bottom">
-          <p class="copyright">Volare © 2025</p>
-        </div>
-
-      </div>
-    </footer>
-
   </main>
+
+  <div id="chargeModalOverlay" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Charge Wallet</h3>
+        <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter the amount you wish to charge:</p>
+        <input type="number" id="chargeAmountInput" class="modal-input" placeholder="0.00" min="1" step="0.01">
+        <div id="modalMessage" class="modal-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmChargeBtn" class="charge-button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+
+      <div class="footer-top">
+        <div class="item">
+          <h3>Our Services</h3>
+          <ul>
+            <li><a href="#">Airplane Tickets</a></li>
+            <li><a href="#">Bus Tickets</a></li>
+            <li><a href="#">Train Tickets</a></li>
+          </ul>
+        </div>
+
+        <div class="item">
+          <h3>About</h3>
+          <ul>
+            <li><a href="#">Our Company</a></li>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="item text">
+          <h3>Volare</h3>
+          <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+            reliable.</p>
+        </div>
+      </div>
+
+      <div class="footer-middle">
+        <div class="item social">
+          <a href="#"><i class="icon ion-social-facebook"></i></a>
+          <a href="#"><i class="icon ion-social-twitter"></i></a>
+          <a href="#"><i class="icon ion-social-snapchat"></i></a>
+          <a href="#"><i class="icon ion-social-instagram"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="copyright">Volare © 2025</p>
+      </div>
+
+    </div>
+  </footer>
+
 </body>
 
 </html>

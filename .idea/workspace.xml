@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b1a9ce51-1b31-4424-9239-b85b70d15045" name="Changes" comment="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/management/commands/index_tickets_es.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/management/commands/index_tickets_es.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/bookings/views/locationView.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/bookings/views/locationView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/search/es_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/search/es_search.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/home_page/js/search.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/js/search.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/ticket_search/js/results.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/ticket_search/js/results.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-design/home_page/css/charging_layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/css/charging_layout.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,15 +57,21 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;frontend&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/reyhaneh/PycharmProjects/volare-ticket-booking-system/web-design/ticket_search&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/reyhaneh/PycharmProjects/volare-ticket-booking-system/web-design/ticket_search/css&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\ticket_search\css" />
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\ticket_search\js" />
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\account_page\js" />
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\account_page\css" />
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\ticket_search" />
-      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\volare\search" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\home_page\js" />
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\home_page\css" />
+      <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\account_page" />
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\web-design\home_page" />
       <recent name="C:\Users\reyhaneh\PycharmProjects\volare-ticket-booking-system\database" />
     </key>
@@ -244,7 +245,47 @@
       <option name="project" value="LOCAL" />
       <updated>1755543340350</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1755704492517</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1755704492517</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1755711741673</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1755711741673</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1755711752965</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1755711752965</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1755711766962</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1755711766962</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+      <option name="closed" value="true" />
+      <created>1755714859077</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1755714859077</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
