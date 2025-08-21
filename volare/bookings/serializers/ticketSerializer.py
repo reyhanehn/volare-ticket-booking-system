@@ -88,7 +88,7 @@ class TicketDetailSerializer(serializers.Serializer):
             return cached_data
 
         # If no cache, query DB
-        ticket_detail = build_ticket_detail(connection.cursor(), ticket_id)
+        ticket_detail = build_ticket_detail(ticket_id)
         if not ticket_detail:
             return {}
 
