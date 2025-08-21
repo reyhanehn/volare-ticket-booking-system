@@ -25,16 +25,15 @@ class ProfileView(APIView):
     def put(self, request):
         serializer = ProfileSerializer(instance=request.user, data=request.data, partial=False)
         if serializer.is_valid():
-            result = serializer.save()
-            set_user_cache(request.user)
-            return Response(result)
+            user = serializer.save()  # returns Account instance
+            set_user_cache(user)
+            return Response(ProfileSerializer(user).data)  # ✅ wrap in serializer
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
         serializer = ProfileSerializer(instance=request.user, data=request.data, partial=True)
         if serializer.is_valid():
-            result = serializer.save()
-            set_user_cache(request.user)
-            return Response(result)
+            user = serializer.save()  # returns Account instance
+            set_user_cache(user)
+            return Response(ProfileSerializer(user).data)  # ✅ wrap in serializer
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-

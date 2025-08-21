@@ -1,7 +1,8 @@
-const API_BASE = "http://127.0.0.1:8000";  
+const API_BASE = "http://127.0.0.1:8000";
+import { loadProfile } from "./authenticated.js"  
 
 
-// ---- Edit / Save toggle ----
+// ------------------ Edit / Save toggle ------------------
 document.querySelectorAll(".edit-btn").forEach(button => {
   button.addEventListener("click", async () => {
     const input = button.previousElementSibling;
@@ -27,23 +28,30 @@ document.querySelectorAll(".edit-btn").forEach(button => {
           body: JSON.stringify({ [fieldName]: fieldValue })
         });
 
-        if (!res.ok) window.alert("failed to save");
+        if (!res.ok) {
+          window.alert("Failed to save");
+          return;
+        }
+
+        const updatedData = await res.json();
 
         // Lock input back
         input.setAttribute("readonly", true);
         input.classList.remove("editable");
         button.textContent = "Edit";
 
-        // Also update hero if it's email/city/name
-        if (fieldName === "name") {
-          document.querySelector(".hero h2").textContent = `Welcome ${fieldValue}`;
+        // Update hero section from server response
+        if (updatedData.name) {
+          document.querySelector(".hero h2").textContent = `Welcome ${updatedData.name}`;
         }
-        if (fieldName === "email") {
-          document.querySelector(".hero-info .info-text:nth-child(1) span").textContent = fieldValue;
+        if (updatedData.email) {
+          document.querySelector(".hero-info .info-text:nth-child(1) span").textContent = updatedData.email;
         }
-        if (fieldName === "city") {
-          document.querySelector(".hero-info .info-text:nth-child(2) span").textContent = fieldValue;
+        if (updatedData.city) {
+          document.querySelector(".hero-info .info-text:nth-child(2) span").textContent = updatedData.city;
         }
+
+        await loadProfile();
 
       } catch (err) {
         console.error("Error saving profile:", err);
