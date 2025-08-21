@@ -433,3 +433,14 @@ header {
 .nav-action:hover .nav-action-icon g {
   fill: var(--color-primary-text);
 }
+
+
+.charge-link {
+    font-size: var(--font-size-base);
+    color: var(--color-medium-blue);
+    text-decoration: none;
+}
+
+.charge-link:hover {
+    text-decoration: underline;
+}

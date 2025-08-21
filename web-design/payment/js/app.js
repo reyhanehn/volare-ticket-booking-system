@@ -298,22 +298,80 @@ function closeWalletModal() {
 function handleWalletCharge() {
   const amountInput = document.getElementById('wallet-amount');
   const amount = parseFloat(amountInput?.value || 0);
-  
+  const modalMessage = document.getElementById('wallet-modal-message');
+  const confirmBtn = document.getElementById('confirm-wallet-charge');
   if (!amount || amount <= 0) {
-    showNotification('Please enter a valid amount', 'error');
+    if (modalMessage) {
+      modalMessage.textContent = 'Please enter a valid amount greater than zero.';
+      modalMessage.classList.add('error');
+      modalMessage.classList.remove('success');
+    } else {
+      showNotification('Please enter a valid amount greater than zero.', 'error');
+    }
     return;
   }
-  
-  // Update global state
-  window.paymentState.walletAmount = amount;
-  
-  console.log('Wallet charged with amount:', amount);
-  
-  // Show success message
-  showNotification(`Wallet charged with $${amount.toFixed(2)}`, 'success');
-  
-  // Close modal
-  closeWalletModal();
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = 'Processing...';
+  const userToken = getAuthToken();
+  if (!userToken) {
+    if (modalMessage) {
+      modalMessage.textContent = 'Authorization token is missing. Please log in again.';
+      modalMessage.classList.add('error');
+      modalMessage.classList.remove('success');
+    } else {
+      showNotification('Authorization token is missing. Please log in again.', 'error');
+    }
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = 'Confirm';
+    return;
+  }
+  fetch('http://127.0.0.1:8000/account/wallet/transactions/charge/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userToken}`
+    },
+    body: JSON.stringify({ amount })
+  })
+    .then(async response => {
+      if (response.ok) {
+        const data = await response.json();
+        if (modalMessage) {
+          modalMessage.textContent = data.message;
+          modalMessage.classList.add('success');
+          modalMessage.classList.remove('error');
+        } else {
+          showNotification(data.message, 'success');
+        }
+        window.paymentState.walletAmount = amount;
+        // Update balance display
+        updateWalletBalanceDisplay(window.paymentState.walletBalance + amount);
+        setTimeout(closeWalletModal, 2000);
+      } else {
+        const errorData = await response.json();
+        const errorMessage = (typeof errorData === 'object' && Object.values(errorData)[0][0]) || 'An unknown error occurred.';
+        if (modalMessage) {
+          modalMessage.textContent = errorMessage;
+          modalMessage.classList.add('error');
+          modalMessage.classList.remove('success');
+        } else {
+          showNotification(errorMessage, 'error');
+        }
+      }
+    })
+    .catch(error => {
+      if (modalMessage) {
+        modalMessage.textContent = 'Failed to connect to the server. Please check your token and backend connection.';
+        modalMessage.classList.add('error');
+        modalMessage.classList.remove('success');
+      } else {
+        showNotification('Failed to connect to the server. Please check your token and backend connection.', 'error');
+      }
+    })
+    .finally(() => {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Confirm';
+    });
 }
 
 /**

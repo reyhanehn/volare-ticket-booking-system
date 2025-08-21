@@ -10,6 +10,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="css/charging_layout.css">
 
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
@@ -28,6 +29,8 @@
   <script src="js/app.js" defer></script>
   <script src="js/api.js" defer></script>
   <script src="js/state.js" defer></script>
+  <script type="module" src="js/chargeWallet.js" defer></script>
+
 
   <title>Payment - Volare</title>
 </head>
@@ -191,7 +194,7 @@
                     <span class="payment-method-description">Use your Volare wallet balance</span>
                   </div>
                 </div>
-                <button type="button" class="btn btn-link" id="charge-wallet-btn">Charge Wallet</button>
+                <a href="#" class="charge-link">Charge</a>
               </label>
             </div>
 
@@ -245,34 +248,22 @@
     </main>
 
     <!-- Wallet Top-Up Modal -->
-    <div id="wallet-modal" class="modal" aria-hidden="true">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="others">Charge Wallet</h3>
-          <button type="button" class="modal-close" aria-label="Close modal">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="wallet-amount">Amount to Add</label>
-            <div class="amount-input-wrapper">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="wallet-amount" name="amount" min="1" step="0.01" placeholder="0.00" required>
-            </div>
-          </div>
-          <div class="current-balance">
-            <span>Current Balance: $150.00</span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
-          <button type="button" class="btn btn-primary" id="confirm-wallet-charge">Confirm</button>
-        </div>
+  <div id="chargeModalOverlay" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Charge Wallet</h3>
+        <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter the amount you wish to charge:</p>
+        <input type="number" id="chargeAmountInput" class="modal-input" placeholder="0.00" min="1" step="0.01">
+        <div id="modalMessage" class="modal-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmChargeBtn" class="charge-button">Confirm</button>
       </div>
     </div>
+  </div>
 
     <footer class="footer">
       <div class="container">
