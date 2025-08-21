@@ -334,8 +334,14 @@ function handleWalletCharge() {
     body: JSON.stringify({ amount })
   })
     .then(async response => {
-      if (response.ok) {
-        const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonErr) {
+        data = null;
+      }
+      console.log('Wallet charge response:', response, data);
+      if (response.ok && data && data.message) {
         if (modalMessage) {
           modalMessage.textContent = data.message;
           modalMessage.classList.add('success');
@@ -344,12 +350,14 @@ function handleWalletCharge() {
           showNotification(data.message, 'success');
         }
         window.paymentState.walletAmount = amount;
-        // Update balance display
         updateWalletBalanceDisplay(window.paymentState.walletBalance + amount);
         setTimeout(closeWalletModal, 2000);
       } else {
-        const errorData = await response.json();
-        const errorMessage = (typeof errorData === 'object' && Object.values(errorData)[0][0]) || 'An unknown error occurred.';
+        let errorMessage = 'An unknown error occurred.';
+        if (data && typeof data === 'object') {
+          if (data.message) errorMessage = data.message;
+          else if (Object.values(data)[0]) errorMessage = Object.values(data)[0][0];
+        }
         if (modalMessage) {
           modalMessage.textContent = errorMessage;
           modalMessage.classList.add('error');
@@ -360,6 +368,7 @@ function handleWalletCharge() {
       }
     })
     .catch(error => {
+      console.error('Wallet charge network error:', error);
       if (modalMessage) {
         modalMessage.textContent = 'Failed to connect to the server. Please check your token and backend connection.';
         modalMessage.classList.add('error');
