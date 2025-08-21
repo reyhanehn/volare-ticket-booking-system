@@ -7,8 +7,7 @@ from django.db import connection
 class ReservationCancelInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        reservation_id = request.data.get('reservation_id')
+    def post(self, request, reservation_id):
         account_id = request.user.account_id
 
         with connection.cursor() as cursor:
@@ -63,8 +62,7 @@ class ReservationCancelInfoView(APIView):
 class ReservationCancelConfirmView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        reservation_id = request.data.get("reservation_id")
+    def post(self, request, reservation_id):
         account_id = request.user.account_id
 
         if not reservation_id:

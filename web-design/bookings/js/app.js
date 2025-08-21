@@ -1,20 +1,23 @@
 /**
- * Main Application Module for My Bookings Page
- * Bootstraps the page and displays booking information
+ * Main Application Module for Bookings Page
+ * Handles API integration, data fetching, and UI updates
  */
 
-class MyBookingsApp {
+class BookingsApp {
   constructor() {
     this.bookingsList = null;
-    this.bookings = [];
+    this.loadingState = null;
+    this.errorState = null;
+    this.emptyState = null;
+    this.filterInputs = {};
     this.init();
   }
 
   /**
    * Initialize the application
    */
-  init() {
-    console.log('[App] Initializing My Bookings Page');
+  async init() {
+    console.log('[App] Initializing Bookings Page');
     
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
@@ -27,265 +30,426 @@ class MyBookingsApp {
   /**
    * Setup the application after DOM is ready
    */
-  setup() {
+  async setup() {
     try {
-      // Get bookings data from state
-      this.bookings = BookingsStateManager.getBookings();
-      
+      // Check authentication first
+      if (!window.BookingsAPI || !window.BookingsAPI.getAuthTokenOrRedirect()) {
+        return;
+      }
+
       // Get DOM elements
       this.bookingsList = document.getElementById('bookingsList');
+      this.loadingState = document.getElementById('loadingState');
+      this.errorState = document.getElementById('errorState');
+      this.emptyState = document.getElementById('emptyState');
       
+      // Get filter elements
+      this.filterInputs = {
+        dateAfter: document.getElementById('dateAfter'),
+        dateBefore: document.getElementById('dateBefore'),
+        statusFilter: document.getElementById('statusFilter'),
+        applyFilters: document.getElementById('applyFilters'),
+        clearFilters: document.getElementById('clearFilters'),
+        retryButton: document.getElementById('retryButton')
+      };
+
       if (!this.bookingsList) {
         throw new Error('Bookings list element not found');
       }
 
-      // Render the bookings
-      this.renderBookings();
-      
       // Setup event listeners
       this.setupEventListeners();
       
-      // Subscribe to state changes
+      // Setup state subscriptions
       this.setupStateSubscriptions();
       
-      console.log('[App] My Bookings Page initialized successfully');
+      // Load initial data
+      await this.loadReservations();
+      
+      console.log('[App] Bookings Page initialized successfully');
       
     } catch (error) {
       console.error('[App] Error during setup:', error);
-      this.showError('Failed to initialize bookings page');
+      this.showError(`Failed to initialize: ${error.message}`);
     }
   }
 
   /**
-   * Render the bookings list
-   */
-  renderBookings() {
-    if (!this.bookings || !this.bookingsList) {
-      return;
-    }
-
-    try {
-      if (this.bookings.length === 0) {
-        this.showEmptyState();
-        return;
-      }
-
-      const bookingsHTML = this.bookings.map(booking => 
-        this.generateBookingCardHTML(booking)
-      ).join('');
-
-      this.bookingsList.innerHTML = bookingsHTML;
-      
-      console.log('[App] Bookings rendered successfully');
-      
-    } catch (error) {
-      console.error('[App] Error rendering bookings:', error);
-      this.showError('Failed to render bookings');
-    }
-  }
-
-  /**
-   * Generate HTML for a single booking card
-   */
-  generateBookingCardHTML(booking) {
-    return `
-      <div class="booking-card" data-booking-id="${booking.id}">
-        <div class="booking-info">
-          <div class="booking-route">
-            <span>${booking.route.from}</span>
-            <span class="route-arrow">→</span>
-            <span>${booking.route.to}</span>
-          </div>
-          <div class="booking-details">
-            <div class="booking-time">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              ${booking.departureTime}
-            </div>
-            <div class="booking-date">${booking.departureDate}</div>
-          </div>
-        </div>
-        
-        <div class="booking-price">
-          ${booking.price.currency}${booking.price.amount}
-        </div>
-        
-        <div class="booking-actions">
-          <button class="btn-view" onclick="event.stopPropagation(); app.viewBooking('${booking.id}')">
-            View
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Show empty state when no bookings exist
-   */
-  showEmptyState() {
-    if (this.bookingsList) {
-      this.bookingsList.innerHTML = `
-        <div class="bookings-empty">
-          <h3>No Bookings Found</h3>
-          <p>You haven't made any bookings yet. Start planning your next trip!</p>
-          <a href="../home_page/index.html" class="btn-primary">Book Now</a>
-        </div>
-      `;
-    }
-  }
-
-  /**
-   * Setup event listeners for the page
+   * Setup event listeners
    */
   setupEventListeners() {
-    // Setup booking card click events
-    this.setupBookingCardClicks();
+    // Filter controls
+    if (this.filterInputs.applyFilters) {
+      this.filterInputs.applyFilters.addEventListener('click', () => {
+        this.applyFilters();
+      });
+    }
+
+    if (this.filterInputs.clearFilters) {
+      this.filterInputs.clearFilters.addEventListener('click', () => {
+        this.clearFilters();
+      });
+    }
+
+    if (this.filterInputs.retryButton) {
+      this.filterInputs.retryButton.addEventListener('click', () => {
+        this.loadReservations();
+      });
+    }
+
+    // Enter key on filter inputs
+    Object.values(this.filterInputs).forEach(input => {
+      if (input && input.tagName === 'INPUT' || input.tagName === 'SELECT') {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            this.applyFilters();
+          }
+        });
+      }
+    });
+
     console.log('[App] Event listeners setup complete');
   }
 
   /**
-   * Setup click events for booking cards
-   */
-  setupBookingCardClicks() {
-    if (!this.bookingsList) return;
-
-    // Use event delegation for better performance
-    this.bookingsList.addEventListener('click', (e) => {
-      const bookingCard = e.target.closest('.booking-card');
-      if (bookingCard) {
-        const bookingId = bookingCard.dataset.bookingId;
-        if (bookingId) {
-          this.viewBooking(bookingId);
-        }
-      }
-    });
-  }
-
-  /**
-   * View a specific booking (navigate to ticket details)
-   */
-  viewBooking(bookingId) {
-    try {
-      console.log('[App] Viewing booking:', bookingId);
-      
-      // For now, redirect to a placeholder ticket details page
-      // In the future, this would navigate to the actual ticket details page
-      window.location.href = '../reservation_info/index.html';
-      
-    } catch (error) {
-      console.error('[App] Error viewing booking:', error);
-      this.showNotification('Failed to open booking details', 'error');
-    }
-  }
-
-  /**
-   * Setup subscriptions to state changes
+   * Setup state subscriptions
    */
   setupStateSubscriptions() {
-    // Subscribe to new bookings
-    BookingsStateManager.subscribe('bookingAdded', (newBooking) => {
-      console.log('[App] New booking added:', newBooking);
-      this.bookings.unshift(newBooking);
-      this.renderBookings();
+    // Subscribe to reservations changes
+    BookingsStateManager.subscribe('reservationsChanged', (reservations) => {
+      console.log('[App] Reservations changed:', reservations);
+      this.renderBookings(reservations);
     });
 
-    // Subscribe to status changes
-    BookingsStateManager.subscribe('statusChanged', (changeData) => {
-      console.log('[App] Booking status changed:', changeData);
-      const booking = this.bookings.find(b => b.id === changeData.id);
-      if (booking) {
-        booking.status = changeData.status;
-        this.renderBookings();
+    // Subscribe to loading changes
+    BookingsStateManager.subscribe('loadingChanged', (isLoading) => {
+      this.toggleLoadingState(isLoading);
+    });
+
+    // Subscribe to error changes
+    BookingsStateManager.subscribe('errorChanged', (error) => {
+      if (error) {
+        this.showError(error);
+      } else {
+        this.hideError();
       }
-    });
-
-    // Subscribe to booking removal
-    BookingsStateManager.subscribe('bookingRemoved', (removedBooking) => {
-      console.log('[App] Booking removed:', removedBooking);
-      this.bookings = this.bookings.filter(b => b.id !== removedBooking.id);
-      this.renderBookings();
     });
 
     console.log('[App] State subscriptions setup complete');
   }
 
   /**
-   * Show error message to user
+   * Load reservations from API
    */
-  showError(message) {
-    if (this.bookingsList) {
-      this.bookingsList.innerHTML = `
-        <div style="text-align: center; padding: 2rem; color: var(--color-error);">
-          <h3>Error</h3>
-          <p>${message}</p>
-        </div>
-      `;
+  async loadReservations() {
+    try {
+      BookingsStateManager.setLoading(true);
+      BookingsStateManager.clearError();
+
+      const filters = BookingsStateManager.getFilters();
+      const result = await window.BookingsAPI.getReservationsList(filters);
+      const reservations = result.reservations || [];      
+      // Fetch ticket details for each reservation
+      const enrichedReservations = await this.enrichReservationsWithTicketDetails(reservations);
+      
+      BookingsStateManager.setReservations(enrichedReservations);
+      
+    } catch (error) {
+      console.error('[App] Error loading reservations:', error);
+      BookingsStateManager.setError(error.message);
+    } finally {
+      BookingsStateManager.setLoading(false);
     }
   }
 
   /**
-   * Show notification message
+   * Enrich reservations with ticket details
    */
-  showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-      <div class="notification-content">
-        <span class="notification-message">${message}</span>
-        <button class="notification-close">&times;</button>
+  async enrichReservationsWithTicketDetails(reservations) {
+    const enriched = [];
+    
+    for (const reservation of reservations) {
+      try {
+        const ticketDetails = await window.BookingsAPI.getTicketDetails(reservation.ticket_id);
+        enriched.push({
+          ...reservation,
+          ticket_details: ticketDetails
+        });
+      } catch (error) {
+        console.warn(`[App] Could not fetch ticket details for reservation ${reservation.reservation_id}:`, error);
+        // Add reservation without ticket details
+        enriched.push(reservation);
+      }
+    }
+    
+    return enriched;
+  }
+
+  /**
+   * Apply filters and reload reservations
+   */
+  async applyFilters() {
+    const filters = {
+      dateAfter: this.filterInputs.dateAfter?.value || '',
+      dateBefore: this.filterInputs.dateBefore?.value || '',
+      status: this.filterInputs.statusFilter?.value || ''
+    };
+
+    BookingsStateManager.setFilters(filters);
+    await this.loadReservations();
+  }
+
+  /**
+   * Clear filters and reload reservations
+   */
+  async clearFilters() {
+    // Clear input values
+    if (this.filterInputs.dateAfter) this.filterInputs.dateAfter.value = '';
+    if (this.filterInputs.dateBefore) this.filterInputs.dateBefore.value = '';
+    if (this.filterInputs.statusFilter) this.filterInputs.statusFilter.value = '';
+
+    BookingsStateManager.clearFilters();
+    await this.loadReservations();
+  }
+
+  /**
+   * Render bookings list
+   */
+  renderBookings(reservations) {
+    if (!this.bookingsList) return;
+
+    if (!reservations || reservations.length === 0) {
+      this.showEmptyState();
+      return;
+    }
+
+    this.hideEmptyState();
+    
+    const bookingsHTML = reservations.map(reservation => this.generateBookingCard(reservation)).join('');
+    this.bookingsList.innerHTML = bookingsHTML;
+
+    // Setup view buttons
+    this.setupViewButtons();
+  }
+
+  /**
+   * Generate HTML for a booking card
+   */
+  generateBookingCard(reservation) {
+    const ticketDetails = reservation.ticket_details;
+    const route = ticketDetails?.route;
+    const trip = ticketDetails?.trip;
+    
+    const origin = route?.origin || 'N/A';
+    const destination = route?.destination || 'N/A';
+    const departureDate = trip?.departure_datetime ? 
+      BookingsStateManager.formatDate(trip.departure_datetime) : 'N/A';
+    const departureTime = trip?.departure_datetime ? 
+      BookingsStateManager.formatTime(trip.departure_datetime) : 'N/A';
+    
+    const statusColor = BookingsStateManager.getStatusColor(reservation.status);
+    
+    return `
+      <div class="booking-card" data-reservation-id="${reservation.reservation_id}">
+        <div class="booking-header">
+          <div class="booking-route">
+            <h3>${origin} → ${destination}</h3>
+          </div>
+          <div class="booking-status">
+            <span class="status-badge status-${statusColor}">${reservation.status}</span>
+          </div>
+        </div>
+        
+        <div class="booking-details">
+          <div class="booking-info">
+            <div class="info-item">
+              <span class="info-label">Reservation ID:</span>
+              <span class="info-value">#${reservation.reservation_id}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Departure Date:</span>
+              <span class="info-value">${departureDate}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Departure Time:</span>
+              <span class="info-value">${departureTime}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Seat Number:</span>
+              <span class="info-value">${reservation.seat_number || 'N/A'}</span>
+            </div>
+          </div>
+          
+          <div class="booking-actions">
+            <button class="btn-view" data-reservation-id="${reservation.reservation_id}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
       </div>
     `;
+  }
 
-    // Add to page
-    document.body.appendChild(notification);
-
-    // Show notification
-    setTimeout(() => {
-      notification.classList.add('notification-show');
-    }, 100);
-
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      this.hideNotification(notification);
-    }, 5000);
-
-    // Close button functionality
-    const closeBtn = notification.querySelector('.notification-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        this.hideNotification(notification);
+  /**
+   * Setup view buttons
+   */
+  setupViewButtons() {
+    const viewButtons = this.bookingsList.querySelectorAll('.btn-view');
+    viewButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const reservationId = e.currentTarget.getAttribute('data-reservation-id');
+        if (reservationId) {
+          this.viewReservationDetails(reservationId);
+        }
       });
+    });
+  }
+
+  /**
+   * Navigate to reservation details page
+   */
+  viewReservationDetails(reservationId) {
+    const url = `../reservation_info/index.html?reservation_id=${reservationId}`;
+    window.location.href = url;
+  }
+
+  /**
+   * Toggle loading state
+   */
+  toggleLoadingState(isLoading) {
+    if (isLoading) {
+      this.showLoadingState();
+    } else {
+      this.hideLoadingState();
     }
   }
 
   /**
-   * Hide notification message
+   * Show loading state
    */
-  hideNotification(notification) {
-    notification.classList.remove('notification-show');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
+  showLoadingState() {
+    if (this.loadingState) this.loadingState.style.display = 'block';
+    if (this.bookingsList) this.bookingsList.style.display = 'none';
+    if (this.errorState) this.errorState.style.display = 'none';
+    if (this.emptyState) this.emptyState.style.display = 'none';
   }
 
   /**
-   * Refresh bookings data (for future use with API)
+   * Hide loading state
    */
-  refreshBookings() {
-    console.log('[App] Refreshing bookings data...');
-    this.bookings = BookingsStateManager.getBookings();
-    this.renderBookings();
+  hideLoadingState() {
+    if (this.loadingState) this.loadingState.style.display = 'none';
+    if (this.bookingsList) this.bookingsList.style.display = 'block';
+  }
+
+  /**
+   * Show empty state
+   */
+  showEmptyState() {
+    if (this.emptyState) this.emptyState.style.display = 'block';
+    if (this.bookingsList) this.bookingsList.style.display = 'none';
+    if (this.loadingState) this.loadingState.style.display = 'none';
+    if (this.errorState) this.errorState.style.display = 'none';
+  }
+
+  /**
+   * Hide empty state
+   */
+  hideEmptyState() {
+    if (this.emptyState) this.emptyState.style.display = 'none';
+  }
+
+  /**
+   * Show error state
+   */
+  showError(message) {
+    if (this.errorState) {
+      this.errorState.style.display = 'block';
+      const errorMessage = this.errorState.querySelector('#errorMessage');
+      if (errorMessage) {
+        errorMessage.textContent = message || 'An error occurred while loading your bookings.';
+      }
+    }
+    if (this.bookingsList) this.bookingsList.style.display = 'none';
+    if (this.loadingState) this.loadingState.style.display = 'none';
+    if (this.emptyState) this.emptyState.style.display = 'none';
+  }
+
+  /**
+   * Hide error state
+   */
+  hideError() {
+    if (this.errorState) this.errorState.style.display = 'none';
   }
 }
 
-// Initialize the application when the script loads
-const app = new MyBookingsApp();
+// Add CSS animations
+function addAnimationStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .loading-spinner svg {
+      animation: spin 1s linear infinite;
+    }
+    
+    .booking-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .booking-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .status-error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .status-warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .status-info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+  `;
+  document.head.appendChild(style);
+}
 
-// Export for debugging/development
-window.MyBookingsApp = MyBookingsApp;
-window.app = app;
+// Initialize the application when the script loads
+document.addEventListener('DOMContentLoaded', () => {
+  addAnimationStyles();
+  const app = new BookingsApp();
+  
+  // Export for debugging/development
+  window.BookingsApp = BookingsApp;
+  window.app = app;
+});

@@ -166,7 +166,7 @@ urlpatterns = [
     path('payment/history/', PaymentHistoryView.as_view(), name='payment-history'),
     #this is a get request for the customer to see all the payments made
     #this will hae the reservation id  and amount and method of the payment as well as the date-time and the status which can be confirmed of refunded if the reservation was canceled
-    path('reservation/cancellation/info/', ReservationCancelInfoView.as_view(), name='reservation-cancellation-info'),
+    path('reservation/<int:reservation_id>/cancellation/info/', ReservationCancelInfoView.as_view(), name='reservation-cancellation-info'),
     #this is a get request for when the customer wants to cancel a reservation so first by using this api they see the full info of the reservation
     #if the reservation was confirmed and had a payment it will also show the penalty that they have to pay and the refund amount which will be returned to their wallet
     #but if the status was pending only the reservation info and the ticket price is shown
@@ -187,7 +187,7 @@ urlpatterns = [
     #     "refund_amount": 9.0
     # }
 
-    path('reservation/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
+    path('reservation/<int:reservation_id>/cancel/', ReservationCancelConfirmView.as_view(), name='reservation-cancel'),
     #so this is a post request which will actually cancel the reservation by the reservation id
     #and if the reservation was confirmed it will refund the price of the ticket minus the penalty
     path('admin/cancel/reservation/', AdminCancelReservationView.as_view(), name='admin-cancel-reservation'),

@@ -1,15 +1,15 @@
-<!DOCTYPE html >
-<html lang="en" data-theme="default">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" type="image/png" sizes="32x32" href="../images/logo/volare-logo-gold_transparent.png">
-
-  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/logo/volare-logo-gold_transparent.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
 
-  
+
 </head>
 
 <body>
@@ -139,68 +139,131 @@
       </div>
     </section>
 
-    <!-- Bookings List Section -->
-    <section class="bookings-section">
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="container">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label for="dateAfter">From Date</label>
+                        <input type="date" id="dateAfter" class="filter-input">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateBefore">To Date</label>
+                        <input type="date" id="dateBefore" class="filter-input">
+                    </div>
+                    <div class="filter-group">
+                        <label for="statusFilter">Status</label>
+                        <select id="statusFilter" class="filter-input">
+                            <option value="">All Statuses</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                        <button id="clearFilters" class="btn-secondary">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bookings List Section -->
+        <section class="bookings-section">
+            <div class="container">
+                <!-- Loading State -->
+                <div id="loadingState" class="loading-state" style="display: none;">
+                    <div class="loading-spinner">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                            <path d="M12 2V6M12 18V22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <p>Loading your bookings...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="errorState" class="error-state" style="display: none;">
+                    <div class="error-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Failed to load bookings</h3>
+                    <p id="errorMessage">Please try again later.</p>
+                    <button id="retryButton" class="btn-primary">Try Again</button>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 9V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V9M2 9V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V9M2 9H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>No bookings found</h3>
+                    <p>You haven't made any reservations yet.</p>
+                    <a href="../home_page/index.html" class="btn-primary">Book Your First Trip</a>
+                </div>
+
+                <!-- Bookings List -->
+                <div id="bookingsList" class="bookings-list">
+                    <!-- Booking cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
       <div class="container">
-        <div class="bookings-list" id="bookingsList">
-          <!-- Booking cards will be populated by JavaScript -->
+
+        <!-- Top Row: Services, About, Volare -->
+        <div class="footer-top">
+          <div class="item">
+            <h3 class="white-heading">Our Services</h3>
+            <ul>
+              <li><a href="#">Airplane Tickets</a></li>
+              <li><a href="#">Bus Tickets</a></li>
+              <li><a href="#">Train Tickets</a></li>
+            </ul>
+          </div>
+
+          <div class="item">
+            <h3 class="white-heading">About</h3>
+            <ul>
+              <li><a href="#">Our Company</a></li>
+              <li><a href="#">Team</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="item text">
+            <h3 class="white-heading">Volare</h3>
+            <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+              reliable.</p>
+          </div>
         </div>
+
+        <!-- Middle Row: Social Icons -->
+        <div class="footer-middle">
+          <div class="item social">
+            <a href="#"><i class="icon ion-social-facebook"></i></a>
+            <a href="#"><i class="icon ion-social-twitter"></i></a>
+            <a href="#"><i class="icon ion-social-snapchat"></i></a>
+            <a href="#"><i class="icon ion-social-instagram"></i></a>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Copyright -->
+        <div class="footer-bottom">
+          <p class="copyright">Volare © 2025</p>
+        </div>
+
       </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-
-      <!-- Top Row: Services, About, Volare -->
-      <div class="footer-top">
-        <div class="item">
-          <h3 class="white-heading">Our Services</h3>
-          <ul>
-            <li><a href="#">Airplane Tickets</a></li>
-            <li><a href="#">Bus Tickets</a></li>
-            <li><a href="#">Train Tickets</a></li>
-          </ul>
-        </div>
-
-        <div class="item">
-          <h3 class="white-heading">About</h3>
-          <ul>
-            <li><a href="#">Our Company</a></li>
-            <li><a href="#">Team</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-
-        <div class="item text">
-          <h3 class="white-heading">Volare</h3>
-          <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
-            reliable.</p>
-        </div>
-      </div>
-
-      <!-- Middle Row: Social Icons -->
-      <div class="footer-middle">
-        <div class="item social">
-          <a href="#"><i class="icon ion-social-facebook"></i></a>
-          <a href="#"><i class="icon ion-social-twitter"></i></a>
-          <a href="#"><i class="icon ion-social-snapchat"></i></a>
-          <a href="#"><i class="icon ion-social-instagram"></i></a>
-        </div>
-      </div>
-
-      <!-- Bottom Row: Copyright -->
-      <div class="footer-bottom">
-        <p class="copyright">Volare © 2025</p>
-      </div>
-
-    </div>
-  </footer>
-  <!-- JavaScript Files -->
-  <script src="js/state.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/app.js"></script>
+    </footer>
+    <!-- JavaScript Files -->
+    <script src="js/state.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
 </body>
-
 </html>

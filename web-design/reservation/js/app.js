@@ -87,14 +87,18 @@ async function handleConfirmReservation(ticketId) {
   }
   try {
     const passengerId = selectedPassenger.id || selectedPassenger.passenger_id || selectedPassenger.uuid;
-    await window.ReservationAPI.createReservation(ticketId, {
+    const response = await window.ReservationAPI.createReservation(ticketId, {
       passenger_id: passengerId,
       seat_number: window.reservationState.selectedSeat
     });
-    showNotification('Reservation confirmed! Redirecting to payment...', 'success');
-    setTimeout(() => {
-      window.location.href = 'payment/';
-    }, 800);
+    if (response && response.data && response.data.reservation_id) {
+      showNotification('Reservation confirmed! Redirecting to payment...', 'success');
+      setTimeout(() => {
+        window.location.href = `../payment/index.html?reservation_id=${response.data.reservation_id}`;
+      }, 800);
+    } else {
+      throw new Error('Reservation ID not returned from backend');
+    }
   } catch (e) {
     console.error(e);
     showNotification(`Failed to create reservation: ${e.message || 'Unknown error'}`, 'error');

@@ -82,16 +82,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 ticketListContainer.appendChild(ticketItem);
 
-                ticketItem.addEventListener('click', (event) => {
-                    if (event.target.tagName === 'BUTTON') {
-                        return;
+
+                    // Expand/collapse details on ticket item click (not button)
+                    ticketItem.addEventListener('click', (event) => {
+                        if (event.target.tagName === 'BUTTON') return;
+                        ticketItem.classList.toggle('expanded');
+                    });
+
+                    // Select button logic: redirect to reservation page with ticket_id
+                    const selectBtn = ticketItem.querySelector('.select-button');
+                    if (selectBtn) {
+                        selectBtn.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            // Check if user is signed in (JWT token in localStorage)
+                            const token = localStorage.getItem('access_token') || localStorage.getItem('authToken');
+                            if (!token) {
+                                showNotification('You need to sign in to book a ticket.', 'error');
+                                return;
+                            }
+                            window.location.href = `../reservation/index.html?ticket_id=${ticket.ticket_id}`;
+                        });
                     }
-                    ticketItem.classList.toggle('expanded');
-                });
             });
         })
         .catch(error => {
             console.error('There was a problem fetching the tickets:', error);
             ticketListContainer.innerHTML = `<p class="loading-message error">Error: ${error.message}</p>`;
         });
+
+    // Simple notification function for errors
+    function showNotification(message, type = 'info') {
+        let notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            border-left: 4px solid ${type === 'error' ? '#e74c3c' : '#3498db'};
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 12px 20px;
+            z-index: 1001;
+            max-width: 350px;
+            font-size: 1rem;
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            if (notification.parentNode) notification.parentNode.removeChild(notification);
+        }, 3500);
+    }
 });

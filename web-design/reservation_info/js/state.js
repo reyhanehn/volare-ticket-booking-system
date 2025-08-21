@@ -1,90 +1,252 @@
 /**
- * State Management for Ticket Details Page
- * Manages in-memory state for ticket information
+ * State Management for Reservation Info Page
+ * Manages in-memory state for reservation information from API
  */
 
-// Global state object for ticket details
-window.ticketState = {
-  // Mock ticket data
-  ticket: {
-    id: "TK-2025-001",
-    type: "Domestic Flight",
-    status: "Confirmed",
-    route: {
-      from: {
-        code: "NYC",
-        name: "New York"
-      },
-      to: {
-        code: "BOS",
-        name: "Boston"
-      }
-    },
-    details: {
-      date: "August 25, 2025",
-      time: "10:00 AM",
-      duration: "1h 15m",
-      class: "Economy"
-    },
-    company: "Swift Travels",
-    price: {
-      amount: "120",
-      currency: "USD"
-    },
-    passenger: {
-      name: "John Doe",
-      age: 28,
-      contact: "+1 555 123 4567"
-    },
-    seat: "12A",
-    payment: {
-      method: "Credit Card",
-      status: "Paid"
-    }
-  }
+// Global state object for reservation details
+window.reservationState = {
+  reservationId: null,
+  reservationData: null,
+  paymentData: null,
+  cancellationInfo: null,
+  isLoading: false,
+  error: null
 };
 
+// Utility functions for data transformation
+function formatDateTime(departureDatetime) {
+  if (!departureDatetime) return { date: 'N/A', time: 'N/A' };
+  
+  try {
+    const dateObj = new Date(departureDatetime);
+    const date = dateObj.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    const time = dateObj.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    return { date, time };
+  } catch (e) {
+    console.error('Error formatting datetime:', e);
+    return { date: 'N/A', time: 'N/A' };
+  }
+}
+
+function getVehicleTypeDisplay(vehicleType, originCountry, destinationCountry) {
+  const vehicle = (vehicleType || '').toLowerCase();
+  
+  if (vehicle === 'airplane' || vehicle === 'plane') {
+    const isDomestic = originCountry === destinationCountry;
+    return isDomestic ? 'Domestic Flight' : 'International Flight';
+  } else if (vehicle === 'bus') {
+    return 'Bus Ride';
+  } else if (vehicle === 'train') {
+    return 'Train Ride';
+  }
+  
+  return 'Transport';
+}
+
+function formatDuration(duration) {
+  if (!duration) return 'N/A';
+  return duration.replace(/^(\d+):(\d+):(\d+)$/, '$1h $2m');
+}
+
+function isPastDeparture(departureDatetime) {
+  if (!departureDatetime) return false;
+  try {
+    const departureDate = new Date(departureDatetime);
+    const now = new Date();
+    return departureDate < now;
+  } catch (e) {
+    console.error('Error checking departure date:', e);
+    return false;
+  }
+}
+
 /**
- * Ticket State Manager
- * Provides methods to interact with ticket state
+ * Reservation State Manager
+ * Provides methods to interact with reservation state
  */
-const TicketStateManager = {
+const ReservationStateManager = {
   /**
-   * Get current ticket data
-   * @returns {Object} Current ticket data
+   * Get reservation ID from URL
+   * @returns {string|null} Reservation ID
    */
-  getTicket() {
-    return window.ticketState.ticket;
+  getReservationIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('reservation_id');
   },
 
   /**
-   * Update ticket status
+   * Set reservation ID
+   * @param {string} reservationId - Reservation ID
+   */
+  setReservationId(reservationId) {
+    window.reservationState.reservationId = reservationId;
+  },
+
+  /**
+   * Get current reservation data
+   * @returns {Object|null} Current reservation data
+   */
+  getReservationData() {
+    return window.reservationState.reservationData;
+  },
+
+  /**
+   * Set reservation data and transform it for display
+   * @param {Object} data - Raw reservation data from API
+   */
+  setReservationData(data) {
+    if (!data || !data.ticket_info) {
+      window.reservationState.reservationData = null;
+      return;
+    }
+
+    const ticket = data.ticket_info;
+    const route = ticket.route;
+    const vehicle = ticket.vehicle;
+    const trip = ticket.trip;
+    
+    // Format date and time
+    const { date, time } = formatDateTime(trip.departure_datetime);
+    
+    // Determine vehicle type display
+    const vehicleTypeDisplay = getVehicleTypeDisplay(
+      vehicle.type, 
+      route.origin_country, 
+      route.destination_country
+    );
+
+    // Format duration
+    const duration = formatDuration(trip.duration);
+
+    // Check if departure is in the past
+    const isPast = isPastDeparture(trip.departure_datetime);
+
+    // Transform data for display
+    const transformedData = {
+      id: data.reservation_id,
+      type: vehicleTypeDisplay,
+      status: data.status,
+      route: {
+        from: {
+          code: route.origin,
+          country: route.origin_country,
+          station: route.origin_station
+        },
+        to: {
+          code: route.destination,
+          country: route.destination_country,
+          station: route.destination_station
+        }
+      },
+      details: {
+        date: date,
+        time: time,
+        duration: duration,
+        class: vehicle.class_code,
+        section: ticket.section
+      },
+      company: trip.company_name,
+      price: {
+        amount: ticket.price,
+        currency: 'USD'
+      },
+      passenger: {
+        name: data.passenger_id,
+        seat: data.seat_number
+      },
+      isPastDeparture: isPast
+    };
+
+    window.reservationState.reservationData = transformedData;
+    this.notifySubscribers('reservationDataChanged', transformedData);
+  },
+
+  /**
+   * Get current payment data
+   * @returns {Object|null} Current payment data
+   */
+  getPaymentData() {
+    return window.reservationState.paymentData;
+  },
+
+  /**
+   * Set payment data
+   * @param {Object} data - Payment data from API
+   */
+  setPaymentData(data) {
+    window.reservationState.paymentData = data;
+    this.notifySubscribers('paymentDataChanged', data);
+  },
+
+  /**
+   * Get cancellation info
+   * @returns {Object|null} Cancellation info
+   */
+  getCancellationInfo() {
+    return window.reservationState.cancellationInfo;
+  },
+
+  /**
+   * Set cancellation info
+   * @param {Object} data - Cancellation info from API
+   */
+  setCancellationInfo(data) {
+    window.reservationState.cancellationInfo = data;
+    this.notifySubscribers('cancellationInfoChanged', data);
+  },
+
+  /**
+   * Set loading state
+   * @param {boolean} isLoading - Loading state
+   */
+  setLoading(isLoading) {
+    window.reservationState.isLoading = isLoading;
+    this.notifySubscribers('loadingChanged', isLoading);
+  },
+
+  /**
+   * Set error state
+   * @param {string|null} error - Error message
+   */
+  setError(error) {
+    window.reservationState.error = error;
+    this.notifySubscribers('errorChanged', error);
+  },
+
+  /**
+   * Update reservation status
    * @param {string} status - New status
    */
   updateStatus(status) {
-    window.ticketState.ticket.status = status;
-    this.notifySubscribers('statusChanged', status);
+    if (window.reservationState.reservationData) {
+      window.reservationState.reservationData.status = status;
+      this.notifySubscribers('statusChanged', status);
+    }
   },
 
   /**
-   * Update passenger information
-   * @param {Object} passengerData - New passenger data
+   * Check if cancellation is allowed
+   * @returns {boolean} Whether cancellation is allowed
    */
-  updatePassenger(passengerData) {
-    window.ticketState.ticket.passenger = {
-      ...window.ticketState.ticket.passenger,
-      ...passengerData
-    };
-    this.notifySubscribers('passengerChanged', window.ticketState.ticket.passenger);
-  },
-
-  /**
-   * Update seat information
-   * @param {string} seat - New seat number
-   */
-  updateSeat(seat) {
-    window.ticketState.ticket.seat = seat;
-    this.notifySubscribers('seatChanged', seat);
+  canCancel() {
+    const data = window.reservationState.reservationData;
+    if (!data) return false;
+    
+    // Can't cancel if already cancelled
+    if (data.status === 'Cancelled') return false;
+    
+    // Can't cancel if departure is in the past
+    if (data.isPastDeparture) return false;
+    
+    return true;
   },
 
   // Simple pub/sub system
@@ -132,6 +294,6 @@ const TicketStateManager = {
 };
 
 // Export for use in other modules
-window.TicketStateManager = TicketStateManager;
+window.ReservationStateManager = ReservationStateManager;
 
-console.log('[State] Ticket Details State initialized with dummy data');
+console.log('[State] Reservation Info State initialized');

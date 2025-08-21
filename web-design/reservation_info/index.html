@@ -35,7 +35,6 @@
 
 
 </head>
-
 <body>
   <main class="ticket-main">
     <!-- Header with Navigation -->
@@ -130,36 +129,33 @@
       </div>
     </section>
 
-    <!-- Cancellation Modal -->
-    <div class="modal" id="cancellationModal">
-      <div class="modal-backdrop"></div>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Cancel Ticket</h3>
-          <button class="modal-close" id="closeCancellationModal">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
+        <!-- Cancellation Modal -->
+        <div class="modal" id="cancellationModal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Cancel Ticket</h3>
+                    <button class="modal-close" id="closeCancellationModal">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="cancellation-warning">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Loading cancellation information...
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="cancelCancellationBtn">Cancel</button>
+                    <button class="btn-primary" id="confirmCancellationBtn">Confirm Cancellation</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <p class="cancellation-warning">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            Cancelling now will charge a $20 penalty fee
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-secondary" id="cancelCancellationBtn">Cancel</button>
-          <button class="btn-primary" id="confirmCancellationBtn">Confirm Cancellation</button>
-        </div>
-      </div>
-    </div>
-  </main>
+    </main>
 
   <!-- Footer -->
   <footer class="footer">
@@ -215,5 +211,4 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
 </body>
-
 </html>

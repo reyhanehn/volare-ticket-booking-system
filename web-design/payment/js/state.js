@@ -5,28 +5,11 @@
 
 // Global payment state object
 window.paymentState = window.paymentState || {
-  // Selected payment method
   selectedPaymentMethod: null,
-  
-  // Wallet information
   walletAmount: 0,
-  walletBalance: 150.00, // Mock current balance
-  
-  // Payment details
-  paymentAmount: 1299.00,
-  currency: 'USD',
-  
-  // Booking information (mock data)
-  bookingInfo: {
-    route: 'JFK → LHR',
-    date: 'December 25, 2024',
-    time: '10:30 AM',
-    passenger: 'John Doe',
-    age: '39 years',
-    contact: 'john.doe@email.com',
-    seat: '12A',
-    class: 'Economy'
-  }
+  walletBalance: 0.00, // Will be set from backend if available
+  paymentAmount: 0.00,
+  currency: 'USD'
 };
 
 /**
@@ -93,9 +76,7 @@ window.PaymentStateManager = {
    * Get booking information
    * @returns {Object} Booking information
    */
-  getBookingInfo() {
-    return { ...window.paymentState.bookingInfo };
-  },
+  // getBookingInfo removed: now handled by API data
   
   /**
    * Check if payment method is selected
