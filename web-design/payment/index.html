@@ -112,50 +112,8 @@
         <section class="payment-info-section">
           <h2>Booking Summary</h2>
           <div class="payment-info-card">
-            <div class="info-group">
-              <h3>Ticket Information</h3>
-              <div class="info-item">
-                <span class="info-label">Route:</span>
-                <span class="info-value">JFK → LHR</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Date:</span>
-                <span class="info-value">December 25, 2024</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Time:</span>
-                <span class="info-value">10:30 AM</span>
-              </div>
-            </div>
-
-            <div class="info-group">
-              <h3>Passenger Information</h3>
-              <div class="info-item">
-                <span class="info-label">Name:</span>
-                <span class="info-value">John Doe</span>
-              </div>
-            </div>
-
-            <div class="info-group">
-              <h3>Seat Information</h3>
-              <div class="info-item">
-                <span class="info-label">Seat:</span>
-                <span class="info-value">12A</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Class:</span>
-                <span class="info-value">Economy</span>
-              </div>
-            </div>
-
-            <div class="info-group total-group">
-              <h3>Total Amount</h3>
-              <div class="total-amount">
-                <span class="currency">$</span>
-                <span class="amount">1,299</span>
-                <span class="currency">USD</span>
-              </div>
-            </div>
+            <!-- Reservation details will be populated by JavaScript -->
+            <div class="loading-message">Loading reservation details...</div>
           </div>
         </section>
 
@@ -237,11 +195,11 @@
 
         <!-- Pay Button Section -->
         <section class="pay-button-section">
-          <button type="button" id="pay-button" class="btn btn-primary btn-large btn-full-width">
+          <button type="button" id="pay-button" class="btn btn-primary btn-large btn-full-width" disabled>
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Pay $1,299
+            Select Payment Method
           </button>
         </section>
       </div>
