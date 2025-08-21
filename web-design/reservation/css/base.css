@@ -127,3 +127,8 @@ a:hover {
   background-color: var(--color-brand);
   color: white;
 }
+
+.seat-aisle {
+  display: inline-block;
+  width: 24px;
+}

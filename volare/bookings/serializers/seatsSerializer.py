@@ -25,9 +25,28 @@ class AvailableSeatsSerializer(serializers.Serializer):
             ORDER BY s.seat;
         """
 
+        seat_start_num_sql = """
+            SELECT seat_start_number
+            FROM bookings_ticket t
+            WHERE t.ticket_id = %s
+        """
+
+        seat_end_num_sql = """
+            SELECT seat_end_number
+            FROM bookings_ticket t
+            WHERE t.ticket_id = %s
+        """
+
         with connection.cursor() as cursor:
             cursor.execute(sql, [ticket_id, ticket_id])
             rows = cursor.fetchall()
+            cursor.execute(seat_start_num_sql, [ticket_id])
+            start_num = cursor.fetchone()[0]
+            cursor.execute(seat_end_num_sql, [ticket_id])
+            end_num = cursor.fetchone()[0]
         available_seats = [row[0] for row in rows]
 
-        return {"available_seats": available_seats}
+        return {
+                    "available_seats": available_seats,
+                    "total_seats": end_num - start_num + 1
+                }

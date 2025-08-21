@@ -9,9 +9,13 @@ window.SeatManager = {
     this.setSelectLoading(seatSelect, true);
     try {
       const seatsResponse = await window.ReservationAPI.getAvailableSeats(ticketId);
-      const seats = Array.isArray(seatsResponse) ? seatsResponse : (seatsResponse.seats || seatsResponse.available || []);
-      window.reservationState.availableSeats = seats;
-      this.renderSeatDropdown(seats);
+      const availableSeats = Array.isArray(seatsResponse.available_seats)
+        ? seatsResponse.available_seats
+        : [];
+      const totalSeats = seatsResponse.total_seats || availableSeats.length;
+      window.reservationState.availableSeats = availableSeats;
+      window.reservationState.totalSeats = totalSeats;
+      this.renderSeatDropdown(availableSeats);
       this.wireSeatEvents();
       this.generateSeatMap();
     } catch (e) {
@@ -103,46 +107,96 @@ window.SeatManager = {
     }
     const ticket = window.reservationState.ticketData || {};
     const availableSeats = new Set((window.reservationState.availableSeats || []).map(String));
+    const totalSeats = window.reservationState.totalSeats || availableSeats.size;
     const layout = this.getLayoutFromTicket(ticket);
-    const rows = layout.rows;
-    const cols = layout.cols;
-    let seatMapHTML = '';
 
-    for (let row = 1; row <= rows; row++) {
-      seatMapHTML += '<div class="seat-row">';
-      
-      // Add row label
-      seatMapHTML += `<div class="seat-row-label">${row}</div>`;
-      
-      // Add seats for this row
-      for (let col = 0; col < cols; col++) {
-        const seatLetter = String.fromCharCode(65 + col);
-        const seatNumber = `${row}${seatLetter}`;
+    let seatMapHTML = '';
+    let seatIndex = 1;
+
+    if (layout.type === 'bus-single') {
+      // One seat per row (vertical list)
+      for (let row = 1; row <= totalSeats; row++) {
+        const seatNumber = `${row}`;
         const isAvailable = availableSeats.has(seatNumber);
         const isSelected = seatNumber === window.reservationState.selectedSeat;
-        
         let seatClass = isAvailable ? 'seat available' : 'seat occupied';
-        if (isSelected && isAvailable) {
-          seatClass = 'seat selected';
-        }
-        
+        if (isSelected && isAvailable) seatClass = 'seat selected';
+
         seatMapHTML += `
-          <div class="${seatClass}" 
-               data-seat="${seatNumber}" 
-               ${isAvailable ? 'tabindex="0"' : ''}
-               ${isAvailable ? 'role="button"' : ''}
-               ${isAvailable ? 'aria-label="Select seat ' + seatNumber + '"' : ''}>
-            ${seatNumber}
+          <div class="seat-row" style="display: flex;">
+            <div class="${seatClass}" 
+                 data-seat="${seatNumber}" 
+                 ${isAvailable ? 'tabindex="0"' : ''}
+                 ${isAvailable ? 'role="button"' : ''}
+                 ${isAvailable ? 'aria-label="Select seat ' + seatNumber + '"' : ''}>
+              ${seatNumber}
+            </div>
           </div>
         `;
       }
-      
-      seatMapHTML += '</div>';
+    } else if (layout.type === 'bus-double') {
+      // Two seats per row
+      for (let row = 1; row <= Math.ceil(totalSeats / 2); row++) {
+        seatMapHTML += `<div class="seat-row" style="display: flex;">`;
+        for (let col = 0; col < 2; col++) {
+          const seatNumber = `${(row - 1) * 2 + col + 1}`;
+          if (seatNumber > totalSeats) break;
+          const isAvailable = availableSeats.has(seatNumber);
+          const isSelected = seatNumber === window.reservationState.selectedSeat;
+          let seatClass = isAvailable ? 'seat available' : 'seat occupied';
+          if (isSelected && isAvailable) seatClass = 'seat selected';
+
+          seatMapHTML += `
+            <div class="${seatClass}" 
+                 data-seat="${seatNumber}" 
+                 ${isAvailable ? 'tabindex="0"' : ''}
+                 ${isAvailable ? 'role="button"' : ''}
+                 ${isAvailable ? 'aria-label="Select seat ' + seatNumber + '"' : ''}>
+              ${seatNumber}
+            </div>
+          `;
+        }
+        seatMapHTML += `</div>`;
+      }
+    } else {
+      // Default: grid layout for plane, etc.
+      const cols = layout.cols;
+      const rows = Math.ceil(totalSeats / cols);
+      let seatIndex = 1;
+      for (let row = 1; row <= rows; row++) {
+        seatMapHTML += '<div class="seat-row">';
+        for (let col = 0; col < cols; col++) {
+          if (seatIndex > totalSeats) break;
+          const seatNumber = `${seatIndex}`;
+          const isAvailable = availableSeats.has(seatNumber);
+          const isSelected = seatNumber === window.reservationState.selectedSeat;
+          let seatClass = isAvailable ? 'seat available' : 'seat occupied';
+          if (isSelected && isAvailable) seatClass = 'seat selected';
+
+          // Add aisle for plane layouts if needed
+          if (layout.type === 'plane-business' && col === 2) {
+            seatMapHTML += `<div class="seat-aisle"></div>`;
+          }
+          if (layout.type === 'plane-economy' && col === 3) {
+            seatMapHTML += `<div class="seat-aisle"></div>`;
+          }
+
+          seatMapHTML += `
+            <div class="${seatClass}" 
+                 data-seat="${seatNumber}" 
+                 ${isAvailable ? 'tabindex="0"' : ''}
+                 ${isAvailable ? 'role="button"' : ''}
+                 ${isAvailable ? 'aria-label="Select seat ' + seatNumber + '"' : ''}>
+              ${seatNumber}
+            </div>
+          `;
+          seatIndex++;
+        }
+        seatMapHTML += '</div>';
+      }
     }
 
     seatMapContainer.innerHTML = seatMapHTML;
-
-    // Wire up seat click events
     this.wireSeatMapEvents();
   },
 
@@ -283,29 +337,31 @@ window.SeatManager = {
   },
 
   getLayoutFromTicket(ticket) {
-    // Defaults
-    let rows = 20;
-    let cols = 6;
     const vehicle = (ticket.vehicleType || '').toUpperCase();
     const section = (ticket.section || '').toLowerCase();
 
     if (vehicle === 'BUS') {
-      cols = section === 'single' ? 1 : 2;
-      rows = 12;
-    } else if (vehicle === 'PLANE') {
-      if (section === 'first') {
-        cols = 2; rows = 6;
-      } else if (section === 'business') {
-        cols = 4; rows = 8; // 2x2 visualized as 4 across
-      } else {
-        cols = 6; rows = 20; // economy 3x2 visualized as 6 across
+      if (section.includes('single')) {
+        return { rows: 12, cols: 1, type: 'bus-single' };
+      } else if (section.includes('double')) {
+        return { rows: 12, cols: 2, type: 'bus-double' };
       }
+      return { rows: 12, cols: 2, type: 'bus-default' };
+    } else if (vehicle === 'PLANE') {
+      if (section.includes('first')) {
+        return { rows: 6, cols: 2, type: 'plane-first' };
+      } else if (section.includes('business')) {
+        return { rows: 8, cols: 4, type: 'plane-business' };
+      } else if (section.includes('economy')) {
+        return { rows: 20, cols: 6, type: 'plane-economy' };
+      }
+      return { rows: 20, cols: 6, type: 'plane-default' };
     } else if (vehicle === 'TRAIN') {
-      // Skipping custom layout as per requirement
-      cols = 4; rows = 12;
+      // Unknown layout for trains
+      return { rows: 0, cols: 0, type: 'train' };
     }
-
-    return { rows, cols };
+    // Default layout
+    return { rows: 10, cols: 4, type: 'default' };
   },
 
   setSelectLoading(select, isLoading) {
@@ -321,3 +377,18 @@ window.SeatManager = {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = window.SeatManager;
 }
+
+// Add this in your modal HTML:
+// <button id="confirm-seat-btn">Confirm Seat</button>
+
+// And in your JS:
+document.getElementById('confirm-seat-btn').addEventListener('click', function() {
+  const selectedSeat = window.SeatManager.getSelectedSeat();
+  if (selectedSeat) {
+    // Set as user's seat, e.g., update reservation payload
+    window.reservationState.confirmedSeat = selectedSeat;
+    window.ModalManager.close('seat-map-modal');
+    // Optionally, update UI or send to backend
+  }
+});
+
