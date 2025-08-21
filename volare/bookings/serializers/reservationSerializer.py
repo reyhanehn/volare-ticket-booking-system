@@ -44,6 +44,7 @@ class ReservationSerializer(serializers.Serializer):
             """, [ticket_id, seat_number])
             if cursor.fetchone():
                 raise serializers.ValidationError("Seat already reserved.")
+        data['ticket_id'] = ticket_id
 
         return data
 
@@ -100,7 +101,7 @@ class CustomerReservationSerializer(serializers.Serializer):
             raise serializers.ValidationError("Reservation doesn't exist")
         if account_id != reservation[0]:
             raise serializers.ValidationError("this reservation belongs to another user")
-        ticket_info = build_ticket_detail(connection.cursor(), reservation[2])
+        ticket_info = build_ticket_detail(reservation[2])
         if not ticket_info:
             raise serializers.ValidationError("that ticket doesn't exist")
 
