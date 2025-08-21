@@ -154,7 +154,7 @@
 
 .info-content.editable {
   pointer-events: auto; 
-  background: #fff;     
+  /* background: #fff;      */
 }
 
 .edit-btn {
