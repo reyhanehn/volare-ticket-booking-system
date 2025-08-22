@@ -205,9 +205,6 @@ async function initializePaymentPage() {
   // Initialize payment method selection
   initializePaymentMethods();
   
-  // Initialize wallet modal
-  initializeWalletModal();
-  
   // Wire up pay button
   wirePayButton();
   
@@ -324,140 +321,9 @@ function updatePayButtonText(selectedMethod) {
  * Initialize wallet modal functionality
  */
 function initializeWalletModal() {
-  const chargeLink = document.querySelector('.charge-link');
-  const modalOverlay = document.getElementById('chargeModalOverlay');
-  const closeBtn = document.getElementById('closeModalBtn');
-  const confirmBtn = document.getElementById('confirmChargeBtn');
-  
-  if (chargeLink) {
-    chargeLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      openWalletModal();
-    });
-  }
-  
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeWalletModal);
-  }
-  
-  if (confirmBtn) {
-    confirmBtn.addEventListener('click', handleWalletCharge);
-  }
-  
-  // Close modal when clicking outside
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) {
-        closeWalletModal();
-      }
-    });
-  }
-  
-  // Close modal with Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay && !modalOverlay.classList.contains('hidden')) {
-      closeWalletModal();
-    }
-  });
-}
-
-/**
- * Open the wallet top-up modal
- */
-function openWalletModal() {
-  const modalOverlay = document.getElementById('chargeModalOverlay');
-  if (modalOverlay) {
-    modalOverlay.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus on amount input
-    const amountInput = document.getElementById('chargeAmountInput');
-    if (amountInput) {
-      amountInput.focus();
-    }
-  }
-}
-
-/**
- * Close the wallet top-up modal
- */
-function closeWalletModal() {
-  const modalOverlay = document.getElementById('chargeModalOverlay');
-  if (modalOverlay) {
-    modalOverlay.classList.add('hidden');
-    document.body.style.overflow = '';
-    
-    // Reset form
-    const amountInput = document.getElementById('chargeAmountInput');
-    if (amountInput) {
-      amountInput.value = '';
-    }
-    
-    // Clear any messages
-    const messageDiv = document.getElementById('modalMessage');
-    if (messageDiv) {
-      messageDiv.textContent = '';
-      messageDiv.className = 'modal-message';
-    }
-  }
-}
-
-/**
- * Handle wallet charge confirmation
- */
-async function handleWalletCharge() {
-  const amountInput = document.getElementById('chargeAmountInput');
-  const amount = parseFloat(amountInput?.value || 0);
-  const modalMessage = document.getElementById('modalMessage');
-  const confirmBtn = document.getElementById('confirmChargeBtn');
-  
-  if (!amount || amount <= 0) {
-    if (modalMessage) {
-      modalMessage.textContent = 'Please enter a valid amount greater than zero.';
-      modalMessage.classList.add('error');
-      modalMessage.classList.remove('success');
-    } else {
-      showNotification('Please enter a valid amount greater than zero.', 'error');
-    }
-    return;
-  }
-  
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = 'Processing...';
-  
-  try {
-    const result = await window.PaymentAPI.chargeWallet(amount);
-    
-        if (modalMessage) {
-      modalMessage.textContent = result.message || 'Wallet charged successfully!';
-          modalMessage.classList.add('success');
-          modalMessage.classList.remove('error');
-        } else {
-      showNotification(result.message || 'Wallet charged successfully!', 'success');
-    }
-    
-    // Update wallet balance
-    window.paymentState.walletAmount += amount;
-    updateWalletBalanceDisplay(window.paymentState.walletAmount);
-    
-    // Close modal after delay
-        setTimeout(closeWalletModal, 2000);
-    
-  } catch (error) {
-    console.error('Wallet charge error:', error);
-    const errorMessage = error.message || 'Failed to charge wallet';
-    
-        if (modalMessage) {
-          modalMessage.textContent = errorMessage;
-          modalMessage.classList.add('error');
-          modalMessage.classList.remove('success');
-        } else {
-          showNotification(errorMessage, 'error');
-        }
-  } finally {
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = 'Confirm';
-  }
+  // Note: Wallet modal is handled by chargeWallet.js
+  // This function is kept for compatibility but doesn't duplicate functionality
+  console.log('[App] Wallet modal initialization skipped - handled by chargeWallet.js');
 }
 
 /**

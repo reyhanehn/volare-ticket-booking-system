@@ -32,10 +32,14 @@ class BookingsApp {
    */
   async setup() {
     try {
+      console.log('[App] Starting setup...');
+      
       // Check authentication first
       if (!window.BookingsAPI || !window.BookingsAPI.getAuthTokenOrRedirect()) {
+        console.log('[App] Authentication check failed or redirected');
         return;
       }
+      console.log('[App] Authentication check passed');
 
       // Get DOM elements
       this.bookingsList = document.getElementById('bookingsList');
@@ -52,6 +56,26 @@ class BookingsApp {
         clearFilters: document.getElementById('clearFilters'),
         retryButton: document.getElementById('retryButton')
       };
+
+      // Debug: Log filter elements found
+      console.log('[App] Filter elements found:', {
+        dateAfter: !!this.filterInputs.dateAfter,
+        dateBefore: !!this.filterInputs.dateBefore,
+        statusFilter: !!this.filterInputs.statusFilter,
+        applyFilters: !!this.filterInputs.applyFilters,
+        clearFilters: !!this.filterInputs.clearFilters,
+        retryButton: !!this.filterInputs.retryButton
+      });
+
+      // Debug: Log actual DOM elements
+      console.log('[App] Actual DOM elements:', {
+        dateAfter: this.filterInputs.dateAfter,
+        dateBefore: this.filterInputs.dateBefore,
+        statusFilter: this.filterInputs.statusFilter,
+        applyFilters: this.filterInputs.applyFilters,
+        clearFilters: this.filterInputs.clearFilters,
+        retryButton: this.filterInputs.retryButton
+      });
 
       if (!this.bookingsList) {
         throw new Error('Bookings list element not found');
@@ -78,17 +102,31 @@ class BookingsApp {
    * Setup event listeners
    */
   setupEventListeners() {
+    console.log('[App] Setting up event listeners...');
+    
     // Filter controls
     if (this.filterInputs.applyFilters) {
-      this.filterInputs.applyFilters.addEventListener('click', () => {
+      console.log('[App] Adding click listener to applyFilters button:', this.filterInputs.applyFilters);
+      this.filterInputs.applyFilters.addEventListener('click', (e) => {
+        console.log('[App] Apply filters button clicked!');
+        e.preventDefault();
         this.applyFilters();
       });
+      console.log('[App] Apply filters listener added successfully');
+    } else {
+      console.warn('[App] applyFilters button not found!');
     }
 
     if (this.filterInputs.clearFilters) {
-      this.filterInputs.clearFilters.addEventListener('click', () => {
+      console.log('[App] Adding click listener to clearFilters button:', this.filterInputs.clearFilters);
+      this.filterInputs.clearFilters.addEventListener('click', (e) => {
+        console.log('[App] Clear filters button clicked!');
+        e.preventDefault();
         this.clearFilters();
       });
+      console.log('[App] Clear filters listener added successfully');
+    } else {
+      console.warn('[App] clearFilters button not found!');
     }
 
     if (this.filterInputs.retryButton) {
@@ -99,7 +137,7 @@ class BookingsApp {
 
     // Enter key on filter inputs
     Object.values(this.filterInputs).forEach(input => {
-      if (input && input.tagName === 'INPUT' || input.tagName === 'SELECT') {
+      if (input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
         input.addEventListener('keypress', (e) => {
           if (e.key === 'Enter') {
             this.applyFilters();
@@ -147,7 +185,11 @@ class BookingsApp {
       BookingsStateManager.clearError();
 
       const filters = BookingsStateManager.getFilters();
+      console.log('[App] Loading reservations with filters:', filters);
+      
       const result = await window.BookingsAPI.getReservationsList(filters);
+      console.log('[App] API response:', result);
+      
       const reservations = result.reservations || [];      
       // Fetch ticket details for each reservation
       const enrichedReservations = await this.enrichReservationsWithTicketDetails(reservations);
@@ -189,14 +231,26 @@ class BookingsApp {
    * Apply filters and reload reservations
    */
   async applyFilters() {
+    console.log('[App] applyFilters method called!');
+    console.log('[App] Current filter inputs:', this.filterInputs);
+    
     const filters = {
       dateAfter: this.filterInputs.dateAfter?.value || '',
       dateBefore: this.filterInputs.dateBefore?.value || '',
       status: this.filterInputs.statusFilter?.value || ''
     };
 
+    console.log('[App] Filter values extracted:', filters);
+    console.log('[App] Raw input values:', {
+      dateAfter: this.filterInputs.dateAfter?.value,
+      dateBefore: this.filterInputs.dateBefore?.value,
+      status: this.filterInputs.statusFilter?.value
+    });
+
     BookingsStateManager.setFilters(filters);
+    console.log('[App] Filters set in state manager, now loading reservations...');
     await this.loadReservations();
+    console.log('[App] Reservations loaded after applying filters');
   }
 
   /**
@@ -445,11 +499,39 @@ function addAnimationStyles() {
 }
 
 // Initialize the application when the script loads
-document.addEventListener('DOMContentLoaded', () => {
-  addAnimationStyles();
-  const app = new BookingsApp();
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('[Bookings] DOM Content Loaded, initializing...');
   
-  // Export for debugging/development
-  window.BookingsApp = BookingsApp;
-  window.app = app;
+  try {
+    addAnimationStyles();
+    const app = new BookingsApp();
+    
+    // Export for debugging/development
+    window.BookingsApp = BookingsApp;
+    window.app = app;
+    
+    // Wait for the app to fully initialize
+    await app.init();
+    console.log('[Bookings] App initialization completed successfully');
+    
+    // Add global test function for debugging
+    window.testFilters = () => {
+      console.log('[Test] Testing filter functionality...');
+      console.log('[Test] App instance:', app);
+      console.log('[Test] Filter inputs:', app.filterInputs);
+      console.log('[Test] Apply filters button:', app.filterInputs?.applyFilters);
+      
+      if (app.filterInputs?.applyFilters) {
+        console.log('[Test] Simulating click on apply filters button...');
+        app.filterInputs.applyFilters.click();
+      } else {
+        console.log('[Test] Apply filters button not found!');
+      }
+    };
+    
+    console.log('[Bookings] Test function available: window.testFilters()');
+    
+  } catch (error) {
+    console.error('[Bookings] Failed to initialize app:', error);
+  }
 });

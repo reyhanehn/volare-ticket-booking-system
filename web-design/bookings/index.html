@@ -34,6 +34,11 @@
   <script type="module" src="../js/authenticated.js" defer></script>
   <script type="module" src="../js/theme.js" defer></script>
 
+  <!-- JavaScript Files -->
+  <script src="js/state.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/app.js" defer></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
@@ -161,8 +166,8 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <button id="applyFilters" class="btn-primary">Apply Filters</button>
-                        <button id="clearFilters" class="btn-secondary">Clear</button>
+                        <button id="applyFilters" class="btn-primary" onclick="console.log('Apply Filters clicked via inline handler')">Apply Filters</button>
+                        <button id="clearFilters" class="btn-secondary" onclick="console.log('Clear Filters clicked via inline handler')">Clear</button>
                     </div>
                 </div>
             </div>
@@ -261,9 +266,5 @@
 
       </div>
     </footer>
-    <!-- JavaScript Files -->
-    <script src="js/state.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/app.js"></script>
 </body>
 </html>
