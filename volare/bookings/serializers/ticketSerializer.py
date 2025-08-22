@@ -5,6 +5,7 @@ from cache_utils import get_ticket_cache, set_ticket_cache
 from search.es_search import search_tickets_es
 from search.indexes import TICKET_INDEX
 from search.es_client import get_es
+from ..tasks import update_ticket_in_es_and_cache
 
 es: Elasticsearch = get_es()
 
@@ -120,3 +121,45 @@ class CompanyTicketListSerializer(BaseTicketFilterSerializer):
         filters['company_id'] = self.company_id
         results = search(filters)
         return results
+
+
+# trips/serializers.py
+from rest_framework import serializers
+from django.db import connection
+
+class TripUpdateSerializer(serializers.Serializer):
+    departure_datetime = serializers.DateTimeField()
+
+    def update(self, instance, validated_data):
+        trip_id = instance.trip_id
+        departure_datetime = validated_data["departure_datetime"]
+        ticket_ids = []
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE bookings_trip
+                SET departure_datetime = %s
+                WHERE trip_id = %s
+                """,
+                [departure_datetime, trip_id],
+            )
+            cursor.execute("""
+                SELECT t.ticket_id
+                FROM bookings_ticket t
+                WHERE t.trip_id = %s
+            """, [trip_id])
+            rows = cursor.fetchall()
+            ticket_ids = [row[0] for row in rows]
+        for ticket_id in ticket_ids:
+            update_ticket_in_es_and_cache.delay(ticket_id, {
+                "trip": {"departure_datetime": departure_datetime}
+            })
+
+        # we can return a dict, not ORM instance, since ORM wasn’t touched
+        return {
+            "trip_id": trip_id,
+            "departure_datetime": departure_datetime,
+        }
+
+    def create(self, validated_data):
+        raise NotImplementedError("Use update instead of create for this serializer.")

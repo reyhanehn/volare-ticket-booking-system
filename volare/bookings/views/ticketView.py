@@ -6,6 +6,9 @@ from ..serializers.ticketSerializer import TicketSearchSerializer, TicketDetailS
 from accounts.permissions import IsAdmin, IsCompanyAdmin
 from django.db import connection
 from rest_framework import serializers
+from rest_framework.generics import UpdateAPIView
+from ..models import Trip
+from ..serializers.ticketSerializer import TripUpdateSerializer
 
 
 class TicketCacheDetailView(APIView):
@@ -64,3 +67,9 @@ class CompanyTicketListView(APIView):
             result = serializer.search()
             return Response(result)
         return Response(serializer.errors, status=400)
+
+
+class TripUpdateRawView(UpdateAPIView):
+    queryset = Trip.objects.all()
+    serializer_class = TripUpdateSerializer
+    permission_classes = [IsAdmin]

@@ -9,7 +9,7 @@ from .views.stationView import CreateStationView, StationListView
 from .views.routeView import RouteListView, RouteCreateView
 from .views.tripView import TripCreateView
 from .views.tripStopView import TripStopView
-from .views.ticketView import TicketSearchView, TicketCacheDetailView, AdminTicketListView, CompanyTicketListView
+from .views.ticketView import TicketSearchView, TicketCacheDetailView, AdminTicketListView, CompanyTicketListView, TripUpdateRawView
 from .views.paymentView import ReservationPaymentView, PaymentStatusView
 from .views.paymentHistoryView import PaymentHistoryView
 from .views.adminReservationView import AdminEditReservationView, AdminConfirmReservationView
@@ -79,7 +79,7 @@ urlpatterns = [
     path('company/tickets/search/', CompanyTicketListView.as_view(), name='company-tickets-list'),
     path('tickets/search/<int:ticket_id>/', TicketCacheDetailView.as_view(), name='ticket-details'),
     path('tickets/<int:ticket_id>/available_seats/', AvailableSeatsView.as_view(), name='available-seats'),
-    # path('admin/tickets/<int:ticket_id>/edit/',  , name='edit-ticket'),  # not done
+    path('admin/tickets/<int:pk>/edit/',  TripUpdateRawView.as_view(), name='edit-ticket'),
     # path('admin/tickets/<int:ticket_id>/cancel/',  , name='edit-ticket'),  # not done
     path('customer/passenger/create/', CreatePassengerView.as_view(), name='create-passenger'),
     #this is a post request for the customers to add related passengers for themselves to use in the reservation because each reservation needs a specific passenger
