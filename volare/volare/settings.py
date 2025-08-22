@@ -62,13 +62,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",
-    "http://127.0.0.1:5501",
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'volare.urls'
 
@@ -95,9 +89,9 @@ WSGI_APPLICATION = 'volare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'volare',
+        'NAME': 'Volare',
         'USER': 'postgres',
-        'PASSWORD': 'h.tah1584',
+        'PASSWORD': 'reyh00n83',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -188,7 +182,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 ELASTICSEARCH = {
-    "hosts": ["https://localhost:9200"],
+    "hosts": ["http://localhost:9200"],
     "username": "elastic",
     "password": "qH3yjkb-1CXu+EiIPF2S",
     "verify_certs": False,   # OK for local dev

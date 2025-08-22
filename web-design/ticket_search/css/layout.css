@@ -1,31 +1,230 @@
+/* ========== NAVBAR ========== */
 
-
-.results-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.results-container h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+
+.navbar {
+    background: var(--color-primary-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding: .75rem 1.25rem;
 }
 
-#ticket-list {
+.nav-container {
+    max-width: 90rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand-icon {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+}
+
+.brand-text {
+    font-weight: 700;
+    font-family: var(--font-family-volare);
+    font-size: var(--font-size-3xl);
+    color: var(--color-primary-text);
+}
+
+.nav-right {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-action {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    padding: 0.5rem 0;
 }
 
-.loading-message {
-    color: #888;
-    font-size: 1.2rem;
-    text-align: center;
-    padding: 50px;
+.nav-action:hover {
+    color: var(--color-primary-text);
 }
+
+.nav-action-icon {
+    width: 2.25rem;
+    height: 1.25rem;
+}
+
+.nav-action-icon g {
+    fill: var(--color-muted);
+}
+
+.nav-action:hover .nav-action-icon g {
+    fill: var(--color-primary-text);
+}
+
+
+/* ========== account box ========== */
+.account-box {
+    position: fixed;
+    top: 5rem;
+    right: 0.5rem;
+    width: 18rem;
+    background: var(--color-primary-bg);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 1000;
+}
+
+/* hidden fully */
+.hidden {
+    display: none;
+}
+
+/* visible with animation */
+.showing {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* header section */
+.account-header {
+    background-color: var(--color-primary-bg-hover);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.account-header .email {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-primary-text);
+}
+
+.account-header .pic {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-primary-text);
+    background-color: var(--color-ice-blue);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    width: 2rem;
+    text-align: center;
+    position: relative;
+}
+.account-header .pic p{
+    position: absolute;
+    left: .635rem;
+    top: .25rem;
+}
+
+/* wallet row */
+.wallet {
+    display: flex;
+    align-items: center;
+    margin: .5rem 1rem 0;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.wallet-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--color-primary-text);
+    margin-right: .5rem;
+}
+
+.balance {
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    color: var(--color-primary-text);
+    margin-right: 7rem;
+}
+
+.charge-link {
+    font-size: var(--font-size-base);
+    color: var(--color-medium-blue);
+    text-decoration: none;
+}
+
+.charge-link:hover {
+    text-decoration: underline;
+}
+
+.wallet .filter-icon {
+    width: .7rem;
+    aspect-ratio: 1 / 1;
+    transform: rotate(-90deg);
+}
+
+/* account links */
+.account-links {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.account-links li {
+    padding: .5rem 1rem;
+}
+
+.account-links li:hover {
+    background-color: var(--color-primary-bg-hover);
+}
+
+.account-links a {
+    text-decoration: none;
+    color: var(--color-primary-text);
+    font-size: var(--font-size-base);
+}
+
+.logout {
+    margin: 1rem;
+}
+
+/* logout button */
+.logout button {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--color-brand);
+    color: var(--color-primary-text);
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.logout button:hover {
+    background: var(--color-brand-hover);
+}
+
 
 /* ============ Ticket List and Results ============ */
 
@@ -122,10 +321,12 @@
 }
 
 .select-button {
+    transform: translateY(0.2rem);
+    background-color: var(--color-medium-blue);
+    box-shadow: 0 0.2rem var(--color-dark-blue);
+    font-size: var(--font-size-lg);
     margin-top: 5px; /* Smaller margin */
     padding: 8px 16px; /* Smaller button */
-    background-color: #1a73e8;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -134,7 +335,7 @@
 }
 
 .select-button:hover {
-    background-color: #155ab6;
+    background: 0 0.4rem var(--color-dark-blue);
 }
 
 /* ============ Ticket Details Slider ============ */
@@ -169,4 +370,56 @@
 
 .detail-row .detail-value {
     color: #777;
+}
+
+/* ============ NEW Filter Search Bar Styles ============ */
+.filter-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.filter-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.filter-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+}
+
+.filter-button {
+    width: 150px;
+    padding: 12px 20px;
+    background-color: var(--color-brand);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-end; /* Aligns button to the bottom */
+}
+
+.filter-button:hover {
+    background-color: var(--color-brand-hover);
 }

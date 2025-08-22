@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/fonts.css">
-  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/animation.css">
 
 
@@ -35,7 +35,6 @@
   <script type="module" src="../js/authenticated.js" defer></script>
 
 
-  <!-- fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
@@ -139,17 +138,31 @@
     <section class="results-container">
       <h1>Available Tickets</h1>
 
+      <div class="filter-search-bar">
+        <div class="filter-group">
+          <label for="price-filter">Max Price:</label>
+          <input type="number" id="price-filter" placeholder="e.g., 100" min="0">
+        </div>
+        <div class="filter-group">
+          <label for="company-filter">Company:</label>
+          <input type="text" id="company-filter" placeholder="e.g., Ryanair">
+        </div>
+        <div class="filter-group">
+          <label for="class-filter">Class Code:</label>
+          <input type="text" id="class-filter" placeholder="e.g., Economy">
+        </div>
+        <button id="apply-filters-btn" class="filter-button">Apply Filters</button>
+      </div>
+
       <div id="ticket-list">
         <p class="loading-message">Searching for available tickets...</p>
       </div>
-
     </section>
   </main>
 
   <footer class="footer">
     <div class="container">
 
-      <!-- Top Row: Services, About, Volare -->
       <div class="footer-top">
         <div class="item">
           <h3>Our Services</h3>
@@ -176,7 +189,6 @@
         </div>
       </div>
 
-      <!-- Middle Row: Social Icons -->
       <div class="footer-middle">
         <div class="item social">
           <a href="#"><i class="icon ion-social-facebook"></i></a>
@@ -186,7 +198,6 @@
         </div>
       </div>
 
-      <!-- Bottom Row: Copyright -->
       <div class="footer-bottom">
         <p class="copyright">Volare © 2025</p>
       </div>
