@@ -19,6 +19,7 @@
 
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="../css/navbar.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/responsive.css">
@@ -29,12 +30,11 @@
 
 
   <script type="module" src="../../js/theme.js" defer></script>
-  <script type="module" src="js/accountBox.js" defer></script>
-  <script type="module" src="js/authenticated.js" defer></script>
   <script src="js/results.js" defer></script>
+  <script type="module" src="../js/accountBox.js" defer></script>
+  <script type="module" src="../js/authenticated.js" defer></script>
 
 
-  <!-- fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@
             </svg>
             Contact
           </a>
-          <a href="#" class="nav-action nav-booking">
+          <a href="../bookings/index.html" class="nav-action nav-booking">
             <svg class="nav-action-icon" viewBox="0 0 460.054 460.054" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g>
                 <path class="dot dot1"
@@ -109,11 +109,12 @@
     </nav>
   </header>
 
-  <!-- Dropdown box -->
   <div id="accountBox" class="account-box hidden">
     <div class="account-header">
       <p class="email">alialavinikoo@gmail.com</p>
-      <div class="pic"><p>A</p></div>
+      <div class="pic">
+        <p>A</p>
+      </div>
     </div>
     <div class="wallet">
       <svg xmlns="http://www.w3.org/2000/svg" class="wallet-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -121,8 +122,7 @@
       </svg>
       <span class="balance">$0.00</span>
       <a href="#" class="charge-link">Charge</a>
-      <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-        viewBox="0 0 16 16">
+      <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
         <path d="M1.5 5.5l6.5 6 6.5-6" stroke="#7886C7" stroke-width="2" fill="none" stroke-linecap="round"
           stroke-linejoin="round" />
       </svg>
@@ -138,60 +138,72 @@
     <section class="results-container">
       <h1>Available Tickets</h1>
 
+      <div class="filter-search-bar">
+        <div class="filter-group">
+          <label for="price-filter">Max Price:</label>
+          <input type="number" id="price-filter" placeholder="e.g., 100" min="0">
+        </div>
+        <div class="filter-group">
+          <label for="company-filter">Company:</label>
+          <input type="text" id="company-filter" placeholder="e.g., Ryanair">
+        </div>
+        <div class="filter-group">
+          <label for="class-filter">Class Code:</label>
+          <input type="text" id="class-filter" placeholder="e.g., Economy">
+        </div>
+        <button id="apply-filters-btn" class="filter-button">Apply Filters</button>
+      </div>
+
       <div id="ticket-list">
         <p class="loading-message">Searching for available tickets...</p>
       </div>
-
     </section>
   </main>
 
   <footer class="footer">
-      <div class="container">
+    <div class="container">
 
-        <!-- Top Row: Services, About, Volare -->
-        <div class="footer-top">
-          <div class="item">
-            <h3>Our Services</h3>
-            <ul>
-              <li><a href="#">Airplane Tickets</a></li>
-              <li><a href="#">Bus Tickets</a></li>
-              <li><a href="#">Train Tickets</a></li>
-            </ul>
-          </div>
-
-          <div class="item">
-            <h3>About</h3>
-            <ul>
-              <li><a href="#">Our Company</a></li>
-              <li><a href="#">Team</a></li>
-              <li><a href="#">Careers</a></li>
-            </ul>
-          </div>
-
-          <div class="item text">
-            <h3>Volare</h3>
-            <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
-              reliable.</p>
-          </div>
+      <div class="footer-top">
+        <div class="item">
+          <h3>Our Services</h3>
+          <ul>
+            <li><a href="#">Airplane Tickets</a></li>
+            <li><a href="#">Bus Tickets</a></li>
+            <li><a href="#">Train Tickets</a></li>
+          </ul>
         </div>
 
-        <!-- Middle Row: Social Icons -->
-        <div class="footer-middle">
-          <div class="item social">
-            <a href="#"><i class="icon ion-social-facebook"></i></a>
-            <a href="#"><i class="icon ion-social-twitter"></i></a>
-            <a href="#"><i class="icon ion-social-snapchat"></i></a>
-            <a href="#"><i class="icon ion-social-instagram"></i></a>
-          </div>
+        <div class="item">
+          <h3>About</h3>
+          <ul>
+            <li><a href="#">Our Company</a></li>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
         </div>
 
-        <!-- Bottom Row: Copyright -->
-        <div class="footer-bottom">
-          <p class="copyright">Volare © 2025</p>
+        <div class="item text">
+          <h3>Volare</h3>
+          <p>Nel blu dipinto di blu. Volare makes booking your airplane, bus, or train tickets fast, simple, and
+            reliable.</p>
         </div>
-
       </div>
-    </footer>
+
+      <div class="footer-middle">
+        <div class="item social">
+          <a href="#"><i class="icon ion-social-facebook"></i></a>
+          <a href="#"><i class="icon ion-social-twitter"></i></a>
+          <a href="#"><i class="icon ion-social-snapchat"></i></a>
+          <a href="#"><i class="icon ion-social-instagram"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="copyright">Volare © 2025</p>
+      </div>
+
+    </div>
+  </footer>
 </body>
 
 </html>

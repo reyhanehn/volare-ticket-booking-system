@@ -5,79 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b1a9ce51-1b31-4424-9239-b85b70d15045" name="Changes" comment="Merge branch 'frontend' of https://github.com/reyhanehn/volare-ticket-booking-system into frontend&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
-      <change afterPath="$PROJECT_DIR$/web-design/account_page/js/editTheme.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/base.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/components.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/fonts.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/footer.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/layout.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/reset.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/css/responsive.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/js/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/js/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/bookings/js/state.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/base.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/components.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/fonts.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/footer.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/layout.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/reset.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/css/responsive.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/js/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/js/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/payment/js/state.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/base.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/components.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/fonts.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/footer.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/layout.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/reset.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/css/responsive.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/state.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/ui-modal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/ui-passenger.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/ui-seat.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/ui-ticket.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/utils.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation/js/validators.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/base.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/components.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/fonts.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/footer.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/layout.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/reset.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/css/responsive.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/js/api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/js/app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-design/reservation_info/js/state.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/accounts/views/otpLoginView.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/accounts/views/otpLoginView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/volare/volare/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/volare/volare/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/account_page/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/account_page/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/account_page/css/layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/account_page/css/layout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/account_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/account_page/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/login_otp_page/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/login_otp_page/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/login_otp_page/css/layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/login_otp_page/css/layout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/login_otp_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/login_otp_page/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/login_page/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/login_page/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/login_page/css/layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/login_page/css/layout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/login_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/login_page/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/signup_page/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/signup_page/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/signup_page/css/layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/signup_page/css/layout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/signup_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/signup_page/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/verify_otp_page/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/verify_otp_page/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/auth-pages/verify_otp_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/auth-pages/verify_otp_page/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/home_page/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/css/base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/home_page/css/layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/css/layout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/home_page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/home_page/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/js/theme.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-design/ticket_search/css/layout.css" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/ticket_search/css/layout.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-design/ticket_search/js/results.js" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/ticket_search/js/results.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-design/ticket_search/ticket_result.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-design/ticket_search/ticket_result.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +57,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Merging frontend",
+    "git-widget-placeholder": "frontend",
     "last_opened_file_path": "C:/Users/reyhaneh/PycharmProjects/volare-ticket-booking-system/web-design/ticket_search/css"
   }
 }]]></component>
