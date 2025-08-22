@@ -1,6 +1,6 @@
 /**
  * Main application file for the reservation page
- * Handles initialization and event wiring
+ * Handles initialization and event wiring with real API
  */
 
 // Global state for the reservation
@@ -13,80 +13,101 @@ window.reservationState = {
 /**
  * Initialize the reservation page
  */
-function initializeReservationPage() {
+async function initializeReservationPage() {
   console.log('Initializing reservation page...');
-  
-  // Initialize ticket summary
-  initializeTicketSummary();
-  
-  // Initialize passenger selection
-  initializePassengerSelection();
-  
-  // Initialize seat selection
-  initializeSeatSelection();
-  
-  // Wire up confirm button
-  wireConfirmButton();
-  
-  // Initialize modals
+
+  // Auth check
+  if (!window.ReservationAPI || !window.ReservationAPI.getAuthTokenOrRedirect()) {
+    return;
+  }
+
+  // Initialize modals early
   initializeModals();
-  
+
+  // Parse ticket id
+  const ticketId = getTicketIdFromUrl();
+  if (!ticketId) {
+    showNotification('Missing ticket_id in URL', 'error');
+    return;
+  }
+
+  // Load ticket, then seats (needs ticket data), and passengers
+  try {
+    await window.TicketManager.loadTicketSummary(ticketId);
+  } catch (e) {
+    console.error(e);
+    showNotification(`Failed to load ticket details: ${e.message || 'Unknown error'}`, 'error');
+  }
+
+  try {
+    await Promise.all([
+      window.PassengerManager.loadPassengers(),
+      window.SeatManager.loadSeats(ticketId)
+    ]);
+  } catch (e) {
+    console.error(e);
+    showNotification(`Failed to load initial data: ${e.message || 'Unknown error'}`, 'error');
+  }
+
+  // Wire up confirm button
+  wireConfirmButton(ticketId);
+
   console.log('Reservation page initialized successfully');
 }
 
 /**
  * Wire up the confirm reservation button
  */
-function wireConfirmButton() {
+function wireConfirmButton(ticketId) {
   const confirmBtn = document.getElementById('confirm-reservation');
   if (confirmBtn) {
-    confirmBtn.addEventListener('click', handleConfirmReservation);
+    confirmBtn.addEventListener('click', () => handleConfirmReservation(ticketId));
   }
 }
 
 /**
  * Handle confirm reservation button click
  */
-function handleConfirmReservation() {
-  const { selectedPassenger, selectedSeat, ticketData } = window.reservationState;
-  
-  // Validate selections
+async function handleConfirmReservation(ticketId) {
+  const { selectedPassenger, selectedSeat } = window.reservationState;
+
   if (!selectedPassenger) {
     showNotification('Please select a passenger', 'error');
     return;
   }
-  
   if (!selectedSeat) {
     showNotification('Please select a seat', 'error');
     return;
   }
-  
-  // Show loading state
+
   const confirmBtn = document.getElementById('confirm-reservation');
   if (confirmBtn) {
     confirmBtn.classList.add('loading');
     confirmBtn.disabled = true;
   }
-  
-  // Simulate API call delay
-  setTimeout(() => {
-    // Reset button state
+  try {
+    const passengerId = selectedPassenger.id || selectedPassenger.passenger_id || selectedPassenger.uuid;
+    const response = await window.ReservationAPI.createReservation(ticketId, {
+      passenger_id: passengerId,
+      seat_number: window.reservationState.selectedSeat
+    });
+    if (response && response.data && response.data.reservation_id) {
+      showNotification('Reservation confirmed! Redirecting to payment...', 'success');
+      setTimeout(() => {
+        window.location.href = `../payment/index.html?reservation_id=${response.data.reservation_id}`;
+      }, 800);
+    } else {
+      throw new Error('Reservation ID not returned from backend');
+    }
+  } catch (e) {
+    console.error(e);
+    showNotification(`Failed to create reservation: ${e.message || 'Unknown error'}`, 'error');
+  } finally {
     if (confirmBtn) {
       confirmBtn.classList.remove('loading');
       confirmBtn.disabled = false;
     }
-    
-    // Show success message
-    showNotification('Reservation confirmed! Redirecting to payment...', 'success');
-    
-    // In a real app, this would redirect to payment page
-    // For now, just show a success message
-    console.log('Reservation confirmed:', {
-      passenger: selectedPassenger,
-      seat: selectedSeat,
-      ticket: ticketData
-    });
-  }, 2000);
+  }
 }
 
 /**
@@ -173,32 +194,14 @@ function initializeModals() {
   }
 }
 
-/**
- * Initialize ticket summary
- */
-function initializeTicketSummary() {
-  if (window.TicketManager) {
-    window.TicketManager.init();
-  }
-}
+// Deprecated in API mode
+function initializeTicketSummary() {}
 
-/**
- * Initialize passenger selection
- */
-function initializePassengerSelection() {
-  if (window.PassengerManager) {
-    window.PassengerManager.init();
-  }
-}
+// Deprecated in API mode
+function initializePassengerSelection() {}
 
-/**
- * Initialize seat selection
- */
-function initializeSeatSelection() {
-  if (window.SeatManager) {
-    window.SeatManager.init();
-  }
-}
+// Deprecated in API mode
+function initializeSeatSelection() {}
 
 /**
  * Add CSS animations for notifications
@@ -229,6 +232,11 @@ function addNotificationStyles() {
     }
   `;
   document.head.appendChild(style);
+}
+
+function getTicketIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('ticket_id');
 }
 
 // Initialize when DOM is ready

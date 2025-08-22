@@ -48,6 +48,7 @@ class ReservationPaymentSerializer(serializers.Serializer):
 
                 data["wallet_id"] = wallet_id
 
+        data["reservation_id"] = reservation_id
         return data
 
     def save(self):

@@ -1,57 +1,23 @@
 /**
- * Ticket Manager - Handles ticket summary display
- * Renders ticket information with dummy data
+ * Ticket Manager - Handles ticket summary display via real API
  */
 
 window.TicketManager = {
-  /**
-   * Initialize the ticket manager
-   */
-  init() {
-    console.log('Initializing Ticket Manager...');
-    this.renderTicketSummary();
-  },
+  async loadTicketSummary(ticketId) {
+    const container = document.getElementById('ticket-summary');
+    if (!container) return;
+    container.innerHTML = this.loadingSkeleton();
 
-  /**
-   * Render the ticket summary with dummy data
-   */
-  renderTicketSummary() {
-    const ticketContainer = document.getElementById('ticket-summary');
-    if (!ticketContainer) {
-      console.error('Ticket summary container not found');
-      return;
+    try {
+      const data = await window.ReservationAPI.getTicketDetails(ticketId);
+      const normalized = this.normalizeTicket(data);
+      window.reservationState.ticketData = normalized;
+      container.innerHTML = this.generateTicketHTML(normalized);
+    } catch (e) {
+      console.error(e);
+      container.innerHTML = this.errorState(e.message || 'Failed to load ticket details');
+      throw e;
     }
-
-    // Dummy ticket data
-    const ticketData = {
-      type: 'International Flight',
-      route: {
-        from: {
-          code: 'JFK',
-          name: 'New York'
-        },
-        to: {
-          code: 'LHR',
-          name: 'London'
-        }
-      },
-      details: {
-        date: 'December 25, 2024',
-        time: '10:30 AM',
-        duration: '7h 15m',
-        class: 'Economy'
-      },
-      price: {
-        amount: '1,299',
-        currency: 'USD'
-      }
-    };
-
-    // Store ticket data in global state
-    window.reservationState.ticketData = ticketData;
-
-    // Render ticket HTML
-    ticketContainer.innerHTML = this.generateTicketHTML(ticketData);
   },
 
   /**
@@ -59,7 +25,7 @@ window.TicketManager = {
    * @param {Object} ticketData - Ticket information
    * @returns {string} HTML string
    */
-  generateTicketHTML(ticketData) {
+  generateTicketHTML(ticket) {
     return `
       <div class="ticket-header">
         <div class="ticket-type">
@@ -68,54 +34,54 @@ window.TicketManager = {
             <polyline points="3.27,6.96 12,12.01 20.73,6.96" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          ${ticketData.type}
+          ${ticket.type}
         </div>
       </div>
 
       <div class="ticket-route">
         <div class="ticket-location">
           <div class="ticket-detail-label">Origin</div>
-          <div class="ticket-location-code">${ticketData.route.from.code}</div>
-          <div class="ticket-location-name">${ticketData.route.from.name}</div>
+          <div class="ticket-location-code">${ticket.from.code}</div>
+          <div class="ticket-location-name">${ticket.from.name}</div>
         </div>
         
         <div class="ticket-arrow">
           <div class="ticket-arrow-line"></div>
-          <div class="ticket-arrow-text">Direct</div>
+          <div class="ticket-arrow-text">${ticket.direct ? 'Direct' : 'Via'}</div>
         </div>
         
         <div class="ticket-location">
           <div class="ticket-detail-label">Destination</div>
-          <div class="ticket-location-code">${ticketData.route.to.code}</div>
-          <div class="ticket-location-name">${ticketData.route.to.name}</div>
+          <div class="ticket-location-code">${ticket.to.code}</div>
+          <div class="ticket-location-name">${ticket.to.name}</div>
         </div>
       </div>
 
       <div class="ticket-details">
         <div class="ticket-detail">
           <div class="ticket-detail-label">Departure</div>
-          <div class="ticket-detail-value">${ticketData.details.date}</div>
+          <div class="ticket-detail-value">${ticket.departure}</div>
         </div>
         
-        <div class="ticket-detail">
-          <div class="ticket-detail-label">Arrival</div>
-          <div class="ticket-detail-value">${ticketData.details.time}</div>
-        </div>
         
         <div class="ticket-detail">
           <div class="ticket-detail-label">Duration</div>
-          <div class="ticket-detail-value">${ticketData.details.duration}</div>
+          <div class="ticket-detail-value">${ticket.duration}</div>
         </div>
         
         <div class="ticket-detail">
-          <div class="ticket-detail-label">Type</div>
-          <div class="ticket-detail-value">${ticketData.details.class}</div>
+          <div class="ticket-detail-label">Section</div>
+          <div class="ticket-detail-value">${ticket.section}</div>
+        </div>
+
+        <div class="ticket-detail">
+          <div class="ticket-detail-label">Class</div>
+          <div class="ticket-detail-value">${ticket.class_code}</div>
         </div>
       </div>
 
       <div class="ticket-price">
-        <div class="ticket-price-amount">$${ticketData.price.amount}</div>
-        <div class="ticket-price-currency">${ticketData.price.currency}</div>
+        <div class="ticket-price-amount">${ticket.currency}${ticket.price}</div>
       </div>
     `;
   },
@@ -129,7 +95,10 @@ window.TicketManager = {
       ...window.reservationState.ticketData,
       ...newData
     };
-    this.renderTicketSummary();
+    const container = document.getElementById('ticket-summary');
+    if (container && window.reservationState.ticketData) {
+      container.innerHTML = this.generateTicketHTML(window.reservationState.ticketData);
+    }
   },
 
   /**
@@ -138,6 +107,40 @@ window.TicketManager = {
    */
   getTicketData() {
     return window.reservationState.ticketData;
+  },
+
+  normalizeTicket(apiData) {
+    const route = apiData.route || {};
+    const vehicle = apiData.vehicle || {};
+    const trip = apiData.trip || {};
+
+    return {
+        id: apiData.ticket_id || apiData.id || null,
+        type: vehicle.name || 'Ticket',
+        from: {
+            code: route.origin|| '',
+            name: route.origin_station || route.origin || ''
+        },
+        to: {
+            code: route.destination|| '',
+            name: route.destination_station || route.destination || ''
+        },
+        departure: trip.departure_datetime || '',
+        duration: trip.duration || '',
+        class_code: vehicle.class_code || apiData.section || '',
+        section: apiData.section || '',
+        vehicleType: vehicle.type || '',
+        price: apiData.price || '',
+        currency: '$'
+    };
+  },
+
+  loadingSkeleton() {
+    return '<div class="skeleton" style="height:140px"></div>';
+  },
+
+  errorState(message) {
+    return `<div class="form-error">${message}</div>`;
   }
 };
 

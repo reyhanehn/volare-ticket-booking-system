@@ -22,7 +22,7 @@
 
 .reservation-header h1 {
   margin-bottom: var(--spacing-sm);
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
 }
 
 .reservation-header p {
@@ -42,7 +42,7 @@
 .passenger-section h2,
 .seat-section h2 {
   margin-bottom: var(--spacing-lg);
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
   font-size: var(--font-size-xl);
 }
 
@@ -81,7 +81,7 @@
   display: block;
   margin-bottom: var(--spacing-sm);
   font-weight: 600;
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
   font-size: var(--font-size-base);
 }
 
@@ -181,7 +181,7 @@
 
 .modal-header h3 {
   margin: 0;
-  color: var(--color-dark-blue);
+  color: var(--color-primary-text);
 }
 
 .modal-close {
@@ -286,82 +286,3 @@
 }
 
 
-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-
-.navbar {
-    background: var(--color-primary-bg);
-    border-bottom: 1px solid var(--color-border);
-    padding: .75rem 1.25rem;
-}
-
-.nav-container {
-    max-width: 75rem;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.brand-icon {
-    width: 3rem;
-    height: 3rem;
-    object-fit: cover;
-}
-
-.brand-text {
-    font-weight: 700;
-    font-family: var(--font-family-volare);
-    font-size: var(--font-size-3xl);
-    color: var(--color-primary-text);
-}
-
-.nav-right {
-    display: flex;
-    gap: 2rem;
-}
-
-.nav-action {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    text-decoration: none;
-    color: var(--color-muted);
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    padding: 0.5rem 0;
-}
-
-.nav-action:hover {
-    color: var(--color-primary-text);
-}
-
-.nav-action-icon {
-    width: 2.25rem;
-    height: 1.25rem;
-}
-
-.nav-action-icon g {
-    fill: var(--color-muted);
-}
-
-.nav-action:hover .nav-action-icon g {
-    fill: var(--color-primary-text);
-}

@@ -1,0 +1,58 @@
+/* booking dots */
+
+.nav-booking .dot {
+    transform: translateX(0);
+    transition: transform 0.5s ease;
+}
+
+.nav-booking .dot1 {
+    transition-delay: 0s;
+}
+
+.nav-booking .dot2 {
+    transition-delay: 0.2s;
+}
+
+.nav-booking .dot3 {
+    transition-delay: 0.4s;
+}
+
+.nav-booking:hover .dot1 {
+    transform: translateX(-10rem);
+    transition-delay: 0s;
+}
+
+.nav-booking:hover .dot2 {
+    transform: translateX(-10rem);
+    transition-delay: 0.2s;
+}
+
+.nav-booking:hover .dot3 {
+    transform: translateX(-10rem);
+    transition-delay: 0.4s;
+}
+
+
+/* contact rotate */
+
+.nav-account circle {
+    transform: translateY(0);
+    transition: transform 1s ease;
+}
+
+.nav-account:hover circle {
+    transform: translateY(-10rem);
+}
+
+
+.nav-contact .circle {
+    transform: rotateZ(0);
+    transition: transform 1s ease;
+    transform-origin: 50% 50%;
+}
+
+.nav-contact:hover .circle {
+    transform: rotateZ(360deg);
+}
+
+

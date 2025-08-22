@@ -107,29 +107,7 @@ class ProfileSerializer(serializers.Serializer):
                     values + [account_id]
                 )
 
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT a.account_id, a.name, a.lastname, a.email, a.phone_number,
-                       a.role, a.status, a.registration_date, a.birth_date,
-                       l.city
-                FROM account a
-                LEFT JOIN bookings_location l ON a.city_id = l.location_id
-                WHERE a.account_id = %s
-            """, [account_id])
-            row = cursor.fetchone()
+        # Reload the updated instance from DB
+        instance.refresh_from_db()
 
-        if not row:
-            raise serializers.ValidationError("Failed to retrieve updated profile.")
-
-        return {
-            "account_id": row[0],
-            "name": row[1],
-            "lastname": row[2],
-            "email": row[3],
-            "phone_number": row[4],
-            "role": row[5],
-            "status": row[6],
-            "registration_date": row[7],
-            "birth_date": row[8],
-            "city": row[9]
-        }
+        return instance

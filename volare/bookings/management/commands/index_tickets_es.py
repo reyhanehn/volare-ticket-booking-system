@@ -2,80 +2,22 @@
 
 from django.core.management.base import BaseCommand
 from bookings.models import Ticket
-from elasticsearch import Elasticsearch
 from search.es_client import get_es
-
-# Name of your Elasticsearch index
-TICKET_INDEX = "tickets_index"
-
-# Define the full, correct Elasticsearch mapping here
-TICKET_MAPPING = {
-    "settings": {
-        "analysis": {
-            "normalizer": {
-                "lowercase": {
-                    "type": "custom",
-                    "char_filter": [],
-                    "filter": ["lowercase"]
-                }
-            }
-        }
-    },
-    "mappings": {
-        "properties": {
-            "ticket_id": {"type": "keyword"},
-            "price": {"type": "float"},
-            "remaining_seats": {"type": "integer"},
-            "section": {"type": "keyword"},
-            "vehicle": {
-                "properties": {
-                    "type": {"type": "keyword", "normalizer": "lowercase"},
-                    "class_code": {"type": "keyword"},
-                }
-            },
-            "route": {
-                "properties": {
-                    "origin_id": {"type": "keyword"},
-                    "destination_id": {"type": "keyword"},
-                    "origin": {"type": "keyword"},
-                    "destination": {"type": "keyword"},
-                    "origin_station": {"type": "keyword"},
-                    "destination_station": {"type": "keyword"},
-                    "origin_country": {"type": "keyword"},  # <-- ADDED
-                    "destination_country": {"type": "keyword"},  # <-- ADDED
-                }
-            },
-            "trip": {
-                "properties": {
-                    "trip_id": {"type": "keyword"},
-                    "departure_datetime": {"type": "date"},
-                    "duration": {"type": "keyword"},
-                    "company_id": {"type": "keyword"},
-                    "company_name": {"type": "keyword"},
-                }
-            },
-        }
-    }
-}
-
+from search.indexes import TICKET_INDEX, TICKET_MAPPING
 
 class Command(BaseCommand):
     help = "Index all tickets in Elasticsearch"
 
     def handle(self, *args, **kwargs):
-        # Connect to Elasticsearch
         es = get_es()
 
-        # Delete index if it exists
         if es.indices.exists(index=TICKET_INDEX):
             self.stdout.write(f"Index '{TICKET_INDEX}' exists, deleting...")
             es.indices.delete(index=TICKET_INDEX)
 
-        # Create index with the correct mapping defined above
         es.indices.create(index=TICKET_INDEX, body=TICKET_MAPPING)
         self.stdout.write(self.style.SUCCESS(f"Index '{TICKET_INDEX}' created."))
 
-        # Fetch all tickets with all necessary related data in one efficient query
         tickets = Ticket.objects.select_related(
             "trip",
             "section",
@@ -120,9 +62,7 @@ class Command(BaseCommand):
                     "destination_station": getattr(route.destination_station, "name",
                                                    "") if route and route.destination_station else "",
                     "origin_country": getattr(route.origin, "country", "") if route and route.origin else "",
-                    # <-- ADDED
-                    "destination_country": getattr(route.destination, "country",
-                                                   "") if route and route.destination else "",  # <-- ADDED
+                    "destination_country": getattr(route.destination, "country", "") if route and route.destination else "",
                 },
                 "trip": {
                     "trip_id": str(getattr(trip, "trip_id", "")) if trip else "",
@@ -135,7 +75,6 @@ class Command(BaseCommand):
                 },
             }
 
-            # Index the ticket
             es.index(index=TICKET_INDEX, id=ticket.ticket_id, document=doc)
             indexed_count += 1
 

@@ -91,6 +91,7 @@ def search_tickets_es(filters):
             "origin": source.get("route", {}).get("origin"),
             "destination": source.get("route", {}).get("destination"),
             "origin_station": source.get("route", {}).get("origin_station"),
+            "destination_station": source.get("route", {}).get("destination_station"),
             "departure_datetime": trip.get("departure_datetime"),
             "company_name": trip.get("company_name"),
             "duration": trip.get("duration"),
