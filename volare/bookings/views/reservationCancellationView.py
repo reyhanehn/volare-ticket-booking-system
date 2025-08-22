@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import connection
+from ..tasks import update_ticket_in_es_and_cache
 
 class ReservationCancelInfoView(APIView):
     permission_classes = [IsAuthenticated]
@@ -97,7 +98,6 @@ class ReservationCancelConfirmView(APIView):
                 return Response({
                     "message": "Pending reservation cancelled. No refund issued."
                 }, status=status.HTTP_200_OK)
-
             cursor.execute("SELECT wallet_id FROM wallet WHERE account_id = %s", [account_id])
             wallet_row = cursor.fetchone()
             if not wallet_row:
@@ -136,6 +136,16 @@ class ReservationCancelConfirmView(APIView):
             cursor.execute("""
                 UPDATE bookings_payment SET status = 'Refunded' WHERE payment_id = %s
             """, [payment_id])
+
+            cursor.execute("""
+                UPDATE bookings_ticket
+                SET remaining_seats = remaining_seats + 1
+                WHERE ticket_id = %s
+                RETURNING remaining_seats;
+            """, [ticket_id])
+            remaining_seats = cursor.fetchone()[0]
+
+            update_ticket_in_es_and_cache(ticket_id, {"remaining_seats": remaining_seats})
 
         return Response({
             "message": "Reservation cancelled and refund issued to wallet.",

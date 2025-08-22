@@ -16,6 +16,7 @@ function updateFilters(activeId) {
             break;
         case "bus-option":
             filters.carTransport.style.display = "none";
+            filters.private.style.display = "none";
             break;
         case "international-flight-option":
             filters.private.style.display = "none";
