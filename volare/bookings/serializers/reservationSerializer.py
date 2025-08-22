@@ -3,6 +3,7 @@ from django.db import connection
 from django.utils import timezone
 from datetime import timedelta
 from ..serializers.ticketSerializer import build_ticket_detail
+from ..tasks import update_ticket_in_es_and_cache
 
 EXPIRATION_DURATION_MINUTES = 3
 
@@ -68,6 +69,17 @@ class ReservationSerializer(serializers.Serializer):
                 expiration_time,
             ])
             reservation_id, res_date, res_time, exp_time = cursor.fetchone()
+
+            cursor.execute("""
+                UPDATE bookings_ticket
+                SET remaining_seats = remaining_seats - 1
+                WHERE ticket_id = %s
+                RETURNING remaining_seats;
+            """, [ticket_id])
+            remaining_seats = cursor.fetchone()[0]
+        update_ticket_in_es_and_cache(ticket_id, {"remaining_seats": remaining_seats})
+
+
 
         return {
             "reservation_id": reservation_id,

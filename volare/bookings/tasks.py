@@ -3,6 +3,7 @@ from bookings.models import Ticket
 from elasticsearch import Elasticsearch
 from bookings.management.commands.index_tickets_es import TICKET_INDEX
 from search.es_client import get_es
+from cache_utils import get_ticket_cache, set_ticket_cache
 
 @shared_task(queue='reservations')
 def cancel_expired_reservations():
@@ -81,4 +82,25 @@ def index_ticket_to_es(self, ticket_id):
         self.retry(exc=Exception(f"Ticket {ticket_id} does not exist"), countdown=60)
     except Exception as exc:
         # Retry on other exceptions
+        raise self.retry(exc=exc)
+
+@shared_task(bind=True, max_retries=5, default_retry_delay=60, queue='tickets')
+def update_ticket_in_es_and_cache(self, ticket_id, fields: dict):
+    try:
+        es.update(
+            index=TICKET_INDEX,
+            id=ticket_id,
+            body={"doc": fields},
+            refresh="wait_for"
+        )
+
+        updated_doc = es.get(index=TICKET_INDEX, id=ticket_id)["_source"]
+
+        set_ticket_cache(ticket_id, updated_doc)
+
+        return f"Ticket {ticket_id} updated and cache refreshed"
+
+    except Ticket.DoesNotExist:
+        self.retry(exc=Exception(f"Ticket {ticket_id} does not exist"), countdown=60)
+    except Exception as exc:
         raise self.retry(exc=exc)
